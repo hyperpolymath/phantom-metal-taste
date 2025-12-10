@@ -1,4 +1,4 @@
-# Phantom Metal Taste
+= Phantom Metal Taste
 
 ![License](https://img.shields.io/badge/license-MIT%2BPalimpsest-blue.svg)
 ![Status](https://img.shields.io/badge/status-experimental-orange.svg)
@@ -11,43 +11,43 @@
 ![Offline First](https://img.shields.io/badge/offline-capable-blue)
 ![TPCF](https://img.shields.io/badge/TPCF-Perimeter%203-yellow)
 
-## Overview
+== Overview
 
-**Phantom Metal Taste** is an advanced multi-model database architecture designed to capture, analyze, and visualize the complex relationship between corporate initiatives and their outcomes.
+*Phantom Metal Taste* is an advanced multi-model database architecture designed to capture, analyze, and visualize the complex relationship between corporate initiatives and their outcomes.
 
 The project leverages cutting-edge graph and semantic database technologies, implemented in a modern functional programming language (ReScript) and secure runtime (Deno), to model organizational dynamics with unprecedented fidelity.
 
 > *"The taste of metal in your mouth when nothing is there—a phantom sensation that feels undeniably real yet fundamentally wrong."*
 
-## Technical Architecture
+== Technical Architecture
 
 This project employs a sophisticated polyglot stack:
 
-- **ReScript**: Type-safe functional programming language (compiles to JavaScript)
-- **Deno**: Secure JavaScript/TypeScript runtime with modern tooling
-- **ArangoDB**: For graph-based modeling of causal relationships
-- **Virtuoso**: For semantic web ontologies and formal knowledge representation
-- **Rust/WebAssembly**: For high-performance core logic
-- **Julia**: For advanced statistical analysis
+- *ReScript*: Type-safe functional programming language (compiles to JavaScript)
+- *Deno*: Secure JavaScript/TypeScript runtime with modern tooling
+- *ArangoDB*: For graph-based modeling of causal relationships
+- *Virtuoso*: For semantic web ontologies and formal knowledge representation
+- *Rust/WebAssembly*: For high-performance core logic
+- *Julia*: For advanced statistical analysis
 
-## Why ReScript + Deno?
+== Why ReScript + Deno?
 
-**ReScript** provides:
-- **Sound type system** - impossible states are unrepresentable
-- **100% type coverage** - if it compiles, it works
-- **Functional paradigm** - immutable, pure functions
-- **Fast compilation** - ~1ms per file
-- **Zero-cost abstractions** - optimized JavaScript output
+*ReScript* provides:
+- *Sound type system* - impossible states are unrepresentable
+- *100% type coverage* - if it compiles, it works
+- *Functional paradigm* - immutable, pure functions
+- *Fast compilation* - ~1ms per file
+- *Zero-cost abstractions* - optimized JavaScript output
 
-**Deno** provides:
-- **Security first** - explicit permissions model
-- **Modern standards** - ES modules, Web APIs
-- **Built-in tooling** - test runner, formatter, linter
-- **No node_modules** - URL-based imports
+*Deno* provides:
+- *Security first* - explicit permissions model
+- *Modern standards* - ES modules, Web APIs
+- *Built-in tooling* - test runner, formatter, linter
+- *No node_modules* - URL-based imports
 
 See [RESCRIPT_MIGRATION.md](RESCRIPT_MIGRATION.md) for detailed rationale.
 
-## The SynapCor Case Study
+== The SynapCor Case Study
 
 Included with this project is a complete case study of "SynapCor," a fictional tech company implementing a data-driven employee wellness program called the "Synergy Matrix." The case study includes:
 
@@ -58,66 +58,66 @@ Included with this project is a complete case study of "SynapCor," a fictional t
 
 This case study serves as both documentation and a demonstration of the system's capabilities.
 
-## Key Features
+== Key Features
 
-- **Multi-model persistence**: Store the same conceptual data in different database paradigms to unlock unique analytical capabilities
-- **Causal graph traversal**: Follow the explicit links between actions and consequences
-- **Semantic reasoning**: Apply formal logic to organizational knowledge
-- **Quantified impact analysis**: Measure and visualize the precise effects of organizational decisions
-- **Gaming detection**: Statistical analysis to identify manipulated metrics
-- **Metric theater detection**: Identify measurements that are never acted upon
+- *Multi-model persistence*: Store the same conceptual data in different database paradigms to unlock unique analytical capabilities
+- *Causal graph traversal*: Follow the explicit links between actions and consequences
+- *Semantic reasoning*: Apply formal logic to organizational knowledge
+- *Quantified impact analysis*: Measure and visualize the precise effects of organizational decisions
+- *Gaming detection*: Statistical analysis to identify manipulated metrics
+- *Metric theater detection*: Identify measurements that are never acted upon
 
-## Getting Started
+== Getting Started
 
-### Prerequisites
+=== Prerequisites
 
-1. **ReScript compiler**:
+1. *ReScript compiler*:
    ```bash
    npm install -g rescript
    ```
 
-2. **Deno runtime**:
+2. *Deno runtime*:
    ```bash
    curl -fsSL https://deno.land/install.sh | sh
    ```
 
-3. **Docker & Docker Compose**: For databases
+3. *Docker & Docker Compose*: For databases
 
-### Quick Start
+=== Quick Start
 
 ```bash
-# Clone the repository
+= Clone the repository
 git clone https://github.com/yourusername/phantom-metal-taste.git
 cd phantom-metal-taste
 
-# Build ReScript code
+= Build ReScript code
 deno task build
 
-# Start the databases (requires Docker)
+= Start the databases (requires Docker)
 deno task db:up
 
-# Run the orchestrator
+= Run the orchestrator
 deno task dev
 ```
 
 See [QUICKSTART.md](QUICKSTART.md) for a 5-minute getting started guide.
 
-## The Deeper Question
+== The Deeper Question
 
 This project asks a fundamental question: What happens when we apply the full rigor of enterprise architecture, formal modeling, and data science to measure the gap between institutional intent and lived reality?
 
 The answer may leave a curious taste in your mouth.
 
-## Documentation
+== Documentation
 
-- **[QUICKSTART.md](QUICKSTART.md)** - Get running in 5 minutes
-- **[RESCRIPT_MIGRATION.md](RESCRIPT_MIGRATION.md)** - Why ReScript + Deno
-- **[PROJECT_SUMMARY.md](PROJECT_SUMMARY.md)** - Complete technical overview
-- **[docs/SETUP.md](docs/SETUP.md)** - Detailed setup guide
-- **[CLAUDE.md](CLAUDE.md)** - AI development guidelines
-- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Contribution guidelines
+- *[QUICKSTART.md](QUICKSTART.md)* - Get running in 5 minutes
+- *[RESCRIPT_MIGRATION.md](RESCRIPT_MIGRATION.md)* - Why ReScript + Deno
+- *[PROJECT_SUMMARY.md](PROJECT_SUMMARY.md)* - Complete technical overview
+- *[docs/SETUP.md](docs/SETUP.md)* - Detailed setup guide
+- *[CLAUDE.md](CLAUDE.md)* - AI development guidelines
+- *[CONTRIBUTING.md](CONTRIBUTING.md)* - Contribution guidelines
 
-## Contributing
+== Contributing
 
 Contributions are welcome. Before submitting a PR, please ensure:
 - ReScript code compiles without warnings
@@ -127,11 +127,11 @@ Contributions are welcome. Before submitting a PR, please ensure:
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
-## License
+== License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## The Meta-Statement
+== The Meta-Statement
 
 This system measures organizational delusion using the most rigorous tools available:
 - Sound type system (ReScript)
