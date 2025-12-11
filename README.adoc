@@ -1,146 +1,76 @@
-= Phantom Metal Taste
+= phantom-metal-taste
+Jonathan D.A. Jewell <jonathan.jewell@gmail.com>
+:toc: macro
+:icons: font
+:source-highlighter: rouge
+:experimental:
+:url-github: https://github.com/hyperpolymath/phantom-metal-taste
+:url-gitlab: https://gitlab.com/hyperpolymath/phantom-metal-taste
+:url-bitbucket: https://bitbucket.org/hyperpolymath/phantom-metal-taste
+:url-codeberg: https://codeberg.org/hyperpolymath/phantom-metal-taste
 
-![License](https://img.shields.io/badge/license-MIT%2BPalimpsest-blue.svg)
-![Status](https://img.shields.io/badge/status-experimental-orange.svg)
-![Irony](https://img.shields.io/badge/irony-DISTINCT-red.svg)
-![Stack](https://img.shields.io/badge/stack-ReScript%2BDeno-blueviolet.svg)
+Phantom sensory experience simulation
 
-![RSR Compliance](https://img.shields.io/badge/RSR-Platinum-e5e4e2)
-![Type Safety](https://img.shields.io/badge/types-sound-brightgreen)
-![Memory Safety](https://img.shields.io/badge/memory-safe-brightgreen)
-![Offline First](https://img.shields.io/badge/offline-capable-blue)
-![TPCF](https://img.shields.io/badge/TPCF-Perimeter%203-yellow)
+image:https://img.shields.io/badge/RSR-Certified-gold[RSR Certified]
+image:https://img.shields.io/badge/License-AGPL%20v3-blue[License]
+
+toc::[]
 
 == Overview
 
-*Phantom Metal Taste* is an advanced multi-model database architecture designed to capture, analyze, and visualize the complex relationship between corporate initiatives and their outcomes.
+phantom-metal-taste is part of the link:https://rhodium.sh[Rhodium Standard] (RSR) ecosystem.
 
-The project leverages cutting-edge graph and semantic database technologies, implemented in a modern functional programming language (ReScript) and secure runtime (Deno), to model organizational dynamics with unprecedented fidelity.
+Domain: *software-development*
 
-> *"The taste of metal in your mouth when nothing is there—a phantom sensation that feels undeniably real yet fundamentally wrong."*
+== Installation
 
-== Technical Architecture
+[source,bash]
+----
+# Clone from GitHub (primary)
+git clone {url-github}
 
-This project employs a sophisticated polyglot stack:
+# Or from mirrors
+git clone {url-gitlab}
+git clone {url-codeberg}
+----
 
-- *ReScript*: Type-safe functional programming language (compiles to JavaScript)
-- *Deno*: Secure JavaScript/TypeScript runtime with modern tooling
-- *ArangoDB*: For graph-based modeling of causal relationships
-- *Virtuoso*: For semantic web ontologies and formal knowledge representation
-- *Rust/WebAssembly*: For high-performance core logic
-- *Julia*: For advanced statistical analysis
+== RSR Stack
 
-== Why ReScript + Deno?
+This project follows RSR conventions:
 
-*ReScript* provides:
-- *Sound type system* - impossible states are unrepresentable
-- *100% type coverage* - if it compiles, it works
-- *Functional paradigm* - immutable, pure functions
-- *Fast compilation* - ~1ms per file
-- *Zero-cost abstractions* - optimized JavaScript output
+* ✅ ReScript for frontend/logic
+* ✅ Deno for JS runtime
+* ✅ WASM for performance-critical code
+* ✅ Rust/OCaml/Haskell for systems/proofs
+* ✅ Guile/Scheme for configuration
+* ❌ No TypeScript
+* ❌ No Go
+* ❌ No npm
 
-*Deno* provides:
-- *Security first* - explicit permissions model
-- *Modern standards* - ES modules, Web APIs
-- *Built-in tooling* - test runner, formatter, linter
-- *No node_modules* - URL-based imports
+== Mirrors
 
-See [RESCRIPT_MIGRATION.md](RESCRIPT_MIGRATION.md) for detailed rationale.
+[cols="1,2"]
+|===
+| Platform | URL
 
-== The SynapCor Case Study
-
-Included with this project is a complete case study of "SynapCor," a fictional tech company implementing a data-driven employee wellness program called the "Synergy Matrix." The case study includes:
-
-- Full UML modeling suite (Use Case, Sequence, State Machine diagrams)
-- TOGAF-compliant enterprise architecture documentation
-- OMG Ontology Definition Metamodel implementation
-- Data Flow Diagrams and Entity-Relationship models
-
-This case study serves as both documentation and a demonstration of the system's capabilities.
-
-== Key Features
-
-- *Multi-model persistence*: Store the same conceptual data in different database paradigms to unlock unique analytical capabilities
-- *Causal graph traversal*: Follow the explicit links between actions and consequences
-- *Semantic reasoning*: Apply formal logic to organizational knowledge
-- *Quantified impact analysis*: Measure and visualize the precise effects of organizational decisions
-- *Gaming detection*: Statistical analysis to identify manipulated metrics
-- *Metric theater detection*: Identify measurements that are never acted upon
-
-== Getting Started
-
-=== Prerequisites
-
-1. *ReScript compiler*:
-   ```bash
-   npm install -g rescript
-   ```
-
-2. *Deno runtime*:
-   ```bash
-   curl -fsSL https://deno.land/install.sh | sh
-   ```
-
-3. *Docker & Docker Compose*: For databases
-
-=== Quick Start
-
-```bash
-= Clone the repository
-git clone https://github.com/yourusername/phantom-metal-taste.git
-cd phantom-metal-taste
-
-= Build ReScript code
-deno task build
-
-= Start the databases (requires Docker)
-deno task db:up
-
-= Run the orchestrator
-deno task dev
-```
-
-See [QUICKSTART.md](QUICKSTART.md) for a 5-minute getting started guide.
-
-== The Deeper Question
-
-This project asks a fundamental question: What happens when we apply the full rigor of enterprise architecture, formal modeling, and data science to measure the gap between institutional intent and lived reality?
-
-The answer may leave a curious taste in your mouth.
-
-== Documentation
-
-- *[QUICKSTART.md](QUICKSTART.md)* - Get running in 5 minutes
-- *[RESCRIPT_MIGRATION.md](RESCRIPT_MIGRATION.md)* - Why ReScript + Deno
-- *[PROJECT_SUMMARY.md](PROJECT_SUMMARY.md)* - Complete technical overview
-- *[docs/SETUP.md](docs/SETUP.md)* - Detailed setup guide
-- *[CLAUDE.md](CLAUDE.md)* - AI development guidelines
-- *[CONTRIBUTING.md](CONTRIBUTING.md)* - Contribution guidelines
-
-== Contributing
-
-Contributions are welcome. Before submitting a PR, please ensure:
-- ReScript code compiles without warnings
-- All tests pass: `deno task test`
-- Documentation is updated
-- The philosophical tone is maintained
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
+| GitHub (primary) | {url-github}
+| GitLab | {url-gitlab}
+| Bitbucket | {url-bitbucket}
+| Codeberg | {url-codeberg}
+|===
 
 == License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+Licensed under AGPL-3.0-or-later OR LicenseRef-Palimpsest-0.5.
 
-== The Meta-Statement
+See link:LICENSE[LICENSE] for details.
 
-This system measures organizational delusion using the most rigorous tools available:
-- Sound type system (ReScript)
-- Formal ontologies (OWL/RDF)
-- Statistical analysis (Julia)
-- Causal graph theory (ArangoDB)
+== Contributing
 
-The irony: Building a perfect system to measure imperfect systems.
+See link:CONTRIBUTING.adoc[CONTRIBUTING.adoc].
 
----
+== Metadata
 
-*"The map is not the territory, but sometimes the map reveals what the territory conceals."*
+* Domain: software-development
+* Framework: RSR (Rhodium Standard Repository)
+* Dublin Core: link:.well-known/dc.xml[.well-known/dc.xml]
