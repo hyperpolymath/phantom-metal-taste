@@ -26,7 +26,7 @@ services:
     environment:
       DBA_PASSWORD: phantom-dev-password
       SPARQL_UPDATE: "true"
-      DEFAULT_GRAPH: http://phantom-metal-taste.org/graph
+      DEFAULT_GRAPH: https://phantom-metal-taste.org/graph
     ports:
       - "8890:8890"
       - "1111:1111"

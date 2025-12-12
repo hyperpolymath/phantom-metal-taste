@@ -91,7 +91,7 @@ VIRTUOSO_URL=http://localhost:8890/sparql
 VIRTUOSO_UPDATE_URL=http://localhost:8890/sparql-auth
 VIRTUOSO_USERNAME=dba
 VIRTUOSO_PASSWORD=phantom-dev-password
-VIRTUOSO_GRAPH=http://phantom-metal-taste.org/graph
+VIRTUOSO_GRAPH=https://phantom-metal-taste.org/graph
 
 # Application
 PORT=3000
