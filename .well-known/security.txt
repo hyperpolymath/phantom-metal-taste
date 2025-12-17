@@ -3,7 +3,7 @@
 
 Contact: mailto:security@phantom-metal-taste.org
 Contact: https://github.com/Hyperpolymath/phantom-metal-taste/security/advisories/new
-Expires: 2025-12-31T23:59:59Z
+Expires: 2026-12-31T23:59:59Z
 Preferred-Languages: en
 Canonical: https://phantom-metal-taste.org/.well-known/security.txt
 
