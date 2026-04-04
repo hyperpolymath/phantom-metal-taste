@@ -1,0 +1,127 @@
+@startuml Domain Model - Class Diagram
+
+class Initiative {
+  - _key: string
+  - name: string
+  - description: string
+  - startDate: DateTime
+  - endDate?: DateTime
+  - department: string
+  - intendedOutcome: string
+  - budget?: number
+  - participants: string[]
+  - status: enum
+  --
+  + linkOutcome(outcome: Outcome, strength: number)
+  + getGapScore(): number
+}
+
+class Outcome {
+  - _key: string
+  - description: string
+  - timestamp: DateTime
+  - type: enum
+  - severity: number
+  - measuredBy: string[]
+  - affectedEmployees: string[]
+  --
+  + isIntended(): boolean
+  + isUnintended(): boolean
+}
+
+class Employee {
+  - _key: string
+  - employeeId: string
+  - name: string
+  - email: string
+  - department: string
+  - role: string
+  - wellnessScore?: number
+  - engagementLevel?: number
+  - synergized: boolean
+  --
+  + calculateActualPerformance(): number
+}
+
+class Department {
+  - _key: string
+  - name: string
+  - description: string
+  - headOfDepartment?: string
+  - employeeCount: number
+  - synergyIndex?: number
+  --
+  + calculateSynergy(): number
+  + getEmployees(): Employee[]
+}
+
+class Metric {
+  - _key: string
+  - name: string
+  - type: enum
+  - value: number
+  - timestamp: DateTime
+  - target?: number
+  - actualVsTarget?: number
+  --
+  + getGap(): number
+  + isGameable(): boolean
+}
+
+class CausalLink {
+  - _from: string
+  - _to: string
+  - strength: number
+  - type: enum
+  - evidence: string[]
+  - discoveredAt: DateTime
+  --
+  + getConfidence(): number
+}
+
+class IntentionRealityGap {
+  - initiativeId: string
+  - gapScore: number
+  - unintendedConsequences: Outcome[]
+  - analysis: string
+  --
+  + getGrade(): string
+  + getSeverity(): string
+}
+
+Initiative "1" --> "*" Outcome : causes
+Initiative "1" --> "1" IntentionRealityGap : analyzed by
+Initiative "*" --> "*" Employee : participates in
+Employee "*" --> "1" Department : belongs to
+Metric "*" --> "*" Employee : measures
+Metric "*" --> "*" Department : measures
+Outcome "*" --> "*" Metric : measured by
+
+CausalLink ..|> Initiative : from
+CausalLink ..|> Outcome : to
+
+note right of Initiative
+  Represents corporate
+  programs and interventions
+end note
+
+note right of Outcome
+  Can be:
+  - intended
+  - unintended
+  - emergent
+end note
+
+note bottom of CausalLink
+  Edge in the causal graph.
+  Strength indicates confidence
+  in the causal relationship.
+end note
+
+note bottom of IntentionRealityGap
+  The "phantom metal taste":
+  gap between stated intentions
+  and actual outcomes
+end note
+
+@enduml

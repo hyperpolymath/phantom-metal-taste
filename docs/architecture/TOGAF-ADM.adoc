@@ -1,0 +1,824 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+// Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+//
+// TOGAF Architecture Development Method (ADM) -- Synergy Matrix
+// Enterprise Architecture Documentation
+// Classification: Internal -- Architecture Practice
+
+= Synergy Matrix: TOGAF Architecture Development Method
+Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+v1.0, 2026-02-20
+:toc: left
+:toclevels: 3
+:sectnums:
+:icons: font
+:source-highlighter: rouge
+:description: Full TOGAF ADM cycle for the Synergy Matrix enterprise initiative.
+:keywords: TOGAF, ADM, enterprise architecture, synergy, wellness, gap analysis
+
+== Document Control
+
+[cols="1,3"]
+|===
+| Document ID | SM-TOGAF-ADM-001
+| Version     | 1.0
+| Status      | Approved (by Chad Kensington)
+| Author      | Jonathan D.A. Jewell
+| Review Date | 2026-02-20
+| Next Review | When someone reads this
+|===
+
+== Executive Summary
+
+This document presents the complete TOGAF Architecture Development Method cycle
+for the Synergy Matrix, an enterprise initiative aimed at the quantification,
+measurement, and continuous improvement of organizational wellness through
+rigorous architectural discipline. The Synergy Matrix applies formal gap analysis
+to the inherently immeasurable domain of human collaboration, producing precise
+numerical scores for phenomena that have historically resisted quantification for
+good reason.
+
+The architecture described herein follows all eight phases of the TOGAF ADM and
+has been reviewed by the Synergy Architecture Review Board.
+
+---
+
+== Preliminary Phase: Architecture Capability
+
+=== Establishing the Synergy Architecture Practice
+
+The Preliminary Phase establishes the organizational context and capability
+required to deliver the Synergy Matrix. This involves creating a dedicated
+Architecture Practice with the mandate to measure that which was previously
+considered unmeasurable.
+
+==== Architecture Principles
+
+[cols="2,4,4"]
+|===
+| Principle | Statement | Rationale
+
+| Quantify Everything
+| All organizational phenomena must be expressible as a numerical score.
+| Unquantified phenomena cannot be placed on dashboards, and dashboards are
+  the primary deliverable of this initiative.
+
+| Semantic Precision
+| Every concept in the wellness domain must be formally modeled in OWL/RDF.
+| Informal understanding of human experience is insufficient for enterprise
+  reporting requirements.
+
+| Technology-Led Insight
+| The technology stack determines what can be measured, and what can be measured
+  determines what matters.
+| This principle ensures alignment between architectural investment and
+  organizational priorities.
+
+| Perpetual Improvement
+| No initiative is ever cancelled; it is rebranded and redeployed.
+| Cancellation implies failure, which is incompatible with the wellness mandate.
+|===
+
+==== Architecture Repository
+
+All architecture artifacts are maintained within the `phantom-metal-taste`
+repository. The ontology definitions, data models, and deployment diagrams
+referenced throughout this document are stored in `docs/diagrams/` and
+`ontology/` respectively.
+
+==== Tailored Architecture Framework
+
+The standard TOGAF ADM has been tailored for the Synergy Matrix by adding
+a ninth implicit phase: *Denial Management*, which runs concurrently with
+all other phases and ensures that inconvenient findings are contextualized
+appropriately before reaching executive stakeholders.
+
+---
+
+== Phase A: Architecture Vision
+
+=== Problem Statement
+
+Organizational wellness remains unquantified. Despite decades of employee
+surveys, team retrospectives, and motivational posters, no enterprise has
+successfully reduced the full spectrum of human collaborative experience to
+a single numerical score. The Synergy Matrix addresses this gap -- or more
+precisely, it addresses the gap between what leadership believes is happening
+and what is actually happening, and then quantifies that gap as well.
+
+=== Stakeholder Map
+
+[cols="2,2,3,2"]
+|===
+| Stakeholder | Role | Concern | Influence
+
+| Chad Kensington
+| VP Human Synergy, Sponsor
+| "Prove the Synergy Matrix works"
+| Very High
+
+| Brenda Smith
+| Senior Engineer, Affected Party
+| "Please stop measuring my mood"
+| Low (officially) / High (informally)
+
+| Robert Kim
+| CFO, Budget Approver, Skeptic
+| "Show me the ROI"
+| High (ignored)
+
+| Jennifer Harmon
+| CEO, Executive Sponsor
+| "Something about culture"
+| Nominal
+|===
+
+NOTE: Stakeholder influence ratings were determined by Chad Kensington.
+Brenda Smith's informal influence reflects the empirical observation that
+engineers who object to measurement systems tend to be correct, a pattern
+the architecture deliberately does not model.
+
+=== Architecture Vision Statement
+
+_"From unquantified positivity to precisely measured outcomes."_
+
+The target state envisions an organization in which every wellness initiative,
+team interaction, and collaborative endeavor is captured, scored, and tracked
+through a formal gap analysis pipeline. The architecture enables leadership to
+view real-time dashboards of organizational synergy, replacing the current
+approach of asking people how they feel with the more rigorous approach of
+telling them how they feel based on graph traversal algorithms.
+
+=== Business Scenario
+
+. Leadership launches a wellness initiative (e.g., "Mandatory Fun Fridays").
+. The initiative is instrumented via the Synergy Matrix platform.
+. Participation metrics, sentiment proxies, and collaboration graph density
+  are collected and analyzed.
+. A Synergy Gap Score is computed, revealing the delta between intended
+  wellness outcomes and observed reality.
+. The gap score is presented to Chad Kensington.
+. Chad requests adjustments to the scoring algorithm.
+. The adjusted score is presented to Jennifer Harmon.
+. Jennifer nods approvingly. The initiative is declared successful.
+
+---
+
+== Phase B: Business Architecture
+
+=== Capability Model
+
+The Synergy Matrix requires the following enterprise capabilities:
+
+[cols="2,3,2"]
+|===
+| Capability | Description | Maturity
+
+| Synergy Quantification
+| The core capability. Reduces complex human dynamics to decimal values
+  with two places of precision.
+| Target: Level 4 (Managed and Measurable). Current: Level 0 (Nonexistent,
+  which is itself a data point).
+
+| Initiative Lifecycle Management
+| Manages the full lifecycle of wellness initiatives from conception through
+  rebranding.
+| Target: Level 3 (Defined)
+
+| Gap Analysis Orchestration
+| Coordinates multi-dimensional gap calculations across heterogeneous data
+  sources.
+| Target: Level 5 (Optimizing)
+
+| Dashboard Proliferation
+| Ensures that every metric, regardless of utility, is visualized in at
+  least three distinct chart types.
+| Target: Level 4 (Managed)
+|===
+
+=== Business Process: Initiative Lifecycle
+
+The canonical business process for all wellness initiatives follows five
+stages. The process is modeled as a linear flow, although in practice it
+is better described as a spiral.
+
+[source]
+----
+Plan --> Launch --> Monitor --> Discover Unintended Consequences --> Rebrand as Success
+  ^                                                                        |
+  |________________________________________________________________________|
+          (repeat with new initiative name and identical objectives)
+----
+
+The "Discover Unintended Consequences" stage is architecturally significant
+because it generates the majority of data consumed by the gap analysis
+engine. The subsequent "Rebrand as Success" stage ensures that this data
+is interpreted constructively.
+
+=== Value Stream: Wellness Intent to Measurable Outcome
+
+[cols="1,3,2"]
+|===
+| Stage | Activity | Value Contribution
+
+| Ideation
+| Chad conceives a new wellness initiative during an offsite.
+| Generates executive enthusiasm.
+
+| Definition
+| The initiative is formalized with KPIs that sound rigorous.
+| Creates the illusion of measurability.
+
+| Instrumentation
+| The Synergy Matrix platform is configured to capture relevant signals.
+| Produces actual data, occasionally useful.
+
+| Analysis
+| Gap scores are computed across multiple dimensions.
+| Reveals truths that require careful contextualization.
+
+| Reporting
+| Dashboard views are curated for stakeholder consumption.
+| Converts complex findings into approved narratives.
+|===
+
+---
+
+== Phase C: Information Systems Architecture
+
+=== Data Architecture
+
+The data architecture supports the capture, storage, and analysis of
+wellness metrics at enterprise scale. The Entity-Relationship model is
+documented in the following diagram:
+
+* *E-R Diagram*: `docs/diagrams/er-diagram.puml`
+
+==== Core Entities
+
+[cols="2,3,2"]
+|===
+| Entity | Purpose | Storage
+
+| Initiative
+| A wellness program with defined objectives and a predetermined outcome.
+| ArangoDB (document collection)
+
+| Participant
+| An employee subject to wellness measurement, with or without consent.
+| ArangoDB (document collection)
+
+| SynergyScore
+| A composite numerical value representing wellness state. Decimal(10,2).
+| ArangoDB (document collection)
+
+| GapAnalysis
+| The delta between target and actual synergy, computed with false precision.
+| ArangoDB (document collection) + Julia analytics tier
+
+| WellnessOntologyEntity
+| A formal OWL class representing a wellness concept.
+| Virtuoso (RDF triple store)
+|===
+
+==== Graph Relationships
+
+ArangoDB edge collections model the following relationships:
+
+* `PARTICIPATES_IN` -- links Participants to Initiatives
+* `SCORED_BY` -- links Participants to SynergyScores
+* `GAPS_IDENTIFIED` -- links GapAnalysis results to Initiatives
+* `INFLUENCES` -- links Participants to other Participants (collaboration graph)
+* `REPORTS_TO` -- organizational hierarchy (determines whose gaps are visible to whom)
+
+=== Application Architecture
+
+The application architecture follows a layered approach with clear
+separation of concerns. Data flow diagrams are maintained at:
+
+* *Context DFD*: `docs/diagrams/dfd-context.puml`
+* *Detailed DFD*: `docs/diagrams/dfd-detailed.puml`
+
+==== Application Components
+
+[cols="2,2,3"]
+|===
+| Component | Technology | Responsibility
+
+| Orchestration Layer
+| ReScript / Deno
+| Coordinates initiative lifecycle, manages API surface, and ensures
+  that all requests pass through the appropriate authorization layer
+  (i.e., Chad).
+
+| Gap Engine
+| Rust / WASM
+| Performance-critical gap calculations. Computes synergy deltas at
+  sub-millisecond latency, which is important because the results are
+  viewed approximately once per quarter.
+
+| Analytics Pipeline
+| Julia
+| Statistical analysis of wellness trends. Capable of sophisticated
+  time-series decomposition of data that is fundamentally noise.
+
+| Graph Service
+| ArangoDB
+| Traverses the organizational collaboration graph to identify synergy
+  clusters and isolation patterns.
+
+| Semantic Reasoner
+| Virtuoso (OWL/RDF)
+| Performs ontological inference over the wellness domain model,
+  discovering relationships between concepts such as "Mandatory Fun"
+  and "Decreased Retention."
+|===
+
+=== Ontology Architecture
+
+The Synergy Matrix employs a formal OWL ontology hosted in Virtuoso to
+model the wellness domain with semantic rigor. Key ontology classes:
+
+* `syn:WellnessInitiative` -- superclass of all initiative types
+* `syn:MandatoryParticipation` -- subclass indicating non-voluntary enrollment
+* `syn:SynergyGap` -- quantified delta, with datatype property `syn:gapMagnitude`
+* `syn:UnintendedConsequence` -- linked to initiatives via `syn:producedBy`
+* `syn:Rebranding` -- transformation that maps failed initiatives to successful ones
+
+SPARQL queries against this ontology power the semantic reasoning layer,
+enabling the system to answer questions such as "Which initiatives caused
+the most unintended consequences?" -- a query that has been disabled in
+the production dashboard by request of the Sponsor.
+
+---
+
+== Phase D: Technology Architecture
+
+=== Technology Stack
+
+[cols="2,2,3"]
+|===
+| Layer | Technology | Justification
+
+| Orchestration & API
+| ReScript compiled via Deno runtime
+| Type-safe orchestration without the overhead of TypeScript. ReScript
+  compiles to clean JavaScript executed by Deno, ensuring reproducible
+  builds and eliminating the npm supply chain as an attack vector.
+
+| Performance-Critical Computation
+| Rust compiled to WebAssembly
+| Gap calculations require deterministic, high-performance execution.
+  Rust/WASM ensures that synergy scores are computed with the kind of
+  precision normally reserved for problems that actually need it.
+
+| Statistical Analysis
+| Julia
+| Batch analytics and time-series decomposition. Julia's multiple
+  dispatch model aligns well with the multi-dimensional nature of
+  wellness data, and its performance profile supports analyses that
+  would be impractical in interpreted languages.
+
+| Graph Database
+| ArangoDB
+| Multi-model database supporting document, graph, and key-value access
+  patterns. The collaboration graph requires efficient traversal for
+  influence propagation and synergy cluster detection.
+
+| Semantic Store
+| Virtuoso (OpenLink)
+| Enterprise-grade triple store for OWL/RDF. Supports SPARQL 1.1 with
+  reasoning extensions required by the wellness ontology.
+
+| Containerization
+| Podman
+| All services are containerized using Podman with Chainguard base
+  images (`cgr.dev/chainguard/wolfi-base`). Container orchestration
+  follows the `selur-compose` pattern.
+
+| ABI/FFI
+| Idris2 (ABI definitions) / Zig (FFI implementation)
+| Cross-language interop between the Rust/WASM gap engine and the
+  Julia analytics tier follows the universal ABI/FFI standard.
+|===
+
+=== Infrastructure
+
+The deployment architecture is documented in `docs/diagrams/deployment-diagram.puml`.
+
+==== Environment Topology
+
+[cols="1,2,3"]
+|===
+| Environment | Purpose | Notes
+
+| Development
+| Local development and unit testing
+| Podman pods on developer workstations. Gap scores are uncalibrated.
+
+| Staging
+| Integration testing and stakeholder preview
+| Full stack deployment. Dashboard access restricted to Chad Kensington
+  to prevent premature interpretation of results.
+
+| Production
+| Live wellness measurement
+| High-availability deployment with automated failover. Uptime SLA of
+  99.9%, which is more reliable than the data it processes.
+|===
+
+---
+
+== Phase E: Opportunities and Solutions
+
+=== Migration Approach: Incremental Synergy Realization
+
+The Synergy Matrix will be delivered through an incremental approach that
+allows the organization to experience the benefits of wellness quantification
+gradually, thereby limiting the volume of objections raised at any single
+point in time.
+
+=== Key Initiatives
+
+[cols="2,3,2"]
+|===
+| Initiative | Description | Priority
+
+| Instrument Everything, Question Nothing
+| Deploy comprehensive telemetry across all wellness touchpoints. The
+  architecture captures participation metrics, sentiment proxies, and
+  collaboration density without requiring explicit justification for
+  each data point collected.
+| Critical
+
+| Ontology-Driven Insight
+| Leverage the Virtuoso semantic store to discover non-obvious
+  relationships in wellness data, such as the correlation between
+  mandatory team-building events and increased use of PTO.
+| High
+
+| Real-Time Gap Visualization
+| Deploy the Rust/WASM gap engine to provide sub-second dashboard
+  updates, ensuring that leadership can observe synergy degradation
+  as it happens rather than after the fact.
+| Medium
+
+| Predictive Synergy Modeling
+| Apply Julia-based time-series forecasting to predict future gap
+  scores, enabling preemptive rebranding of initiatives before they
+  are formally evaluated.
+| Strategic (Phase 2)
+|===
+
+---
+
+== Phase F: Migration Planning
+
+=== Migration Vision
+
+_"From unquantified positivity to precisely measured futility."_
+
+The migration delivers the Synergy Matrix in three phases, each building
+upon the foundation of the previous phase and each progressively revealing
+truths that the organization may not be prepared to receive.
+
+=== Migration Phases
+
+==== Phase 1: Foundation (Months 1-3)
+
+[cols="1,3"]
+|===
+| Activity | Details
+
+| ArangoDB Deployment
+| Provision graph database cluster. Define document collections for
+  Initiatives, Participants, and SynergyScores. Establish edge
+  collections for organizational relationships.
+
+| Virtuoso Provisioning
+| Deploy Virtuoso triple store. Load initial wellness ontology
+  (OWL/RDF). Configure SPARQL endpoints.
+
+| Schema Migration
+| Execute data model as defined in `docs/diagrams/er-diagram.puml`.
+  Seed reference data including initiative categories and scoring
+  rubrics approved by Chad Kensington.
+
+| Container Infrastructure
+| Establish Podman pod definitions and `selur-compose` orchestration
+  for all database services. Base images pinned to Chainguard.
+|===
+
+==== Phase 2: Instrumentation (Months 4-6)
+
+[cols="1,3"]
+|===
+| Activity | Details
+
+| Orchestration Layer
+| Deploy ReScript/Deno API services. Implement initiative lifecycle
+  management and participant enrollment workflows.
+
+| Metrics Collection
+| Activate telemetry collection across wellness initiative touchpoints.
+  Deploy event ingestion pipeline. Begin accumulating the data that will
+  eventually be used to draw conclusions already decided upon.
+
+| Gap Engine (Alpha)
+| Deploy initial Rust/WASM gap calculation module. Calibrate scoring
+  algorithm against historical initiative data, such as it exists.
+
+| Graph Population
+| Build collaboration graph from organizational data sources.
+  Compute initial influence propagation scores.
+|===
+
+==== Phase 3: Enlightenment (Months 7-9)
+
+[cols="1,3"]
+|===
+| Activity | Details
+
+| Full Gap Analysis
+| Activate comprehensive gap analysis across all active initiatives.
+  The system begins producing scores that accurately reflect the delta
+  between wellness aspirations and organizational reality.
+
+| Julia Analytics
+| Deploy statistical analysis pipeline. Time-series decomposition
+  reveals trends that are simultaneously obvious and unwelcome.
+
+| Semantic Reasoning
+| Enable ontological inference in Virtuoso. The reasoner discovers
+  that "Mandatory Fun" and "Voluntary Attrition" share a statistically
+  significant co-occurrence pattern.
+
+| Dashboard Launch
+| Production dashboards made available to all authorized stakeholders.
+  Authorization criteria managed by Chad Kensington.
+|===
+
+=== Risk Register
+
+[cols="1,3,2,2"]
+|===
+| ID | Risk | Likelihood | Mitigation
+
+| R-001
+| The system may reveal that the Synergy Matrix itself has the highest
+  gap score of any initiative in the organization.
+| High
+| Exclude the Synergy Matrix from its own analysis. If questioned,
+  cite "reflexivity concerns."
+
+| R-002
+| Engineers subject to wellness measurement may exhibit decreased
+  wellness as a direct result of being measured.
+| Very High
+| Classify this as a "calibration artifact" rather than a finding.
+
+| R-003
+| The CFO may request a cost-benefit analysis comparing the Synergy
+  Matrix budget to the cost of simply asking employees how they feel.
+| Medium
+| Preemptively reframe the comparison as "qualitative vs. quantitative
+  maturity" and reference Phase E, Initiative 1.
+
+| R-004
+| The ontology reasoner may infer relationships that are politically
+  inconvenient.
+| Certain
+| Implement query-level access controls in Virtuoso. Certain SPARQL
+  patterns require Sponsor approval before execution.
+|===
+
+---
+
+== Phase G: Implementation Governance
+
+=== Synergy Architecture Review Board (SARB)
+
+The Synergy Architecture Review Board provides governance oversight for
+all architectural decisions related to the Synergy Matrix.
+
+[cols="2,2,2"]
+|===
+| Member | Role | Voting Rights
+
+| Chad Kensington (Chair)
+| VP Human Synergy
+| Full voting, plus tie-breaking authority, plus veto
+
+| Brenda Smith
+| Engineering Representative
+| Advisory (non-binding)
+
+| Robert Kim
+| Finance Representative
+| Voting (overridden by Chair veto as needed)
+
+| Rotating Seat
+| Architecture Practice
+| Voting (has never voted against the Chair)
+|===
+
+The Board meets bi-weekly on Thursday afternoons. Meeting minutes are
+recorded and stored in the architecture repository. To date, the Board has
+reviewed forty-seven proposals and has never rejected a proposal submitted
+by the Chair. Proposals submitted by other members have a 23% approval rate.
+
+=== Compliance Checkpoints
+
+[cols="1,3,2"]
+|===
+| Checkpoint | Criteria | Frequency
+
+| CP-1: Architecture Conformance
+| All deployed components conform to the technology architecture
+  defined in Phase D. Deviations require SARB approval.
+| Monthly
+
+| CP-2: Data Model Integrity
+| Database schemas match the approved E-R diagram. No unauthorized
+  entities or relationships have been introduced.
+| Bi-weekly
+
+| CP-3: Ontology Consistency
+| OWL ontology passes consistency checking. No contradictions exist
+  in the wellness domain model (contradictions in the actual wellness
+  data are out of scope).
+| Monthly
+
+| CP-4: Dashboard Accuracy
+| Dashboard visualizations accurately reflect computed scores. The
+  accuracy of the underlying scores relative to reality is outside
+  the scope of this checkpoint.
+| Weekly
+
+| CP-5: Initiative Lifecycle
+| All active initiatives are progressing through the defined lifecycle
+  stages. Initiatives in the "Discover Unintended Consequences" stage
+  for longer than sixty days are automatically advanced to "Rebrand
+  as Success."
+| Quarterly
+|===
+
+=== Architecture Decision Records
+
+All significant architectural decisions are recorded as ADRs in the
+repository. Key decisions include:
+
+* *ADR-001*: Adoption of ArangoDB over Neo4j for graph storage
+* *ADR-002*: Selection of Rust/WASM for gap calculations
+* *ADR-003*: Use of OWL/RDF for wellness ontology (rather than informal definitions)
+* *ADR-004*: Decision to exclude the Synergy Matrix from its own gap analysis
+* *ADR-005*: Removal of the "Cancel Initiative" button from the dashboard UI
+
+ADRs are stored in `.machine_readable/META.scm` under the
+`architecture-decisions` section and follow the standard ADR format
+(Context, Decision, Status, Consequences).
+
+---
+
+== Phase H: Architecture Change Management
+
+=== Change Management Principles
+
+The Synergy Matrix architecture must evolve in response to changing
+organizational needs while maintaining the core invariant that no
+initiative is ever declared a failure. The change management process
+ensures that architectural evolution serves the dual mandate of
+technical excellence and narrative continuity.
+
+=== Change Triggers
+
+[cols="2,3"]
+|===
+| Trigger | Response
+
+| Initiative produces unexpected negative outcomes
+| The initiative is rebranded. The architecture is updated to
+  support the new initiative name while preserving all historical
+  data under the original name (accessible only to SARB members).
+
+| Gap scores consistently indicate no improvement
+| The scoring algorithm is recalibrated. If recalibration is
+  insufficient, the definition of "improvement" is revised.
+
+| New wellness initiative proposed by Chad
+| Architecture is extended to accommodate the initiative. No
+  feasibility assessment is required for Sponsor-originated requests.
+
+| Engineer raises concern about measurement methodology
+| Concern is logged in the architecture repository as a "future
+  consideration." No timeline is assigned.
+
+| CFO requests budget justification
+| A new dashboard is created showing the correlation between Synergy
+  Matrix investment and a carefully selected subset of organizational
+  metrics that happen to trend favorably.
+|===
+
+=== Change Request Process
+
+All architecture change requests follow the standard process:
+
+. Change request submitted via the architecture repository.
+. If submitted by Chad Kensington: approved automatically, proceed to
+  implementation.
+. If submitted by any other stakeholder: routed to Chad Kensington for
+  review.
+.. If Chad approves: proceed to implementation.
+.. If Chad does not approve: request is tabled for "future consideration"
+   and added to the backlog, which is reviewed annually.
+. Implementation follows the governance checkpoints defined in Phase G.
+. Post-implementation review conducted by SARB (see Phase G for Board
+  composition and voting dynamics).
+
+=== Architecture Evolution Roadmap
+
+[cols="1,2,3"]
+|===
+| Horizon | Timeframe | Capability
+
+| Horizon 1
+| Current - 6 months
+| Foundational gap analysis and dashboard delivery. The organization
+  learns what its synergy scores are, even if it would prefer not to.
+
+| Horizon 2
+| 6 - 18 months
+| Predictive modeling and automated rebranding. The system anticipates
+  initiative failure and prepares rebrand proposals before human
+  stakeholders are aware of the need.
+
+| Horizon 3
+| 18 - 36 months
+| Autonomous Synergy Management. The Synergy Matrix creates, monitors,
+  evaluates, and rebrands initiatives without human intervention,
+  achieving the architectural ideal of a fully closed-loop wellness
+  system that requires no actual wellness.
+|===
+
+---
+
+== Appendices
+
+=== Appendix A: Referenced Artifacts
+
+[cols="1,3"]
+|===
+| Artifact | Location
+
+| E-R Diagram               | `docs/diagrams/er-diagram.puml`
+| Context DFD               | `docs/diagrams/dfd-context.puml`
+| Detailed DFD              | `docs/diagrams/dfd-detailed.puml`
+| Deployment Diagram        | `docs/diagrams/deployment-diagram.puml`
+| Wellness Ontology (OWL)   | `ontology/wellness.owl`
+| Architecture Decisions    | `.machine_readable/META.scm`
+| Project State             | `.machine_readable/STATE.scm`
+|===
+
+=== Appendix B: Glossary
+
+[cols="2,4"]
+|===
+| Term | Definition
+
+| Synergy Gap
+| The quantified delta between the intended outcome of a wellness
+  initiative and its observed impact. Always expressed as a positive
+  number, because negative gaps would imply that an initiative exceeded
+  expectations, which has not yet been observed.
+
+| Rebranding
+| The architectural pattern by which a failed initiative is transformed
+  into a successful one through the application of a new name, revised
+  KPIs, and selective historical data presentation.
+
+| Calibration Artifact
+| Any measurement result that contradicts the expected narrative. Treated
+  as a systematic error in the instrumentation rather than a valid finding.
+
+| Reflexivity Concern
+| The theoretical problem arising when the Synergy Matrix attempts to
+  measure itself. Resolved architecturally by excluding the system from
+  its own analysis (see ADR-004).
+
+| Sponsor-Originated Request
+| A change request submitted by Chad Kensington, which follows an
+  expedited approval process consisting of no approval process.
+|===
+
+=== Appendix C: Revision History
+
+[cols="1,1,2,2"]
+|===
+| Version | Date | Author | Changes
+
+| 0.1 | 2026-01-15 | J.D.A. Jewell | Initial draft
+| 0.2 | 2026-01-28 | J.D.A. Jewell | Incorporated SARB feedback (Chad's feedback)
+| 0.3 | 2026-02-10 | J.D.A. Jewell | Added risk register per CFO request (then removed
+                                        two risks per Sponsor request)
+| 1.0 | 2026-02-20 | J.D.A. Jewell | Approved by SARB (unanimous, as always)
+|===

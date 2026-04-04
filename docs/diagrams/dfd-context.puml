@@ -1,0 +1,52 @@
+' SPDX-License-Identifier: PMPL-1.0-or-later
+' DFD Level 0 (Context Diagram) - Synergy Matrix System
+' Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+
+@startuml DFD Context Diagram
+
+!define ENTITY_COLOR #E8EAF6
+!define PROCESS_COLOR #C8E6C9
+!define STORE_COLOR #FFF9C4
+
+skinparam rectangle {
+    BackgroundColor ENTITY_COLOR
+    BorderColor #3F51B5
+    FontColor #1A237E
+    RoundCorner 0
+}
+
+skinparam agent {
+    BackgroundColor PROCESS_COLOR
+    BorderColor #2E7D32
+    FontColor #1B5E20
+}
+
+rectangle "<<External Entity>>\n**HR Management**\n(Chad Kensington,\nVP Human Synergy)" as HR
+
+rectangle "<<External Entity>>\n**Employee**\n(Brenda Smith,\nSenior Engineer)" as EMP
+
+rectangle "<<External Entity>>\n**Executive Leadership**\n(CFO, CEO)" as EXEC
+
+agent "**1.0**\nSynergy Matrix\nSystem" as SMS
+
+rectangle "<<External Entity>>\n**Department Managers**" as DEPT
+
+HR -right-> SMS : "Initiative definitions\nWellness parameters\nTarget metrics\nScoring weights"
+SMS -right-> HR : "Synergy reports\nGap analysis\nGaming detection alerts\nDepartment rankings"
+
+EMP -up-> SMS : "Wellness check-ins\nParticipation data\nMood self-reports\nActivity logs"
+SMS -up-> EMP : "Engagement scores\nWellness notifications\nSynergy badges\n(Increasingly ignored)"
+
+EXEC -left-> SMS : "Strategic objectives\nBudget allocation\nROI thresholds"
+SMS -left-> EXEC : "Executive dashboard\nQuarterly reports\n(Suspiciously positive)"
+
+DEPT -down-> SMS : "Team metrics\nCollaboration data"
+SMS -down-> DEPT : "Department synergy index\nRanking vs. other departments"
+
+note bottom of SMS
+    The system faithfully records everything.
+    Whether anyone acts on the data is
+    a different question entirely.
+end note
+
+@enduml

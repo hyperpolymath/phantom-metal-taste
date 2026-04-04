@@ -1,0 +1,22 @@
+{
+  "tasks": {
+    "dev": "deno run --allow-net --allow-env --allow-read --watch src/Index.bs.js",
+    "start": "deno run --allow-net --allow-env --allow-read src/Index.bs.js",
+    "build": "rescript build",
+    "clean": "rescript clean",
+    "build:wasm": "cd src/core && cargo build --target wasm32-unknown-unknown --release",
+    "test": "deno test --allow-net --allow-env --allow-read tests/",
+    "db:up": "podman-compose up -d",
+    "db:down": "podman-compose down",
+    "db:reset": "podman-compose down -v && podman-compose up -d"
+  },
+  "imports": {
+    "hono/": "https://deno.land/x/hono@v3.11.7/",
+    "zod": "https://deno.land/x/zod@v3.22.4/mod.ts",
+    "std/": "https://deno.land/std@0.208.0/"
+  },
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": false
+  }
+}

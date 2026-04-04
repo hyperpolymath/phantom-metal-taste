@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  arangodb:
+    image: arangodb:3.11
+    container_name: phantom-arangodb
+    environment:
+      ARANGO_ROOT_PASSWORD: phantom-dev-password
+      ARANGO_NO_AUTH: 0
+    ports:
+      - "8529:8529"
+    volumes:
+      - arango_data:/var/lib/arangodb3
+      - arango_apps:/var/lib/arangodb3-apps
+    networks:
+      - phantom-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8529/_api/version"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  virtuoso:
+    image: openlink/virtuoso-opensource-7:latest
+    container_name: phantom-virtuoso
+    environment:
+      DBA_PASSWORD: phantom-dev-password
+      SPARQL_UPDATE: "true"
+      DEFAULT_GRAPH: https://phantom-metal-taste.org/graph
+    ports:
+      - "8890:8890"
+      - "1111:1111"
+    volumes:
+      - virtuoso_data:/database
+    networks:
+      - phantom-network
+    healthcheck:
+      test: ["CMD", "isql", "1111", "dba", "phantom-dev-password", "EXEC=status()"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  arango_data:
+  arango_apps:
+  virtuoso_data:
+
+networks:
+  phantom-network:
+    driver: bridge

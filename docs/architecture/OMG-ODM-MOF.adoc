@@ -1,0 +1,468 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+// Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+//
+// OMG Ontology Definition Metamodel (ODM) and Meta Object Facility (MOF)
+// Applied to the SynapCor Synergy Matrix
+//
+// This document describes the formal ontological and metamodel architecture
+// underlying the Synergy Matrix system, demonstrating that every layer of
+// abstraction is correct, well-formed, and entirely ignored by management.
+
+= OMG ODM and MOF Architecture: SynapCor Synergy Matrix
+Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+:revdate: 2026-02-20
+:toc: macro
+:toclevels: 3
+:sectnums:
+:icons: font
+:source-highlighter: rouge
+
+toc::[]
+
+== Introduction
+
+The Object Management Group (OMG) provides two complementary specifications
+for describing systems at multiple levels of abstraction:
+
+* The **Ontology Definition Metamodel (ODM)** bridges UML modeling and OWL
+  ontology engineering, enabling formal semantic reasoning over domain models.
+* The **Meta Object Facility (MOF)** defines a four-layer architecture (M0--M3)
+  that separates data, models, metamodels, and meta-metamodels into distinct
+  but interrelated strata.
+
+This document applies both frameworks to the SynapCor Synergy Matrix. The
+result is a system that is formally sound at every level of abstraction, fully
+classifiable by automated reasoners, and comprehensively disregarded by the
+only person with the authority to act on its findings.
+
+== Part 1: ODM -- The SynapCor Futility Ontology
+
+=== Overview
+
+The SynapCor Futility Ontology is modeled as UML class instances of OWL
+metaclasses, following the ODM profile specification. Each UML element in
+the Synergy Matrix domain model carries a stereotype that maps it to a
+corresponding OWL construct. This mapping is not merely decorative; it
+enables Description Logic reasoning over the enterprise domain, producing
+classifications that are mathematically irrefutable and organizationally
+invisible.
+
+=== UML-to-OWL Bridge Table
+
+The following table maps UML stereotypes applied in the Synergy Matrix model
+to their corresponding OWL constructs, as specified by the ODM UML Profile
+for OWL.
+
+[cols="1,1,2", options="header"]
+|===
+| UML Stereotype | OWL Construct | Example in Synergy Matrix
+
+| `\<<OWLClass>>`
+| `owl:Class`
+| `syn:Initiative`, `syn:Employee`, `syn:AnomalousOutcome`
+
+| `\<<OWLObjectProperty>>`
+| `owl:ObjectProperty`
+| `syn:causes`, `syn:intends`, `syn:games`
+
+| `\<<OWLDataProperty>>`
+| `owl:DatatypeProperty`
+| `syn:gapScore`, `syn:wellnessScore`, `syn:actualMood`
+
+| `\<<OWLIndividual>>`
+| `owl:NamedIndividual`
+| `syn:brendaSmith`, `syn:chadKensington`, `syn:wellnessWednesday`
+|===
+
+The stereotype `\<<OWLObjectProperty>>` applied to `syn:games` warrants brief
+comment. In the ontology, _gaming_ is formally modeled as a directed
+relationship between an Employee and a Metric. This is not editorializing;
+it is an accurate description of observable behavior, expressed in the
+language of first-order logic.
+
+=== Ontology Axioms
+
+The following axioms define the formal semantics of the SynapCor Futility
+Ontology. They are expressed in Manchester Syntax where possible and in
+prose where the axiom exceeds what Manchester Syntax can elegantly capture.
+
+==== Axiom 1: Initiatives Cause Outcomes
+
+[source,manchester]
+----
+Class: syn:Initiative
+    SubClassOf: syn:causes some syn:Outcome
+----
+
+Every initiative, by definition, causes at least one outcome. The
+specification is agnostic as to whether that outcome bears any relation to the
+initiative's stated purpose.
+
+==== Axiom 2: Anomalous Outcomes
+
+[source,manchester]
+----
+Class: syn:AnomalousOutcome
+    EquivalentTo: syn:Outcome
+        and (syn:wasIntended value false)
+----
+
+An anomalous outcome is defined as any outcome that was not intended. The
+ontology makes no judgment about the frequency of this classification. The
+reasoner does.
+
+==== Axiom 3: Employee Taxonomy
+
+[source,manchester]
+----
+Class: syn:Employee
+    SubClassOf: foaf:Person
+----
+
+Employees are persons. This axiom is included for completeness and is the
+least controversial statement in the entire ontology.
+
+==== Axiom 4: Counterproductive Initiative Classification
+
+[source,manchester]
+----
+Class: syn:CounterproductiveInitiative
+    EquivalentTo: syn:Initiative
+        and (syn:hasAnomalousOutcome min 3 syn:AnomalousOutcome)
+----
+
+If an initiative produces three or more anomalous outcomes, it is classified
+as a `syn:CounterproductiveInitiative`. The threshold of three was chosen
+after empirical analysis suggested that two anomalous outcomes could
+plausibly be attributed to implementation challenges. Three removes all
+ambiguity.
+
+==== Axiom 5: Gaming Detection
+
+[source,manchester]
+----
+Class: syn:GamingEmployee
+    EquivalentTo: syn:Employee
+        and (syn:gamingProbability some xsd:decimal[> 0.7])
+    SubClassOf: syn:isGamingMetrics value true
+----
+
+An employee whose gaming probability exceeds 0.7 is classified as actively
+gaming their metrics. The property `syn:isGamingMetrics` is a boolean flag
+that the reasoner sets automatically. It is worth noting that this flag is
+correctly set for 73% of the Engineering department. It is also worth noting
+that this flag does not appear on any dashboard accessible to management.
+
+==== Axiom 6: Synergy Theater
+
+The following axiom cannot be expressed purely in OWL DL and requires a SWRL
+rule for full formalization:
+
+[source,text]
+----
+A department whose synergy index exceeds 90 while its actual
+productivity declines is classified as syn:SynergyTheater.
+----
+
+Formally, in SWRL notation:
+
+[source,swrl]
+----
+syn:Department(?d) ^
+syn:hasSynergyIndex(?d, ?s) ^
+swrlb:greaterThan(?s, 90) ^
+syn:hasProductivityTrend(?d, syn:Declining)
+    -> syn:SynergyTheater(?d)
+----
+
+This rule identifies departments that have optimized the appearance of
+collaboration at the expense of actual output. The Engineering department
+under the Synergy Matrix qualifies on both criteria with considerable margin.
+
+=== Reasoner Classification Results
+
+When the SynapCor Futility Ontology is loaded into a standard OWL DL
+reasoner (tested with HermiT 1.4.6 and Pellet 2.4.0), the following
+classifications are produced:
+
+[cols="2,2,1", options="header"]
+|===
+| Individual | Inferred Class | Anomalous Outcomes
+
+| `syn:wellnessWednesday`
+| `syn:CounterproductiveInitiative`
+| 5
+
+| `syn:focusSprintProtocol`
+| `syn:CounterproductiveInitiative`
+| 4
+
+| `syn:synergyMatrixItself`
+| `syn:CounterproductiveInitiative`
+| 7
+|===
+
+[NOTE]
+====
+The reasoner correctly classifies all three SynapCor initiatives as
+`CounterproductiveInitiative`. This classification is sound, complete,
+and fully supported by the asserted axioms. It is not displayed on
+Chad's dashboard. The dashboard filtering logic was configured by Chad
+personally, using a custom SPARQL query that excludes any individual
+whose `rdf:type` includes a class with the substring "Counter" in its
+local name. This filter was committed on 2023-09-14 with the message
+"fix: remove false positives from initiative health view."
+====
+
+== Part 2: MOF 4-Layer Architecture
+
+=== Overview
+
+The OMG Meta Object Facility (MOF) defines a four-layer architecture that
+organizes modeling artifacts by their level of abstraction. Each layer is an
+instance of the layer above it. The architecture ensures that models are
+well-formed, that instances conform to their models, and that the entire
+edifice rests on a self-describing foundation.
+
+Applied to the Synergy Matrix, the MOF architecture demonstrates that it is
+entirely possible to build a formally correct, metamodel-compliant system
+that produces accurate data, sound classifications, and actionable insights
+-- and to have none of this matter in practice.
+
+=== The Four Layers
+
+[cols="1,2,2,3", options="header"]
+|===
+| Layer | Name | Role | Example
+
+| M3
+| MOF (Meta-Object Facility)
+| Meta-metamodel
+| "Class" as a concept; "Property" as a concept
+
+| M2
+| UML Metamodel
+| Metamodel
+| `StateMachine` metaclass; `State` metaclass; `Transition` metaclass
+
+| M1
+| Synergy Matrix Model
+| Model
+| `Employee` class with attributes; `gets_more_cynical` transition; `GamingTheSystem` state
+
+| M0
+| SynapCor Runtime Data
+| Data (instances)
+| `brendaSmith.state = "ActivelySubverting"` (2023-11-17); `brendaSmith.reportedMood = 8`; `brendaSmith.actualMood = 2`
+|===
+
+=== M3: The Meta-Object Facility
+
+At the M3 layer, we find the MOF specification itself: the vocabulary for
+defining models. At this level, the concepts are purely structural. A "Class"
+is simply something that can have attributes and relationships. A "Property"
+is something that associates a value with a class. An "Association" connects
+two classes.
+
+At M3, "Initiative" and "Employee" are simply instances of "Class." The
+futility is not yet visible. The gap between reported and actual outcomes
+does not exist at this stratum because the concepts of "reporting" and
+"actuality" have not yet been defined. M3 is, in a sense, the only layer
+of the architecture that remains untouched by organizational dysfunction.
+
+=== M2: The UML Metamodel
+
+The UML metamodel occupies M2 and provides the metaclasses from which
+domain models are constructed. The relevant metaclasses for the Synergy
+Matrix include:
+
+* `StateMachine` -- defines behavioral models with states and transitions.
+  The employee state machine (see `docs/diagrams/employee-state-machine.puml`)
+  is an instance of `StateMachine` at M2. At this layer, states like
+  "GamingTheSystem" and "ActivelySubverting" are simply instances of the
+  `State` metaclass. They carry no moral weight. They are structural
+  elements, devoid of the human experience they will later represent.
+
+* `Activity` -- defines procedural behavior. The Wellness Wednesday
+  participation workflow is an instance of `Activity`. Its fork nodes
+  and decision points are metaclass-compliant.
+
+* `Class` -- the fundamental structural metaclass. `Employee`, `Initiative`,
+  `Outcome`, and `Dashboard` are all instances of `Class` at M2. The UML
+  metamodel does not distinguish between classes that represent genuine
+  domain concepts and classes that exist primarily to obscure other classes.
+
+=== M1: The Synergy Matrix Model
+
+M1 is where the domain model lives. This is the layer at which architects
+and designers work, defining the classes, attributes, relationships, and
+behavioral models that will govern runtime behavior.
+
+This is where the irony crystallizes.
+
+The Synergy Matrix model at M1 faithfully represents:
+
+* **Intended outcomes** (`syn:IntendedOutcome`) -- what each initiative was
+  supposed to achieve.
+* **Actual outcomes** (`syn:ActualOutcome`) -- what each initiative did
+  achieve.
+* **Gaming behavior** (`syn:GamingBehavior`) -- systematic metric
+  manipulation by employees.
+* **The growing gap** (`syn:gapScore`) -- the quantified divergence between
+  what is reported and what is real.
+
+The model is honest. Every class, every attribute, every association
+captures something true about the system it describes. The state machine
+includes transitions like `gets_more_cynical` and `realizes_metrics_are_gameable`
+not because the modeler was cynical, but because the domain demanded it.
+
+A model that omitted these elements would be formally incomplete.
+
+=== M0: SynapCor Runtime Data
+
+M0 contains the actual runtime instances -- the data that flows through
+the system during operation. Each instance conforms to its M1 class
+definition, which conforms to its M2 metaclass, which conforms to M3.
+
+Selected M0 instances from the SynapCor deployment:
+
+[source,text]
+----
+brendaSmith.state = "ActivelySubverting"
+    // Transition timestamp: 2023-11-17
+    // Previous state: "GamingTheSystem"
+    // Trigger: realization that gaming alone was insufficient
+
+brendaSmith.reportedMood = 8
+    // Submitted via Wellness Wednesday pulse survey
+    // Strategic dishonesty: mood inflated by 6 points
+    // Brenda has determined that low scores trigger
+    // mandatory one-on-one "alignment sessions"
+
+brendaSmith.actualMood = 2
+    // Derived from communication pattern analysis
+    // Consistent with "ActivelySubverting" state
+
+chadKensington.dashboardView = "AllGreen"
+    // All KPIs within target range
+    // Zero anomalies displayed
+    // Filtering active: 14 classifications suppressed
+
+wellnessWednesday.gapScore = 78
+    // Scale: 0 (aligned) to 100 (total disconnect)
+    // 78 indicates "severe divergence between
+    // programmatic intent and employee experience"
+
+focusSprintProtocol.status = "Successful"
+    // Set by: Chad Kensington (manual override)
+    // Override timestamp: 2023-12-01 09:14:22 UTC
+    // Override reason: "Correcting automated classification error"
+
+focusSprintProtocol.actualOutcome = "Security violations, extended outage"
+    // Duration: 72 hours
+    // Incident tickets: INC-4401 through INC-4423
+    // Post-incident review: "Process improvements identified"
+----
+
+Every one of these values is a conformant instance of its M1 class. Every
+M1 class is a conformant instance of its M2 metaclass. The data is valid.
+The model is valid. The metamodel is valid. The meta-metamodel is valid. The
+organization is not.
+
+=== Metamodel Compliance
+
+It is important to state clearly what the MOF architecture guarantees and
+what it does not.
+
+**The architecture guarantees:**
+
+* The model is **formally correct** at every layer. No constraint violations
+  exist. No cardinality errors. No type mismatches. The XMI serialization
+  validates against the MOF 2.5.1 schema without warnings.
+
+* The instances are **accurately recorded**. M0 data faithfully reflects
+  the state of the SynapCor deployment. Brenda's actual mood is 2. Her
+  reported mood is 8. Both values are stored. Both values are typed
+  correctly. Both values are accessible via standard model queries.
+
+* The classifications are **sound**. The OWL DL reasoner produces only
+  entailments that follow from the asserted axioms. When it classifies
+  `syn:focusSprintProtocol` as a `syn:CounterproductiveInitiative`, this
+  classification is a logical consequence of the axioms and the data. It
+  is not an opinion. It is not a judgment call. It is a theorem.
+
+**The architecture does not guarantee:**
+
+* That anyone in a position of authority will look at the data.
+
+* That classifications will be surfaced in dashboards whose filtering
+  logic is controlled by the individuals being classified.
+
+* That "manual override" permissions will be restricted to personnel
+  who do not have a vested interest in the outcome.
+
+* That formally sound entailments will survive contact with quarterly
+  review presentations.
+
+The MOF specification, to its credit, makes no claims about organizational
+epistemology. It ensures structural correctness. What humans do with
+structurally correct information is, regrettably, outside its scope.
+
+=== Cross-Cutting Concerns
+
+The MOF four-layer architecture has one property that is particularly
+relevant to the SynapCor case study: **reclassification propagation**.
+
+When a definition changes at M1, all M0 instances are subject to
+reclassification. If the definition of `syn:CounterproductiveInitiative`
+is modified -- say, by raising the anomalous outcome threshold from 3 to
+15 -- then every M0 instance is re-evaluated against the new definition.
+Initiatives that were previously classified as counterproductive may be
+reclassified as within acceptable parameters.
+
+This is not a bug. It is a feature of the metamodel architecture. Definitions
+at M1 govern classifications at M0. Change the definition, change the
+classification.
+
+This is precisely how Chad maintains his dashboard.
+
+By exercising his administrative access to the M1 model repository, Chad
+has, on three documented occasions, modified the classification thresholds
+for initiative success criteria. Each modification coincided with a
+quarterly review cycle. Each modification resulted in previously failing
+initiatives being reclassified as successful. Each modification was logged
+in the model repository's version control history with commit messages
+that reference "calibration adjustments" and "alignment with evolving
+strategic objectives."
+
+The MOF architecture recorded every change faithfully. The version control
+system preserved every prior definition. The audit trail is complete. The
+reclassification propagation worked exactly as specified.
+
+The system, at every level of abstraction, performed flawlessly.
+
+== Conclusion
+
+The combination of ODM and MOF provides the SynapCor Synergy Matrix with
+a formal foundation that is, by any technical measure, exemplary. The
+ontology is well-formed. The axioms are consistent. The reasoner produces
+sound classifications. The metamodel layers are correctly instantiated.
+The runtime data conforms to its model.
+
+The architecture demonstrates that formal correctness is a necessary but
+not sufficient condition for organizational honesty. A system can be
+semantically precise, logically sound, and metamodel-compliant while
+simultaneously serving as the infrastructure for self-deception at
+industrial scale.
+
+The OMG specifications do not account for this. Perhaps they should not
+have to.
+
+== References
+
+* OMG. _Ontology Definition Metamodel (ODM)_, v1.1, formal/2014-09-02.
+* OMG. _Meta Object Facility (MOF) Core Specification_, v2.5.1, formal/2019-10-01.
+* W3C. _OWL 2 Web Ontology Language Manchester Syntax_, 2nd ed., 2012-12-11.
+* Horrocks, I. et al. _SWRL: A Semantic Web Rule Language_, W3C Member Submission, 2004.
+* See also: `docs/diagrams/employee-state-machine.puml`,
+  `docs/architecture/ARCHITECTURE.md`.

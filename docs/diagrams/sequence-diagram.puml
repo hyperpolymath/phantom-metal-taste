@@ -1,0 +1,73 @@
+@startuml Gap Analysis Sequence
+
+actor Client
+participant "API Gateway" as API
+participant "InitiativeService" as IS
+participant "AnalyticsService" as AS
+participant "ArangoDB" as Arango
+participant "WASM Module" as WASM
+participant "Julia" as Julia
+participant "Virtuoso" as Virtuoso
+
+Client -> API: GET /api/analytics/gap/:id
+
+API -> IS: getInitiativeWithOutcomes(id)
+
+IS -> Arango: AQL Query (traverse causes)
+activate Arango
+Arango --> IS: {initiative, outcomes, metrics}
+deactivate Arango
+
+IS --> API: Initiative data
+
+API -> AS: calculateIntentionRealityGap(id)
+
+AS -> Arango: Query outcomes & metrics
+activate Arango
+Arango --> AS: Raw data
+deactivate Arango
+
+AS -> WASM: calculate_metric_gaps(metrics)
+activate WASM
+WASM -> WASM: Statistical calculations
+WASM --> AS: Gap scores
+deactivate WASM
+
+AS -> Julia: detect_metric_gaming(timeSeries)
+activate Julia
+Julia -> Julia: Variance analysis\nAnomaly detection
+Julia --> AS: Gaming probability
+deactivate Julia
+
+AS -> AS: Calculate final gap score
+
+AS -> Arango: Store gap analysis
+activate Arango
+Arango --> AS: Saved
+deactivate Arango
+
+AS -> Virtuoso: Update semantic layer
+activate Virtuoso
+Virtuoso --> AS: Updated
+deactivate Virtuoso
+
+AS --> API: IntentionRealityGap
+
+API --> Client: JSON response
+
+note over WASM
+  Performance-critical
+  calculations in Rust
+end note
+
+note over Julia
+  Statistical analysis
+  for gaming detection
+end note
+
+note over Arango, Virtuoso
+  Multi-model persistence:
+  Graph + Semantic
+end note
+
+@enduml

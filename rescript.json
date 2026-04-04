@@ -1,0 +1,21 @@
+{
+  "name": "phantom-metal-taste",
+  "version": "0.1.0",
+  "sources": {
+    "dir": "src/orchestrator",
+    "subdirs": true
+  },
+  "package-specs": {
+    "module": "es6",
+    "in-source": true
+  },
+  "suffix": ".bs.js",
+  "bs-dependencies": [],
+  "warnings": {
+    "error": "+101"
+  },
+  "namespace": true,
+  "refmt": 3,
+  "ppx-flags": [],
+  "bsc-flags": ["-bs-no-version-header", "-bs-g"]
+}

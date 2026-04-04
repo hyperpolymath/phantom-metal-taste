@@ -1,0 +1,134 @@
+' SPDX-License-Identifier: PMPL-1.0-or-later
+' Entity-Relationship Diagram - Synergy Matrix Data Model
+' Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+
+@startuml Entity-Relationship Diagram
+
+!define TABLE_BG #FAFAFA
+!define PK_COLOR #1565C0
+!define FK_COLOR #6A1B9A
+
+skinparam class {
+    BackgroundColor TABLE_BG
+    BorderColor #37474F
+    FontColor #212121
+    HeaderBackgroundColor #ECEFF1
+    AttributeFontColor #424242
+}
+
+entity "**Departments**" as dept {
+    * <<PK>> department_id : UUID
+    --
+    name : VARCHAR(100)
+    head_name : VARCHAR(100)
+    head_title : VARCHAR(100)
+    synergy_index : DECIMAL(5,2)
+    employee_count : INTEGER
+    created_at : TIMESTAMP
+}
+
+entity "**Employees**" as emp {
+    * <<PK>> employee_id : UUID
+    --
+    * <<FK>> department_id : UUID
+    name : VARCHAR(100)
+    title : VARCHAR(100)
+    wellness_score : DECIMAL(5,2)
+    engagement_level : DECIMAL(5,2)
+    actual_productivity : DECIMAL(5,2)
+    gaming_probability : DECIMAL(3,2)
+    is_interviewing_elsewhere : BOOLEAN
+    hire_date : DATE
+}
+
+entity "**Initiatives**" as init {
+    * <<PK>> initiative_id : UUID
+    --
+    * <<FK>> sponsoring_department_id : UUID
+    name : VARCHAR(200)
+    description : TEXT
+    intended_outcome : TEXT
+    status : ENUM('planned','active','completed','abandoned')
+    start_date : DATE
+    end_date : DATE
+    gap_score : DECIMAL(5,2)
+}
+
+entity "**Participation_Logs**" as plog {
+    * <<PK>> log_id : UUID
+    --
+    * <<FK>> employee_id : UUID
+    * <<FK>> initiative_id : UUID
+    participation_date : TIMESTAMP
+    mood_self_report : INTEGER
+    actual_mood_estimate : INTEGER
+    attendance_type : ENUM('genuine','theater','coerced')
+    notes : TEXT
+}
+
+entity "**Anomalous_Outcomes**" as anom {
+    * <<PK>> outcome_id : UUID
+    --
+    * <<FK>> initiative_id : UUID
+    * <<FK>> discovered_by : UUID
+    description : TEXT
+    outcome_type : ENUM('intended','unintended','emergent')
+    severity : INTEGER
+    causal_strength : DECIMAL(3,2)
+    evidence : TEXT
+    discovered_date : DATE
+    acknowledged : BOOLEAN
+}
+
+entity "**Metrics**" as metr {
+    * <<PK>> metric_id : UUID
+    --
+    * <<FK>> initiative_id : UUID
+    name : VARCHAR(200)
+    target_value : DECIMAL(10,2)
+    actual_value : DECIMAL(10,2)
+    gap_percentage : DECIMAL(5,2)
+    is_gamed : BOOLEAN
+    is_theater : BOOLEAN
+    collection_frequency : VARCHAR(50)
+}
+
+' Relationships
+
+dept ||--o{ emp : "employs"
+dept ||--o{ init : "sponsors"
+
+emp ||--o{ plog : "participates via"
+init ||--o{ plog : "tracked in"
+
+init ||--o{ anom : "produces"
+emp |o--o{ anom : "discovers"
+
+init ||--o{ metr : "measured by"
+
+note bottom of plog
+    The junction table reveals everything:
+    mood_self_report vs actual_mood_estimate
+    diverge by an average of 3.2 points.
+
+    attendance_type = 'theater' accounts
+    for 47% of all Wellness Wednesday logs.
+end note
+
+note right of anom
+    acknowledged = FALSE
+    for 78% of records.
+
+    The system captures what
+    nobody wants to see.
+end note
+
+note bottom of metr
+    is_gamed = TRUE for 31% of all metrics.
+    is_theater = TRUE for 22%.
+
+    The metrics that measure the metrics
+    are themselves suspect.
+end note
+
+@enduml

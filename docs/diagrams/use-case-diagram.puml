@@ -1,0 +1,62 @@
+@startuml Phantom Metal Taste - Use Case Diagram
+
+left to right direction
+
+actor "HR Manager" as hr
+actor "Department Head" as dept
+actor "Executive" as exec
+actor "Data Analyst" as analyst
+actor "Employee" as emp
+
+rectangle "Phantom Metal Taste System" {
+  usecase "Create Initiative" as UC1
+  usecase "Link Outcomes" as UC2
+  usecase "View Gap Analysis" as UC3
+  usecase "Detect Gaming" as UC4
+  usecase "Generate Reports" as UC5
+  usecase "Visualize Causal Graph" as UC6
+  usecase "Calculate Synergy" as UC7
+  usecase "Track Metrics" as UC8
+  usecase "View Personal Metrics" as UC9
+  usecase "Identify Metric Theater" as UC10
+}
+
+hr --> UC1
+hr --> UC2
+hr --> UC7
+
+dept --> UC1
+dept --> UC3
+dept --> UC5
+dept --> UC6
+
+exec --> UC3
+exec --> UC5
+exec --> UC10
+
+analyst --> UC4
+analyst --> UC6
+analyst --> UC8
+analyst --> UC10
+
+emp --> UC9
+
+UC1 ..> UC2 : <<extend>>
+UC3 ..> UC4 : <<include>>
+UC5 ..> UC3 : <<include>>
+UC5 ..> UC6 : <<include>>
+
+note right of UC4
+  Gaming detection uses
+  statistical analysis
+  to identify suspicious
+  metric patterns
+end note
+
+note right of UC10
+  Metric theater: metrics
+  collected but never
+  linked to any action
+end note
+
+@enduml

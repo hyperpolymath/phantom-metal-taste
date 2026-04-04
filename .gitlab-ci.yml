@@ -1,0 +1,261 @@
+# GitLab CI/CD Configuration for Phantom Metal Taste
+# RSR-compliant continuous integration
+
+stages:
+  - validate
+  - build
+  - test
+  - security
+  - deploy
+
+variables:
+  DENO_VERSION: "1.38.0"
+  RUST_VERSION: "1.74.0"
+  JULIA_VERSION: "1.9.4"
+  DOCKER_DRIVER: overlay2
+
+# Default image
+image: debian:bookworm-slim
+
+# Cache dependencies
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - .deno/
+    - .cargo/
+    - node_modules/
+    - target/
+
+# ============================================================================
+# Validation Stage
+# ============================================================================
+
+rsr-compliance:
+  stage: validate
+  script:
+    - echo "📋 Verifying RSR compliance..."
+    - |
+      # Check required documentation
+      for file in README.md LICENSE SECURITY.md CODE_OF_CONDUCT.md CONTRIBUTING.md MAINTAINERS.md CHANGELOG.md; do
+        test -f "$file" || (echo "❌ Missing $file" && exit 1)
+        echo "✓ $file"
+      done
+    - |
+      # Check .well-known/
+      for file in security.txt ai.txt humans.txt; do
+        test -f ".well-known/$file" || (echo "❌ Missing .well-known/$file" && exit 1)
+        echo "✓ .well-known/$file"
+      done
+    - |
+      # Check build system
+      test -f justfile || (echo "❌ Missing justfile" && exit 1)
+      test -f flake.nix || (echo "❌ Missing flake.nix" && exit 1)
+      echo "✓ Build system files present"
+    - echo "✅ RSR compliance verified"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+code-format:
+  stage: validate
+  image: denoland/deno:${DENO_VERSION}
+  script:
+    - echo "✨ Checking code formatting..."
+    - deno fmt --check
+  allow_failure: true
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+code-lint:
+  stage: validate
+  image: denoland/deno:${DENO_VERSION}
+  script:
+    - echo "🔍 Linting code..."
+    - deno lint
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+# ============================================================================
+# Build Stage
+# ============================================================================
+
+build-rescript:
+  stage: build
+  image: node:20-slim
+  script:
+    - echo "🔨 Building ReScript → JavaScript..."
+    - npm install --save-dev rescript
+    - npx rescript build
+  artifacts:
+    paths:
+      - src/**/*.bs.js
+      - lib/
+    expire_in: 1 hour
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+build-wasm:
+  stage: build
+  image: rust:${RUST_VERSION}
+  script:
+    - echo "🦀 Building Rust → WASM..."
+    - rustup target add wasm32-unknown-unknown
+    - cd src/core
+    - cargo build --target wasm32-unknown-unknown --release
+    - ls -lh target/wasm32-unknown-unknown/release/*.wasm
+  artifacts:
+    paths:
+      - src/core/target/wasm32-unknown-unknown/release/*.wasm
+    expire_in: 1 hour
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+# ============================================================================
+# Test Stage
+# ============================================================================
+
+test-deno:
+  stage: test
+  image: denoland/deno:${DENO_VERSION}
+  needs:
+    - build-rescript
+  script:
+    - echo "🧪 Running Deno tests..."
+    - deno test --allow-net --allow-env --allow-read tests/
+  coverage: '/Lines\s*:\s*(\d+\.\d+)%/'
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+test-rust:
+  stage: test
+  image: rust:${RUST_VERSION}
+  needs:
+    - build-wasm
+  script:
+    - echo "🧪 Running Rust tests..."
+    - cd src/core
+    - cargo test --verbose
+    - cargo clippy -- -D warnings
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+test-julia:
+  stage: test
+  image: julia:${JULIA_VERSION}
+  script:
+    - echo "🧪 Running Julia tests..."
+    - cd src/analytics
+    - julia --project=. -e 'using Pkg; Pkg.instantiate()'
+    - julia --project=. -e 'using Pkg; Pkg.test()'
+  allow_failure: true  # Julia setup can be complex
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+# ============================================================================
+# Security Stage
+# ============================================================================
+
+security-scan-dependencies:
+  stage: security
+  image: aquasec/trivy:latest
+  script:
+    - echo "🔒 Scanning dependencies for vulnerabilities..."
+    - trivy fs --security-checks vuln .
+  allow_failure: true
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+security-scan-rust:
+  stage: security
+  image: rust:${RUST_VERSION}
+  script:
+    - echo "🔒 Auditing Rust dependencies..."
+    - cargo install cargo-audit
+    - cd src/core
+    - cargo audit
+  allow_failure: true
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+security-check-secrets:
+  stage: security
+  image: trufflesecurity/trufflehog:latest
+  script:
+    - echo "🔍 Scanning for secrets..."
+    - trufflehog filesystem . --no-update --fail
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+# ============================================================================
+# Deploy Stage
+# ============================================================================
+
+build-docker:
+  stage: deploy
+  image: docker:latest
+  services:
+    - docker:dind
+  needs:
+    - build-rescript
+    - build-wasm
+  script:
+    - echo "Building container image..."
+    - podman build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA .
+    - podman build -t $CI_REGISTRY_IMAGE:latest .
+    - |
+      if [ "$CI_COMMIT_BRANCH" == "$CI_DEFAULT_BRANCH" ]; then
+        podman login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        podman push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+        podman push $CI_REGISTRY_IMAGE:latest
+      fi
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  only:
+    - main
+    - master
+
+pages:
+  stage: deploy
+  image: node:20-slim
+  script:
+    - echo "📚 Building documentation for GitLab Pages..."
+    - mkdir -p public
+    - cp -r docs/* public/
+    - cp README.md public/index.md
+    # Optional: Convert markdown to HTML
+    # - npx markdown-it README.md > public/index.html
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+# ============================================================================
+# Workflow Rules
+# ============================================================================
+
+workflow:
+  rules:
+    # Run on merge requests
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    # Run on main branch
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    # Run on tags
+    - if: $CI_COMMIT_TAG
+    # Manual pipelines
+    - if: $CI_PIPELINE_SOURCE == "web"
+
+# ============================================================================
+# Includes
+# ============================================================================
+
+# Optional: Include additional configuration
+# include:
+#   - template: Security/SAST.gitlab-ci.yml
+#   - template: Security/Dependency-Scanning.gitlab-ci.yml
+#   - template: Security/License-Scanning.gitlab-ci.yml

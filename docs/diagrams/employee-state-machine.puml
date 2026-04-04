@@ -1,0 +1,81 @@
+' SPDX-License-Identifier: PMPL-1.0-or-later
+' Employee Mental State Machine - Brenda Smith's Journey Through the Synergy Matrix
+' Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+
+@startuml Employee State Machine
+
+skinparam state {
+    BackgroundColor #FAFAFA
+    BorderColor #37474F
+    FontColor #212121
+    StartColor #4CAF50
+    EndColor #F44336
+}
+
+[*] --> CautiouslyOptimistic
+
+state "Cautiously Optimistic" as CautiouslyOptimistic #C8E6C9 {
+    CautiouslyOptimistic : entry / reports mood 7
+    CautiouslyOptimistic : "Maybe this one will be different."
+    CautiouslyOptimistic : Attends Wellness Wednesday voluntarily.
+    CautiouslyOptimistic : Fills out surveys honestly.
+}
+
+state "Skeptical" as Skeptical #FFF9C4 {
+    Skeptical : entry / reports mood 6 (actual: 5)
+    Skeptical : "I've seen this before."
+    Skeptical : Notices metrics don't map to reality.
+    Skeptical : Begins strategic survey responses.
+}
+
+state "Resigned" as Resigned #FFE0B2 {
+    Resigned : entry / reports mood 7 (actual: 4)
+    Resigned : "It doesn't matter what I report."
+    Resigned : Automates check-ins.
+    Resigned : Gap between reported and actual mood: 3pts.
+}
+
+state "Actively Subverting" as ActivelySubverting #FFCCBC {
+    ActivelySubverting : entry / reports mood 8 (actual: 3)
+    ActivelySubverting : "If you can't beat the system, game it."
+    ActivelySubverting : Joins metric optimization working group.
+    ActivelySubverting : Trades wellness credits on black market.
+}
+
+state "Gaming the System" as GamingTheSystem #FFCDD2 {
+    GamingTheSystem : entry / reports mood 9 (actual: 2)
+    GamingTheSystem : "Wellness score: 94. Burnout level: critical."
+    GamingTheSystem : Has perfected the art of visible engagement.
+    GamingTheSystem : Is debugging production at 2am off-camera.
+}
+
+CautiouslyOptimistic --> Skeptical : Wellness Wednesday\nmandated;\nmeditation becomes\nperformance review
+Skeptical --> Resigned : Transparency Dashboard\nlaunches; realizes\nscores affect\npromotion decisions
+Resigned --> ActivelySubverting : Synergy Champions\nProgram creates\ntwo-tier culture;\n"Siloed" label applied
+ActivelySubverting --> GamingTheSystem : Focus-Sprint Protocol\nfails spectacularly;\nChad logs it as\n"successful innovation"
+
+' The ironic loop
+GamingTheSystem -[#F44336,dashed]-> CautiouslyOptimistic : New VP of People\nhired; announces\n"Synergy Matrix 2.0"\n(the cycle repeats)
+
+note right of GamingTheSystem
+    **Terminal State (in practice)**
+
+    Brenda reports mood 9
+    while debugging a P0
+    off-camera during
+    "Mindful Moments."
+
+    Her synergy score
+    has never been higher.
+
+    She has three interviews
+    scheduled this week.
+end note
+
+note left of CautiouslyOptimistic
+    **Week 1 of any new initiative.**
+    This state has a half-life
+    of approximately 2.3 sprints.
+end note
+
+@enduml

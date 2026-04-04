@@ -1,0 +1,95 @@
+' SPDX-License-Identifier: PMPL-1.0-or-later
+' DFD Level 1 (Detailed Data Flow Diagram) - Synergy Matrix System
+' Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+
+@startuml DFD Level 1
+
+!define ENTITY_COLOR #E8EAF6
+!define PROCESS_COLOR #C8E6C9
+!define STORE_COLOR #FFE0B2
+
+skinparam rectangle {
+    BackgroundColor ENTITY_COLOR
+    BorderColor #3F51B5
+    FontColor #1A237E
+    RoundCorner 0
+}
+
+skinparam agent {
+    BackgroundColor PROCESS_COLOR
+    BorderColor #2E7D32
+    FontColor #1B5E20
+}
+
+skinparam database {
+    BackgroundColor STORE_COLOR
+    BorderColor #E65100
+    FontColor #BF360C
+}
+
+' External entities
+rectangle "**HR Management**\n(Chad)" as HR
+rectangle "**Employee**\n(Brenda)" as EMP
+rectangle "**Executive\nLeadership**" as EXEC
+
+' Processes
+agent "**1.1**\nManage\nInitiatives" as P11
+agent "**1.2**\nLog\nParticipation" as P12
+agent "**1.3**\nCapture\nAnomalous\nOutcomes" as P13
+agent "**1.4**\nGenerate\nSynergy\nReports" as P14
+
+' Data stores
+database "**D1** Employees" as D1
+database "**D2** Initiatives" as D2
+database "**D3** Participation_Logs" as D3
+database "**D4** Anomalous_Outcomes" as D4
+
+' Flows from HR
+HR --> P11 : "Initiative details\n(name, parameters,\ntarget metrics)"
+
+' Flows from Employee
+EMP --> P12 : "Check-in data\nMood reports\nActivity logs"
+
+' Process 1.1 flows
+P11 --> D2 : "Store initiative\ndefinition"
+P11 --> P14 : "Initiative metadata"
+D1 --> P11 : "Employee roster\n(for assignment)"
+
+' Process 1.2 flows
+P12 --> D3 : "Store participation\nrecord"
+D1 --> P12 : "Employee profile"
+D2 --> P12 : "Active initiatives"
+P12 --> P13 : "Participation events\n(for anomaly scan)"
+
+' Process 1.3 flows
+D3 --> P13 : "Historical\nparticipation data"
+D2 --> P13 : "Intended outcomes"
+P13 --> D4 : "Store anomalous\noutcome"
+
+' Process 1.4 flows
+D2 --> P14 : "Initiative records"
+D3 --> P14 : "Participation data"
+D4 --> P14 : "Anomalous outcomes"
+P14 --> HR : "Synergy reports\nGap scores\nGaming alerts"
+P14 --> EXEC : "Executive summary\n(sanitized)"
+P14 --> EMP : "Personal scores\nBadges\nNotifications"
+
+' The key note
+note right of P13
+    **The heart of the irony.**
+    This process discovers outcomes
+    nobody intended: meditation theater,
+    metric gaming rings, and the
+    emergence of a black market
+    for wellness credits.
+
+    It records them faithfully.
+    Nobody reads the output.
+end note
+
+note bottom of D4
+    Ratio of unintended to intended
+    outcomes: 2.3:1 (and climbing)
+end note
+
+@enduml

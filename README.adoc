@@ -1,0 +1,245 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+// Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+= Phantom Metal Taste
+:toc: macro
+:toclevels: 3
+
+image:https://img.shields.io/badge/License-PMPL--1.0-blue.svg[License: PMPL-1.0,link="https://github.com/hyperpolymath/palimpsest-license"]
+image:https://img.shields.io/badge/RSR-Platinum-e5e4e2.svg[RSR Compliance]
+image:https://img.shields.io/badge/stack-ReScript%2BDeno-blueviolet.svg[Stack]
+image:https://img.shields.io/badge/types-sound-brightgreen.svg[Type Safety]
+image:https://img.shields.io/badge/memory-safe-brightgreen.svg[Memory Safety]
+
+[quote]
+____
+The taste of metal in your mouth when nothing is there -- a phantom sensation that feels undeniably real yet fundamentally wrong.
+____
+
+toc::[]
+
+== What This Is
+
+*Phantom Metal Taste* is a multi-model database architecture for measuring the divergence between what organizations say they value and what they actually incentivize.
+
+Most enterprise analytics platforms measure success. This one measures the gap between intended success and actual outcomes -- including the outcomes nobody planned for, the metrics nobody acts on, and the reports nobody reads.
+
+It does this with the full rigor of enterprise architecture: formal ontologies, causal graph traversal, statistical gaming detection, and a type system that makes invalid states unrepresentable. Whether applying this rigor to the problem of organizational self-deception is itself a form of self-deception is left as an exercise for the reader.
+
+== Technical Architecture
+
+The system employs a polyglot stack, each language chosen for what it does well:
+
+[cols="1,2,3",options="header"]
+|===
+| Layer | Technology | Purpose
+
+| Orchestration
+| ReScript / Deno
+| Type-safe functional API with sound type system and secure runtime
+
+| Performance
+| Rust / WebAssembly
+| Gap calculations, anomaly detection, causal path strength computation
+
+| Analytics
+| Julia
+| Statistical gaming detection, causal inference, impact analysis
+
+| Graph Database
+| ArangoDB
+| Causal relationship traversal, organizational structure modeling
+
+| Semantic Web
+| Virtuoso (OWL/RDF)
+| Formal ontological reasoning over initiative-outcome relationships
+|===
+
+=== Why This Stack
+
+*ReScript* provides a sound type system: if the code compiles, the types are correct. There are no `any` escape hatches, no runtime type errors, no null pointer exceptions. In a system that measures the gap between claims and reality, it seemed appropriate that the code itself should make no false claims.
+
+*Deno* provides an explicit permissions model. The runtime cannot access the filesystem, network, or environment without declared permission. In a system that questions surveillance, the runtime practices what the system preaches.
+
+*Rust/WASM* handles the computationally intensive work: gap score calculations, causal path strength propagation, and anomaly detection. These run at near-native speed in a sandboxed WASM environment.
+
+*Julia* performs the statistical heavy lifting: variance analysis for gaming detection, t-tests for significance, correlation analysis for metric validity, and causal inference with confound control.
+
+See link:RESCRIPT_MIGRATION.md[RESCRIPT_MIGRATION.md] for the full migration rationale.
+
+== The SynapCor Case Study
+
+The system ships with a complete fictional case study: *SynapCor Technologies*, a 487-person enterprise SaaS company that implemented a data-driven wellness program called the Synergy Matrix.
+
+The case study includes two central figures:
+
+* *Chad Kensington*, VP of Human Synergy -- a true believer in the power of measurement to transform culture. He is not cynical. He is something more interesting than that.
+* *Brenda Smith*, Senior Engineer -- whose actual productivity is in the top 5% of the org, whose Synergy Matrix score classifies her as "Siloed," and whose self-reported mood numbers have been strategically optimized.
+
+Three initiatives are documented in detail, each with formal requirements, intended outcomes, actual outcomes, and the growing divergence between what the dashboard shows and what actually happened. The system captures all of it. Whether anyone reads the output is a separate question.
+
+See link:case-studies/synapcor/README.md[the full case study] for details.
+
+== Modeling and Documentation
+
+This project includes enterprise-grade modeling artifacts that treat the subject matter with complete seriousness:
+
+=== Data Flow Diagrams
+* link:docs/diagrams/dfd-context.puml[DFD Level 0 (Context Diagram)] -- System boundary and external entity interactions
+* link:docs/diagrams/dfd-detailed.puml[DFD Level 1 (Detailed)] -- Internal processes, data stores, and the process that captures what nobody intended
+
+=== Entity-Relationship Model
+* link:docs/diagrams/er-diagram.puml[E-R Diagram] -- Full data model with `mood_self_report` vs `actual_mood_estimate` fields, `attendance_type` ENUM including `'theater'`, and metrics flagged `is_gamed` and `is_theater`
+
+=== Behavioral Diagrams
+* link:docs/diagrams/employee-state-machine.puml[Employee Mental State Machine] -- From "Cautiously Optimistic" through "Skeptical," "Resigned," and "Actively Subverting" to "Gaming the System"
+* link:docs/diagrams/focus-sprint-failure.puml[Focus-Sprint Protocol Failure Sequence] -- What happens when you disable all communications and the production server catches fire
+
+=== Enterprise Architecture
+* link:docs/architecture/TOGAF-ADM.adoc[TOGAF ADM] -- Full Architecture Development Method applied to the Synergy Matrix as an enterprise initiative, including a stakeholder table where the person most affected has the least influence
+* link:docs/architecture/OMG-ODM-MOF.adoc[OMG ODM/MOF] -- Ontology Definition Metamodel and Meta Object Facility documentation, including a 4-layer metamodel where the data is correct at every layer and nobody in authority looks at it
+
+=== Additional Diagrams
+* link:docs/diagrams/deployment-diagram.puml[Deployment Diagram] -- Infrastructure topology
+* link:docs/diagrams/class-diagram.puml[Class Diagram] -- Domain model
+* link:docs/diagrams/sequence-diagram.puml[Sequence Diagram] -- Interaction patterns
+* link:docs/diagrams/use-case-diagram.puml[Use Case Diagram] -- System capabilities
+
+=== Formal Specifications
+* link:specs/IntentionRealityGap.tla[IntentionRealityGap.tla] -- TLA+ specification proving gap calculation is bounded, monotonic, and deterministic
+* link:specs/CausalGraph.tla[CausalGraph.tla] -- TLA+ specification proving the causal graph is acyclic and temporally ordered
+
+== Key Capabilities
+
+*Intention-Reality Gap Measurement*:: Quantifies the distance between stated goals and actual results. The score is bounded [0, 100], monotonically increasing with dysfunction, and formally verified in TLA+.
+
+*Causal Graph Traversal*:: Traces chains of causation from initiatives through intended and unintended outcomes. Path strength uses geometric mean -- a chain is only as strong as its weakest link.
+
+*Metric Gaming Detection*:: Statistical analysis identifying suspiciously low variance, end-of-period spikes, target clustering, and large discontinuities. Returns a gaming probability between 0 and 1.
+
+*Metric Theater Detection*:: Identifies metrics that are diligently collected, carefully stored, and never linked to any decision or action.
+
+*Department Synergy Scoring*:: Composite wellness/engagement/productivity/alignment score with a penalty for suspiciously perfect numbers. Departments that score too consistently high are flagged, not celebrated.
+
+== Getting Started
+
+=== Prerequisites
+
+1. *Deno* (v1.40+):
++
+[source,bash]
+----
+curl -fsSL https://deno.land/install.sh | sh
+----
+
+2. *ReScript compiler*:
++
+[source,bash]
+----
+npm install -g rescript
+----
+
+3. *Podman & podman-compose*: For database containers
+
+4. *Rust* (stable): For WASM modules
+
+5. *Julia* (v1.9+): For statistical analysis
+
+=== Quick Start
+
+[source,bash]
+----
+# Build the ReScript code
+deno task build
+
+# Start databases
+podman-compose up -d
+
+# Run the API server
+deno task dev
+
+# Load the SynapCor case study data
+deno task load-data
+
+# Run the interactive demo
+./scripts/demo.sh
+----
+
+See link:QUICKSTART.md[QUICKSTART.md] for the 5-minute guide, or link:docs/SETUP.md[docs/SETUP.md] for comprehensive setup with troubleshooting.
+
+== Documentation
+
+[cols="1,3",options="header"]
+|===
+| Document | Description
+
+| link:QUICKSTART.md[QUICKSTART.md]
+| Get running in 5 minutes
+
+| link:docs/SETUP.md[docs/SETUP.md]
+| Comprehensive setup with troubleshooting
+
+| link:docs/architecture/ARCHITECTURE.md[ARCHITECTURE.md]
+| Deep architectural documentation
+
+| link:docs/architecture/TOGAF-ADM.adoc[TOGAF-ADM.adoc]
+| Enterprise architecture (TOGAF ADM)
+
+| link:docs/architecture/OMG-ODM-MOF.adoc[OMG-ODM-MOF.adoc]
+| Ontology and metamodel documentation
+
+| link:RESCRIPT_MIGRATION.md[RESCRIPT_MIGRATION.md]
+| Why ReScript + Deno
+
+| link:PROJECT_SUMMARY.md[PROJECT_SUMMARY.md]
+| Complete technical overview
+
+| link:case-studies/synapcor/README.md[SynapCor Case Study]
+| The fictional company that makes everything concrete
+
+| link:RSR_COMPLIANCE.md[RSR_COMPLIANCE.md]
+| Rhodium Standard Repository compliance matrix
+|===
+
+== Contributing
+
+Contributions are welcome. Before submitting a PR, please ensure:
+
+* ReScript code compiles without warnings
+* All tests pass: `deno task test`
+* Rust code passes `cargo clippy -- -D warnings`
+* Documentation is updated
+* The philosophical tone is maintained -- the system takes itself seriously so the reader does not have to
+
+See link:CONTRIBUTING.md[CONTRIBUTING.md] for detailed guidelines.
+
+== Disclaimer
+
+Prolonged exposure to this system's output may cause:
+
+* An irresistible urge to audit your own organization's metrics
+* Suspicion that your wellness program is measuring the wrong things
+* The realization that the map was never the territory
+* A faint metallic taste
+
+These effects are considered features, not bugs.
+
+== License
+
+This project is licensed under the Palimpsest License (PMPL-1.0-or-later). See the link:LICENSE[LICENSE] file for details.
+
+== The Question This System Asks
+
+What happens when you build an enterprise-grade, formally verified, multi-model database system to measure the precise distance between what organizations claim to value and what they actually reward?
+
+The architecture is rigorous. The types are sound. The proofs are mechanically checked. The gap scores are bounded and monotonic. The causal graphs are acyclic.
+
+The data is all there. It has always been there.
+
+The question was never whether we could measure it.
+
+---
+
+[quote]
+____
+The map is not the territory, but sometimes the map reveals what the territory conceals.
+____

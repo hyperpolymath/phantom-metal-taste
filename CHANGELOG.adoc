@@ -1,0 +1,192 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+= Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+== [Unreleased]
+
+=== Added
+- RSR (Rhodium Standard Repository) compliance initiative
+- SECURITY.md with 10-dimensional security model
+- CODE_OF_CONDUCT.md based on Contributor Covenant 2.1
+- MAINTAINERS.md with TPCF (Tri-Perimeter Contribution Framework)
+- CHANGELOG.md (this file)
+- .well-known/ directory for RFC 9116 compliance
+- justfile with 20+ build/test/verification recipes
+- flake.nix for Nix reproducible builds
+- GitLab CI/CD configuration
+
+== [0.1.0] - 2024-11-22
+
+=== Added
+
+**Core Architecture**
+- Multi-model database architecture (ArangoDB graph + Virtuoso RDF/semantic)
+- ReScript functional programming layer (sound type system)
+- Deno secure runtime (explicit permissions model)
+- Rust/WASM performance modules (zero unsafe blocks)
+- Julia statistical analysis (gaming detection, causal inference)
+
+**Database Layer**
+- ArangoDB connection with automatic initialization
+- Graph schema: initiatives, outcomes, employees, departments, metrics
+- Edge collections: causes, participates_in, measures, belongs_to, influences
+- Named graph: causal_graph for traversal
+- Virtuoso RDF store with OWL ontology
+- Base ontology classes: Initiative, Outcome, Employee, Metric, Department
+- Semantic properties: causes, intends, measures, participatesIn
+
+**Type System**
+- Algebraic data types in ReScript (initiativeStatus, outcomeType, metricType)
+- Type-safe configuration management
+- Sound option types (no null/undefined)
+- Pattern matching required for all variants
+
+**Analytics Engine**
+- Intention-reality gap calculation
+- Causal path tracing with geometric mean strength
+- Gaming detection algorithms (variance, spikes, clustering)
+- Metric theater detection (unused measurements)
+- Department synergy scoring with irony detection
+- Organizational delusion index
+
+**Case Study**
+- SynapCor fictional company implementation
+- 3 major initiatives (Wellness Wednesday, Transparency Dashboard, Synergy Champions)
+- 6 sample employees with realistic metrics
+- 4 departments with synergy scores
+- 9 outcomes (3 intended, 6 unintended/emergent)
+- Complete data loader
+
+**API Endpoints**
+- `GET /health` - System health check
+- `POST /api/initiatives` - Create initiative
+- `POST /api/initiatives/:id/outcomes` - Link causal outcome
+- `GET /api/initiatives/:id/analysis` - Full analysis
+- `GET /api/initiatives/:id/unintended` - Unintended consequences
+- `GET /api/analytics/gap/:id` - Intention-reality gap
+- `GET /api/analytics/path/:from/:to` - Causal paths
+- `GET /api/analytics/gameable-metrics` - Suspicious metrics
+- `GET /api/analytics/metric-theater` - Unused metrics
+- `GET /api/analytics/department/:id/synergy` - Department synergy
+- `GET /api/reflection` - Philosophical endpoint
+
+**Documentation**
+- README.md with ReScript/Deno quickstart
+- RESCRIPT_MIGRATION.md explaining architectural choices
+- PROJECT_SUMMARY.md with complete technical overview
+- QUICKSTART.md (5-minute getting started)
+- docs/SETUP.md (comprehensive setup guide)
+- docs/architecture/ARCHITECTURE.md (deep technical dive)
+- CLAUDE.md (AI development guidelines)
+- CONTRIBUTING.md (contribution guidelines)
+- case-studies/synapcor/README.md (complete case study narrative)
+
+**UML Diagrams**
+- Use case diagram (PlantUML)
+- Sequence diagram (gap analysis flow)
+- Class diagram (domain model)
+- Deployment diagram (infrastructure)
+
+**Infrastructure**
+- Docker Compose configuration (ArangoDB + Virtuoso)
+- Health checks for database services
+- Environment configuration (.env.example)
+- Git workflow files
+
+**Build System**
+- Deno tasks (build, dev, test, db:up, db:down, db:reset)
+- ReScript compiler configuration (bsconfig.json)
+- Import maps for Deno dependencies
+
+**Testing**
+- Deno test runner integration
+- Unit test structure
+- Integration test setup
+- Rust/WASM unit tests
+
+**Scripts**
+- Demo script (scripts/demo.sh)
+- Database management tasks
+
+=== Changed
+**BREAKING**: Migrated from TypeScript/Bun/npm to ReScript/Deno
+- TypeScript → ReScript (sound type system)
+- Bun → Deno (security model)
+- npm → URL imports (no node_modules)
+- package.json → deno.json
+- tsconfig.json → bsconfig.json
+
+Rationale:
+- ReScript: Impossible states unrepresentable, 100% type coverage
+- Deno: Explicit permissions, modern standards, built-in tooling
+- Philosophical alignment: Rigorous tools to measure organizational rigor
+
+=== Removed
+- package.json (npm configuration)
+- tsconfig.json (TypeScript configuration)
+- node_modules/ (dependency directory)
+- All .ts files (TypeScript source)
+- Bun-specific code
+
+=== Security
+- Explicit permission model (Deno --allow-net, --allow-read, --allow-env)
+- Zero unsafe blocks in Rust/WASM
+- Parameterized database queries (injection prevention)
+- Input validation at API boundaries
+- Minimal dependencies (zero for Rust core)
+- Offline-first architecture (air-gap capable)
+
+=== Philosophy
+This release establishes the core philosophy:
+- Measure organizational delusion with technical rigor
+- Acknowledge measurement limitations
+- Use irony intentionally, not carelessly
+- Type safety prevents the gaps we're measuring
+
+---
+
+== Release Notes
+
+=== v0.1.0 - "Intention"
+
+The inaugural release. Name reflects the project's focus on the gap between
+organizational intentions and actual outcomes.
+
+**Highlights:**
+- Complete multi-model database architecture
+- Functional programming with sound types (ReScript)
+- Statistical gaming detection (Julia)
+- Philosophical self-awareness
+- Production-ready case study
+
+**Known Limitations:**
+- Service layer partially implemented
+- API routes use basic structure
+- No authentication/authorization yet
+- Development-only database passwords
+
+**Next Priorities:**
+- Complete service layer in ReScript
+- Implement full HTTP server with Deno
+- Add authentication layer
+- Expand test coverage
+- Production deployment guides
+
+---
+
+== Version History
+
+[Unreleased]: https://github.com/Hyperpolymath/phantom-metal-taste/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/Hyperpolymath/phantom-metal-taste/releases/tag/v0.1.0
+
+== Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for how to suggest changes to this changelog.
+
+---
+
+*"Every version is an intention. Every release is an outcome. We measure the gap."*

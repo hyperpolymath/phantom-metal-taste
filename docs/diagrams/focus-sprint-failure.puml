@@ -1,0 +1,121 @@
+' SPDX-License-Identifier: PMPL-1.0-or-later
+' Focus-Sprint Protocol Failure Sequence Diagram
+' Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+
+@startuml Focus-Sprint Protocol Failure
+
+skinparam participant {
+    BackgroundColor #FAFAFA
+    BorderColor #37474F
+    FontColor #212121
+}
+
+skinparam sequence {
+    ArrowColor #37474F
+    LifeLineBorderColor #78909C
+    LifeLineBackgroundColor #ECEFF1
+    DividerBackgroundColor #E8EAF6
+    DividerBorderColor #3F51B5
+    GroupBackgroundColor #FFF3E0
+    GroupBorderColor #E65100
+}
+
+title Focus-Sprint Protocol: Intended Path vs. Reality
+
+actor "Chad Kensington\n(VP Human Synergy)" as Chad #E8EAF6
+participant "Synergy Matrix\nSystem" as System #C8E6C9
+participant "Slack/Teams\n(Disabled)" as Chat #FFCDD2
+actor "Brenda Smith\n(Senior Engineer)" as Brenda #FFF9C4
+participant "Production\nServer" as Server #FFCCBC
+participant "Personal\nPhones" as Phones #FFE0B2
+participant "Incident\nResponse" as IR #EF9A9A
+
+== INTENDED PATH: "Deep Work Through Digital Minimalism" ==
+
+Chad -> System : Activate Focus-Sprint Protocol
+System -> Chat : Disable all chat channels\n(4-hour blackout window)
+Chat --> Brenda : [Connection severed]
+note right of Brenda
+    **Intended:**
+    Brenda enters state of
+    deep, uninterrupted flow.
+    Productivity increases 300%.
+    Chad's TED talk writes itself.
+end note
+
+== WHAT ACTUALLY HAPPENS (17 minutes in) ==
+
+Server -> Server : **CRITICAL: OOM killer\ntriggers on prod-db-03**
+Server -[#F44336]-> IR : PagerDuty alert fires
+IR -[#F44336]-> Brenda : Page: P0 incident\n(SMS bypasses blackout)
+
+Brenda -> Chat : Attempt to coordinate\nincident response
+Chat -[#F44336]x Brenda : **BLOCKED**\n"Focus-Sprint active.\nDeep work in progress."
+note right of Brenda #FFCDD2
+    Chat is disabled.
+    The incident channel
+    is unreachable.
+    The runbook is pinned
+    in the incident channel.
+end note
+
+Brenda -> Phones : Create iMessage group:\n"prod is on fire"
+note right of Phones #FFE0B2
+    **Security violation:**
+    Production credentials
+    shared over unencrypted
+    personal messaging.
+
+    InfoSec will have opinions
+    about this later.
+end note
+
+Phones -> Phones : 6 engineers coordinate\nvia personal devices
+Brenda -> Server : SSH directly to prod\n(bypasses bastion host)
+note right of Brenda
+    **Additional security violation.**
+    The bastion host auth
+    requires Slack OAuth.
+    Slack is disabled.
+end note
+
+Server --> Brenda : Incident resolved\n(43 minutes, normal: 15)
+
+== AFTERMATH ==
+
+Brenda -> System : Submit post-incident report\n"Chat blackout tripled\nresolution time"
+System -> System : Log anomalous outcome:\n"Focus-Sprint Protocol\ncaused security violations\nand extended P0 by 28min"
+
+Chad -> System : Query: "How did\nFocus-Sprint go?"
+System -> Chad : **Gap Score: 94/100**\nIntended: deep work\nActual: chaos, security\nviolations, extended outage
+
+Chad -> Chad : <<internal processing>>
+note right of Chad #E8EAF6
+    Chad decides the incident
+    was "an edge case" and
+    the protocol is "fundamentally
+    sound." He will present it
+    at next month's all-hands
+    as a "successful innovation
+    in digital wellness."
+end note
+
+Chad -> System : Override: Mark Focus-Sprint\nas "Successful with\nminor learnings"
+System -> System : Log: gap between\nreported status and\nactual outcome = **maximum**
+
+Brenda -> System : Mood self-report: **8**
+note right of Brenda #FFF9C4
+    **Strategic dishonesty.**
+    Actual mood: 2.
+    Brenda has learned that
+    low mood scores trigger
+    "wellness check-ins" from
+    Chad, which take 45 minutes
+    and accomplish nothing.
+
+    Reporting 8 is self-defense.
+end note
+
+System -> System : Record:\nFocus-Sprint satisfaction = 8/10\n(Sample size: 1 honest response\nout of 47 submitted)
+
+@enduml
