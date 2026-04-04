@@ -81,7 +81,7 @@ pub fn detect_metric_anomalies(values_json: &str) -> Result<f64, JsValue> {
     let std_dev = variance.sqrt();
 
     // Check for suspicious patterns
-    let mut suspicion = 0.0;
+    let mut suspicion: f64 = 0.0;
 
     // Too consistent (gaming indicator)
     if std_dev < 0.01 * mean.abs() {
