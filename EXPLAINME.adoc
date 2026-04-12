@@ -1,0 +1,133 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Phantom Metal Taste — EXPLAINME
+:toc: preamble
+:icons: font
+
+This file maps README.adoc claims to their implementation evidence for
+sceptical developers.
+
+== "Multi-model database architecture for measuring intention-reality divergence"
+
+[quote, README.adoc]
+____
+Phantom Metal Taste is a multi-model database architecture for measuring the
+divergence between what organizations say they value and what they actually
+incentivize.
+____
+
+How this is implemented::
+The system uses two databases running in Podman containers (defined in
+link:compose.yml[`compose.yml`]): ArangoDB for graph-based causal relationship
+modelling and Virtuoso for OWL/RDF ontological reasoning. The ReScript
+orchestration layer in link:src/[`src/`] provides type-safe bindings to both.
+The SynapCor case study in link:case-studies/synapcor/[`case-studies/synapcor/`]
+provides populated data for both databases.
+
+Caveat::
+Both databases must be running (`just db-up`) before any application code
+will work. The in-memory analytics do not persist across container restarts.
+
+== "Sound type system via ReScript — impossible states unrepresentable"
+
+[quote, README.adoc]
+____
+ReScript provides a sound type system: if the code compiles, the types are
+correct. There are no `any` escape hatches, no runtime type errors.
+____
+
+How this is implemented::
+`src/orchestrator/Types.res` defines the domain model as algebraic data types:
+`type initiativeStatus = Planned | Active | Completed | Abandoned`. Pattern
+matching on these variants is exhaustive — the compiler rejects non-exhaustive
+switches. Fields like `mood_self_report` and `actual_mood_estimate` are
+separate typed fields, making it impossible to confuse them at the type level.
+The link:rescript.json[`rescript.json`] configures the ReScript compiler.
+
+Caveat::
+ReScript's sound type system applies to ReScript code only. The Deno server
+glue code (JavaScript) and the database query layer are not type-checked by
+ReScript. Values entering from database queries cross a trust boundary.
+
+== "TLA+ formal verification for gap calculations"
+
+[quote, README.adoc]
+____
+TLA+ specification proving gap calculation is bounded, monotonic, and
+deterministic
+____
+
+How this is implemented::
+link:specs/IntentionRealityGap.tla[`specs/IntentionRealityGap.tla`] specifies
+the gap score as a TLA+ state machine. The spec proves three properties:
+`GapBounded` (score in [0, 100]), `GapMonotonic` (gap score only increases
+with more evidence of dysfunction), `GapDeterministic` (same inputs produce
+same output). link:specs/CausalGraph.tla[`specs/CausalGraph.tla`] proves the
+causal graph is acyclic and temporally ordered.
+
+Caveat::
+The TLA+ specifications are manually written and have been model-checked with
+TLC on small state spaces. They have not been mechanically verified against
+the Rust/WASM implementation — they are design-level proofs, not
+implementation-level proofs.
+
+== "Metric gaming detection via statistical analysis"
+
+[quote, README.adoc]
+____
+Statistical analysis identifying suspiciously low variance, end-of-period
+spikes, target clustering, and large discontinuities.
+____
+
+How this is implemented::
+The Julia module in link:src/analytics/[`src/analytics/`] implements:
+variance analysis (`var(metric_series) < threshold`), end-of-period spike
+detection (t-test on last 10% of period vs baseline), and target clustering
+(distance from declared targets). Each check returns a probability in [0, 1].
+The Julia modules are called via `Deno.run` subprocess from the Deno server.
+
+Caveat::
+Julia startup time (~5-10s for first run) makes the gaming detection
+unsuitable for real-time use. The link:CLAUDE.md[`CLAUDE.md`] notes this and
+recommends caching compiled Julia modules for development.
+
+== Dogfooded Across The Account
+
+[cols="1,2,2", options="header"]
+|===
+| Technology / Pattern | Used here | Also used in
+
+| ReScript ADTs for domain modelling
+| `initiativeStatus`, `metricType`, gap scoring types
+| link:https://github.com/hyperpolymath/gossamer[gossamer],
+  link:https://github.com/hyperpolymath/panll[panll]
+
+| Rust/WASM for browser computation
+| Gap score calculation, anomaly detection
+| link:https://github.com/hyperpolymath/dicti0nary-attack[dicti0nary-attack]
+  (hash cracking WASM)
+
+| Julia statistical modules via Deno subprocess
+| Gaming detection, causal inference
+| link:https://github.com/hyperpolymath/verisimdb[verisimdb]
+  (statistical analysis queries)
+
+| ArangoDB graph database
+| Causal relationship traversal
+| link:https://github.com/hyperpolymath/nextgen-databases[nextgen-databases]
+
+| TLA+ formal specs
+| Gap calculation correctness proofs
+| link:https://github.com/hyperpolymath/ephapax[ephapax]
+  (session type proofs)
+|===
+
+== Known Gaps
+
+The link:EXPLAINME.md[`EXPLAINME.md`] in the root is an older Markdown version
+of this file — it should be removed once this AsciiDoc version is established
+as canonical.
+
+The RESCRIPT_MIGRATION.md notes that migration from TypeScript/Bun to
+ReScript/Deno may not be complete — some files may still be TypeScript.
+Check `ls src/**/*.ts` before treating all `src/` as ReScript.
