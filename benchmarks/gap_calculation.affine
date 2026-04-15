@@ -1,0 +1,121 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Performance benchmarks for intention-reality gap calculation
+// REDO: Converted from TypeScript to AffineScript
+
+// Gap calculation implementation
+fun calculateGap(
+    intended: float,
+    unintended: float,
+    avgMetricGap: float,
+    theaterProb: float
+) -> float {
+    let outcomeComponent = unintended * 10.0;
+    let metricComponent = avgMetricGap * 50.0;
+    let theaterComponent = theaterProb * 40.0;
+    
+    let noIntendedPenalty = 0.0;
+    if (intended == 0.0) {
+        noIntendedPenalty = 25.0;
+    }
+
+    let rawScore = outcomeComponent + metricComponent + theaterComponent + noIntendedPenalty;
+
+    // Clamp between 0.0 and 100.0
+    if (rawScore > 100.0) {
+        return 100.0;
+    }
+    if (rawScore < 0.0) {
+        return 0.0;
+    }
+    return rawScore;
+}
+
+// Path strength calculation (geometric mean)
+fun calculatePathStrength(strengths: [float]) -> float {
+    let n = length(strengths);
+    if (n == 0) {
+        return 0.0;
+    }
+    
+    let product = 1.0;
+    for s in strengths {
+        product = product * s;
+    }
+    
+    // In AffineScript, pow(x, 1/n) is equivalent to nth root
+    return pow(product, 1.0 / float(n));
+}
+
+// Gaming detection logic
+fun detectGaming(values: [float]) -> float {
+    let n = length(values);
+    if (n < 3) {
+        return 0.0;
+    }
+
+    let sum = 0.0;
+    for v in values {
+        sum = sum + v;
+    }
+    let mean = sum / float(n);
+
+    let varianceSum = 0.0;
+    for v in values {
+        let diff = v - mean;
+        varianceSum = varianceSum + (diff * diff);
+    }
+    let variance = varianceSum / float(n);
+    let stdDev = sqrt(variance);
+
+    let suspicion = 0.0;
+
+    // Low variance check (< 1% of mean)
+    let absMean = mean;
+    if (mean < 0.0) {
+        absMean = -mean;
+    }
+    
+    if (stdDev < (0.01 * absMean)) {
+        suspicion = suspicion + 40.0;
+    }
+
+    // Perfect target alignment (near 100)
+    let nearTargetCount = 0;
+    for v in values {
+        let diff = v - 100.0;
+        if (diff < 0.0) {
+            diff = -diff;
+        }
+        if (diff < 2.0) {
+            nearTargetCount = nearTargetCount + 1;
+        }
+    }
+
+    if (float(nearTargetCount) / float(n) > 0.8) {
+        suspicion = suspicion + 35.0;
+    }
+
+    if (suspicion > 100.0) {
+        return 100.0;
+    }
+    return suspicion;
+}
+
+// Entry point for benchmarks/tests
+fun main() {
+    // Single gap calculation test
+    let res1 = calculateGap(5.0, 3.0, 25.5, 0.3);
+    
+    // Worst case test
+    let res2 = calculateGap(0.0, 100.0, 100.0, 1.0);
+    // res2 should be 100.0
+    
+    // Path strength test
+    let strengths = [0.9, 0.8, 0.7];
+    let res3 = calculatePathStrength(strengths);
+    
+    // Gaming detection test
+    let values = [99.5, 99.6, 99.4, 99.5, 99.5];
+    let res4 = detectGaming(values);
+    // res4 should be high
+}

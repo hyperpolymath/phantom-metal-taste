@@ -1,3 +1,5 @@
+import? "contractile.just"
+
 # justfile - Modern command runner
 # https://github.com/casey/just
 #
