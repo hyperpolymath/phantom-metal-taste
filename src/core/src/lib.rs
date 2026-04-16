@@ -196,7 +196,7 @@ mod tests {
     #[test]
     fn test_calculate_metric_gaps() {
         let metrics = r#"[["Wellness", 80.0, 95.0], ["Engagement", 70.0, 40.0]]"#;
-        let result = calculate_metric_gaps(metrics).unwrap();
+        let result = calculate_metric_gaps(metrics).expect("TODO: handle error");
         assert!(result.contains("Wellness"));
     }
 
