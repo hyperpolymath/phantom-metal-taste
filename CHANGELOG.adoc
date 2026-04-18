@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MAINTAINERS.md with TPCF (Tri-Perimeter Contribution Framework)
 - CHANGELOG.md (this file)
 - .well-known/ directory for RFC 9116 compliance
-- justfile with 20+ build/test/verification recipes
+- Justfile with 20+ build/test/verification recipes
 - flake.nix for Nix reproducible builds
 - GitLab CI/CD configuration
 

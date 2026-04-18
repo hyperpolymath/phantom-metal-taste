@@ -18,7 +18,7 @@ See [PLATINUM_UPGRADE.md](PLATINUM_UPGRADE.md) for complete certification detail
 | **2. Type Safety** | ✅ Complete | Bronze+ | ReScript + Rust (sound types) |
 | **3. Memory Safety** | ✅ Complete | Bronze+ | Rust ownership, zero unsafe |
 | **4. Offline-First** | ✅ Complete | Bronze | Air-gap capable |
-| **5. Build System** | ✅ Complete | Bronze | justfile + flake.nix + CI/CD |
+| **5. Build System** | ✅ Complete | Bronze | Justfile + flake.nix + CI/CD |
 | **6. Testing** | ⚠️ Partial | Bronze | Tests exist, coverage improving |
 | **7. Security** | ✅ Complete | Bronze+ | 10-dimensional security model |
 | **8. .well-known/** | ✅ Complete | Bronze | RFC 9116 compliant |
@@ -127,7 +127,7 @@ just dev
 
 ## 5. Build System ✅
 
-**Tools:** justfile + flake.nix + deno.json + GitLab CI
+**Tools:** Justfile + flake.nix + deno.json + GitLab CI
 
 **Recipes (20+):**
 - ✅ `just build` - Build ReScript code
