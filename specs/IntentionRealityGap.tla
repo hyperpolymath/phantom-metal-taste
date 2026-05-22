@@ -11,7 +11,7 @@ Verified Properties:
 - Gaming can be detected statistically
 
 Author: Jewell, Jonathan D.A.
-License: PMPL-1.0-or-later
+License: MPL-2.0
 *)
 
 EXTENDS Naturals, Reals, Sequences, FiniteSets

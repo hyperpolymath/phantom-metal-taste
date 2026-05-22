@@ -6,7 +6,7 @@ This TLA+ specification models the core invariants and safety properties
 of the multi-model database architecture.
 
 Author: Jewell, Jonathan D.A.
-License: PMPL-1.0-or-later
+License: MPL-2.0
 *)
 
 EXTENDS Naturals, Sequences, FiniteSets, TLC

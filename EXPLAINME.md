@@ -69,7 +69,7 @@ Contributions are welcome. Before submitting a PR, please ensure your code passe
 
 ## License
 
-This project is licensed under the Palimpsest License (PMPL-1.0-or-later) - see the LICENSE file for details.
+This project is licensed under the Palimpsest License (MPL-2.0) - see the LICENSE file for details.
 
 ---
 

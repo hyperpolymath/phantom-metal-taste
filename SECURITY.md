@@ -127,7 +127,7 @@ Future enhancements:
 
 ### License Compliance
 This project uses:
-- Palimpsest License (PMPL-1.0-or-later)
+- Palimpsest License (MPL-2.0)
 
 See LICENSE file for details.
 

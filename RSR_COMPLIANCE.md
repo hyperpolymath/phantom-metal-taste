@@ -24,7 +24,7 @@ See [PLATINUM_UPGRADE.md](PLATINUM_UPGRADE.md) for complete certification detail
 | **8. .well-known/** | ✅ Complete | Bronze | RFC 9116 compliant |
 | **9. TPCF** | ✅ Complete | Bronze | Perimeter 3 (Community Sandbox) |
 | **10. Reproducibility** | ✅ Complete | Bronze | Nix flakes |
-| **11. License** | ✅ Complete | Bronze | PMPL-1.0-or-later |
+| **11. License** | ✅ Complete | Bronze | MPL-2.0 |
 
 **Overall: 10/11 complete, 1 in progress = BRONZE**
 
@@ -34,7 +34,7 @@ See [PLATINUM_UPGRADE.md](PLATINUM_UPGRADE.md) for complete certification detail
 
 **Required:**
 - [x] README.md - Comprehensive project overview
-- [x] LICENSE - PMPL-1.0-or-later
+- [x] LICENSE - MPL-2.0
 - [x] SECURITY.md - 10-dimensional security policy
 - [x] CODE_OF_CONDUCT.md - Contributor Covenant 2.1
 - [x] CONTRIBUTING.md - Contribution guidelines
@@ -262,11 +262,11 @@ nix flake check
 
 ## 11. License ✅
 
-**License:** PMPL-1.0-or-later (Palimpsest License)
+**License:** MPL-2.0 (Palimpsest License)
 
 **Structure:**
 ```
-Primary: Palimpsest License (PMPL-1.0-or-later)
+Primary: Palimpsest License (MPL-2.0)
 ```
 
 **Palimpsest Restrictions:**

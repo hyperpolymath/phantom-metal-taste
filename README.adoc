@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-License-Identifier: MPL-2.0
 // Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
 = Phantom Metal Taste
 :toc: macro
@@ -225,7 +225,7 @@ These effects are considered features, not bugs.
 
 == License
 
-This project is licensed under the Palimpsest License (PMPL-1.0-or-later). See the link:LICENSE[LICENSE] file for details.
+This project is licensed under the Palimpsest License (MPL-2.0). See the link:LICENSE[LICENSE] file for details.
 
 == The Question This System Asks
 
