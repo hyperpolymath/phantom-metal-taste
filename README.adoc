@@ -4,7 +4,7 @@
 :toc: macro
 :toclevels: 3
 
-image:https://img.shields.io/badge/License-PMPL--1.0-blue.svg[License: PMPL-1.0,link="https://github.com/hyperpolymath/palimpsest-license"]
+image:https://img.shields.io/badge/License-MPL--2.0-blue.svg[License: MPL-2.0,link="https://www.mozilla.org/MPL/2.0/"]
 image:https://img.shields.io/badge/RSR-Platinum-e5e4e2.svg[RSR Compliance]
 image:https://img.shields.io/badge/stack-ReScript%2BDeno-blueviolet.svg[Stack]
 image:https://img.shields.io/badge/types-sound-brightgreen.svg[Type Safety]
