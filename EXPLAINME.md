@@ -1,3 +1,7 @@
+<!--
+SPDX-License-Identifier: MPL-2.0
+Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+-->
 # Phantom Metal Taste
 
 ![License](https://img.shields.io/badge/license-PMPL--1.0-blue.svg)

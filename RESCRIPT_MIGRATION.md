@@ -1,3 +1,7 @@
+<!--
+SPDX-License-Identifier: MPL-2.0
+Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+-->
 # Migration to ReScript + Deno
 
 This document describes the architectural migration from TypeScript/Bun/npm to ReScript + Deno.

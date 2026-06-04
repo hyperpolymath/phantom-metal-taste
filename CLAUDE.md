@@ -1,3 +1,7 @@
+<!--
+SPDX-License-Identifier: MPL-2.0
+Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+-->
 # Working with Claude on Phantom Metal Taste
 
 This document provides context and guidelines for AI-assisted development on the Phantom Metal Taste project.
