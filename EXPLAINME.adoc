@@ -1,134 +1,98 @@
-// SPDX-License-Identifier: CC-BY-SA-4.0
-// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-= Phantom Metal Taste — EXPLAINME
-:toc: preamble
-:icons: font
+== Phantom Metal Taste
 
-This file maps README.adoc claims to their implementation evidence for
-sceptical developers.
+image:https://img.shields.io/badge/license-PMPL--1.0-blue.svg[License]
+image:https://img.shields.io/badge/status-experimental-orange.svg[Status]
+image:https://img.shields.io/badge/irony-DISTINCT-red.svg[Irony]
 
-== "Multi-model database architecture for measuring intention-reality divergence"
+=== Overview
 
-[quote, README.adoc]
+*Phantom Metal Taste* is an advanced multi-model database architecture
+designed to capture, analyze, and visualize the complex relationship
+between corporate initiatives and their outcomes.
+
+The project leverages cutting-edge graph and semantic database
+technologies to model organizational dynamics with unprecedented
+fidelity, revealing patterns that traditional relational databases
+cannot express.
+
 ____
-Phantom Metal Taste is a multi-model database architecture for measuring the
-divergence between what organizations say they value and what they actually
-incentivize.
-____
-
-How this is implemented::
-The system uses two databases running in Podman containers (defined in
-link:compose.yml[`compose.yml`]): ArangoDB for graph-based causal relationship
-modelling and Virtuoso for OWL/RDF ontological reasoning. The ReScript
-orchestration layer in link:src/[`src/`] provides type-safe bindings to both.
-The SynapCor case study in link:case-studies/synapcor/[`case-studies/synapcor/`]
-provides populated data for both databases.
-
-Caveat::
-Both databases must be running (`just db-up`) before any application code
-will work. The in-memory analytics do not persist across container restarts.
-
-== "Sound type system via ReScript — impossible states unrepresentable"
-
-[quote, README.adoc]
-____
-ReScript provides a sound type system: if the code compiles, the types are
-correct. There are no `any` escape hatches, no runtime type errors.
+_"`The taste of metal in your mouth when nothing is there—a phantom
+sensation that feels undeniably real yet fundamentally wrong.`"_
 ____
 
-How this is implemented::
-`src/orchestrator/Types.res` defines the domain model as algebraic data types:
-`type initiativeStatus = Planned | Active | Completed | Abandoned`. Pattern
-matching on these variants is exhaustive — the compiler rejects non-exhaustive
-switches. Fields like `mood_self_report` and `actual_mood_estimate` are
-separate typed fields, making it impossible to confuse them at the type level.
-The link:rescript.json[`rescript.json`] configures the ReScript compiler.
+=== Technical Architecture
 
-Caveat::
-ReScript's sound type system applies to ReScript code only. The Deno server
-glue code (JavaScript) and the database query layer are not type-checked by
-ReScript. Values entering from database queries cross a trust boundary.
+This project employs a sophisticated stack:
 
-== "TLA+ formal verification for gap calculations"
+* *ArangoDB*: For graph-based modeling of causal relationships
+* *Virtuoso*: For semantic web ontologies and formal knowledge
+representation
+* *ReScript/Deno*: For orchestration and API layer
+* *Rust/WebAssembly*: For high-performance core logic
+* *Julia*: For advanced statistical analysis
 
-[quote, README.adoc]
-____
-TLA+ specification proving gap calculation is bounded, monotonic, and
-deterministic
-____
+=== The SynapCor Case Study
 
-How this is implemented::
-link:specs/IntentionRealityGap.tla[`specs/IntentionRealityGap.tla`] specifies
-the gap score as a TLA+ state machine. The spec proves three properties:
-`GapBounded` (score in [0, 100]), `GapMonotonic` (gap score only increases
-with more evidence of dysfunction), `GapDeterministic` (same inputs produce
-same output). link:specs/CausalGraph.tla[`specs/CausalGraph.tla`] proves the
-causal graph is acyclic and temporally ordered.
+Included with this project is a complete case study of "`SynapCor,`" a
+fictional tech company implementing a data-driven employee wellness
+program called the "`Synergy Matrix.`" The case study includes:
 
-Caveat::
-The TLA+ specifications are manually written and have been model-checked with
-TLC on small state spaces. They have not been mechanically verified against
-the Rust/WASM implementation — they are design-level proofs, not
-implementation-level proofs.
+* Full UML modeling suite (Use Case, Sequence, State Machine diagrams)
+* TOGAF-compliant enterprise architecture documentation
+* OMG Ontology Definition Metamodel implementation
+* Data Flow Diagrams and Entity-Relationship models
 
-== "Metric gaming detection via statistical analysis"
+This case study serves as both documentation and a demonstration of the
+system’s capabilities.
 
-[quote, README.adoc]
-____
-Statistical analysis identifying suspiciously low variance, end-of-period
-spikes, target clustering, and large discontinuities.
-____
+=== Key Features
 
-How this is implemented::
-The Julia module in link:src/analytics/[`src/analytics/`] implements:
-variance analysis (`var(metric_series) < threshold`), end-of-period spike
-detection (t-test on last 10% of period vs baseline), and target clustering
-(distance from declared targets). Each check returns a probability in [0, 1].
-The Julia modules are called via `Deno.run` subprocess from the Deno server.
+* *Multi-model persistence*: Store the same conceptual data in different
+database paradigms to unlock unique analytical capabilities
+* *Causal graph traversal*: Follow the explicit links between actions
+and consequences
+* *Semantic reasoning*: Apply formal logic to organizational knowledge
+* *Quantified impact analysis*: Measure and visualize the precise
+effects of organizational decisions
 
-Caveat::
-Julia startup time (~5-10s for first run) makes the gaming detection
-unsuitable for real-time use. The link:CLAUDE.md[`CLAUDE.md`] notes this and
-recommends caching compiled Julia modules for development.
+=== Getting Started
 
-== Dogfooded Across The Account
+[source,bash]
+----
+# Clone the repository
+git clone https://github.com/yourusername/phantom-metal-taste.git
 
-[cols="1,2,2", options="header"]
-|===
-| Technology / Pattern | Used here | Also used in
+# Install dependencies
+cd phantom-metal-taste
+deno task build
 
-| ReScript ADTs for domain modelling
-| `initiativeStatus`, `metricType`, gap scoring types
-| link:https://github.com/hyperpolymath/gossamer[gossamer],
-  link:https://github.com/hyperpolymath/panll[panll]
+# Start the databases (requires Podman)
+podman-compose up -d
 
-| Rust/WASM for browser computation
-| Gap score calculation, anomaly detection
-| link:https://github.com/hyperpolymath/dicti0nary-attack[dicti0nary-attack]
-  (hash cracking WASM)
+# Run the orchestrator
+deno task dev
+----
 
-| Julia statistical modules via Deno subprocess
-| Gaming detection, causal inference
-| link:https://github.com/hyperpolymath/verisimdb[verisimdb]
-  (statistical analysis queries)
+=== The Deeper Question
 
-| ArangoDB graph database
-| Causal relationship traversal
-| link:https://github.com/hyperpolymath/nextgen-databases[nextgen-databases]
+This project asks a fundamental question: What happens when we apply the
+full rigor of enterprise architecture, formal modeling, and data science
+to measure the gap between institutional intent and lived reality?
 
-| TLA+ formal specs
-| Gap calculation correctness proofs
-| link:https://github.com/hyperpolymath/ephapax[ephapax]
-  (session type proofs)
-|===
+The answer may leave a curious taste in your mouth.
 
-== Known Gaps
+=== Contributing
 
-The link:EXPLAINME.md[`EXPLAINME.md`] in the root is an older Markdown version
-of this file — it should be removed once this AsciiDoc version is established
-as canonical.
+Contributions are welcome. Before submitting a PR, please ensure your
+code passes all tests and adheres to our modeling standards. See
+`+CONTRIBUTING.md+` for details.
 
-The RESCRIPT_MIGRATION.md notes that migration from TypeScript/Bun to
-ReScript/Deno may not be complete — some files may still be TypeScript.
-Check `ls src/**/*.ts` before treating all `src/` as ReScript.
+=== License
+
+This project is licensed under the Palimpsest License (MPL-2.0) - see
+the LICENSE file for details.
+
+'''''
+
+_"`The map is not the territory, but sometimes the map reveals what the
+territory conceals.`"_
