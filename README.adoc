@@ -212,7 +212,7 @@ Contributions are welcome. Before submitting a PR, please ensure:
 * Documentation is updated
 * The philosophical tone is maintained -- the system takes itself seriously so the reader does not have to
 
-See link:CONTRIBUTING.md[CONTRIBUTING.md] for detailed guidelines.
+See link:.github/CONTRIBUTING.md[CONTRIBUTING.md] for detailed guidelines.
 
 == Disclaimer
 
