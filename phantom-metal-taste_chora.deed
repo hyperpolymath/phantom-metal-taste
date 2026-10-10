@@ -106,8 +106,8 @@
   (verification
     :checked-on "2026-10-10"
     :site-output "49 files; 46 sources copied"
-    :site-root-base-sha256 "fe2c7fac9f1f558b2a4bf066240a220fddda8d400106933a86157b7914ec7149"
-    :site-project-base-sha256 "4a4626680a7497d72d939e752aead0f17ecf3b67cfc916d072491fb71546ff3c"
+    :site-root-base-sha256 "9daef5fa4f43a21379a83a01cc133af12b03e982315ac90f06d504d52937a8a5"
+    :site-project-base-sha256 "a6aacdaee9a27750b8c53b74ce75a87920f8fe918af99c4549ff490b9a4f3bd9"
     :site-reproducibility "pass: two root-base builds match; project-base build passes"
     :bun-tests "pass: 5 tests, 0 failures, 20 expect calls (Bun 1.4.3)"
     :source-archive "pass: no .git; Bun tests/build, launcher help/version, no-A2ML check"
