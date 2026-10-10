@@ -66,6 +66,11 @@ function fail(message) {
 
 // ── config ────────────────────────────────────────────────────────────
 
+/**
+ * Read and return the JSON configuration with copy and listing entries normalised.
+ * Read/parse failures and explicit validation failures exit the process with status
+ * 1; malformed field types can still throw TypeError during validation.
+ */
 function loadConfig(path) {
   let parsed;
   try {
@@ -115,9 +120,11 @@ function loadConfig(path) {
   return parsed;
 }
 
-// Anything that could make the publisher read or write outside the repo is a
-// config bug, not something to sanitise later: no absolute paths, no "..", no
-// globs (list a directory and the walker expands it).
+/**
+ * Check a configuration path, using label to identify failures. Empty paths are
+ * accepted; absolute paths, ".." components and asterisks exit with status 1.
+ * This checks path syntax only, without resolving symlinks.
+ */
 function assertRelative(path, label) {
   if (path === "") return;
   if (
@@ -159,6 +166,7 @@ function walk(dir) {
   return files.map(toPosixAbs).sort();
 }
 
+/** Return a path relative to ROOT with POSIX separators; abs must be below ROOT. */
 function toPosixAbs(abs) {
   return abs
     .slice(ROOT.length + 1)
@@ -192,6 +200,11 @@ function esc(text) {
     .replaceAll('"', "&quot;");
 }
 
+/**
+ * Join a normalised base URL and a site-relative path without URL encoding.
+ * Remove one leading "./"; an empty path or "." links to the base with a trailing
+ * slash. Other leading dots, including those in ".well-known", are preserved.
+ */
 function urlFor(baseurl, sitePath) {
   const clean = String(sitePath).replace(/^\.\//, "");
   if (clean === "" || clean === ".")
@@ -199,6 +212,11 @@ function urlFor(baseurl, sitePath) {
   return baseurl === "" ? `/${clean}` : `${baseurl}/${clean}`;
 }
 
+/**
+ * Return a trimmed base path with a leading slash and no trailing slashes, or ""
+ * for nullish, blank or slash-only input. Exit with status 1 if the resulting
+ * path contains characters other than ASCII letters, digits, "._~/-".
+ */
 function normaliseBaseurl(raw) {
   const value = String(raw ?? "")
     .trim()
@@ -212,7 +230,14 @@ function normaliseBaseurl(raw) {
 
 // ── build plan ────────────────────────────────────────────────────────
 
-// copy: verbatim trees/files from site.json.
+/**
+ * Return {src, site} mappings for configured copies without writing files.
+ * For a file, to is its destination path (default: its basename at the site root);
+ * for a directory, to prefixes the relative tree. Missing optional sources are
+ * skipped; missing required sources and symlink sources exit with status 1.
+ * Directory walks skip symlinks, excluded names and unreadable directories;
+ * errors inspecting an existing source propagate.
+ */
 function planCopies(config) {
   const items = [];
   for (const entry of config.copy ?? []) {
@@ -246,8 +271,12 @@ function planCopies(config) {
   return items;
 }
 
-// listing: index sections. link_target "source" also publishes the file,
-// link_target "repo" links to the repository browser and publishes nothing.
+/**
+ * Return {sections, published} for files matching the configured suffixes.
+ * Source links add files to published; repository links only populate sections.
+ * Preserve paths below each root, skipping absent roots and the symlinks,
+ * excluded names and unreadable directories omitted by walk. No files are written.
+ */
 function planListings(config) {
   const sections = [];
   const published = [];
@@ -276,6 +305,10 @@ function planListings(config) {
   return { sections, published };
 }
 
+/**
+ * Return mappings sorted by site path, keeping the last duplicate mapping.
+ * Exit with status 1 if distinct sources have the same site path.
+ */
 function dedupe(items) {
   const bySite = new Map();
   for (const item of items) {
@@ -292,6 +325,18 @@ function dedupe(items) {
 
 // ── build ─────────────────────────────────────────────────────────────
 
+/**
+ * Assemble the configured site and return {outDir, outputs, digest, published}:
+ * the absolute output directory, a map of site paths to buffers, their SHA-256
+ * digest, and sorted source-to-site mappings (excluding generated files).
+ * Resolve opts.config and opts.out relative to ROOT; out defaults to config.output.
+ * opts.baseurl prefixes site links. A truthy opts.dryRun reads and renders inputs
+ * without writing; otherwise the output directory is recursively replaced.
+ * The output directory's basename is excluded from this and subsequent walks.
+ * Config read/parse failures, explicit validation failures, missing required
+ * sources, source symlinks and path conflicts exit with status 1. Other errors,
+ * including source reads and output filesystem operations, propagate to callers.
+ */
 function build(opts) {
   const config = loadConfig(resolve(ROOT, opts.config));
   const outDir = resolve(ROOT, opts.out ?? config.output);
@@ -378,12 +423,22 @@ function writeSiteFile(outDir, site, buffer) {
 
 // ── html ──────────────────────────────────────────────────────────────
 
+/**
+ * Return a GitHub source URL, encoding each slash-separated component of src.
+ * Use GITHUB_REPOSITORY and GITHUB_REF_NAME, defaulting to
+ * hyperpolymath/phantom-metal-taste and main when unset.
+ */
 function repoUrl(src) {
   const slug = env.GITHUB_REPOSITORY ?? "hyperpolymath/phantom-metal-taste";
   const ref = env.GITHUB_REF_NAME ?? "main";
   return `https://github.com/${slug}/blob/${ref}/${src.split("/").map(encodeURIComponent).join("/")}`;
 }
 
+/**
+ * Return the landing-page HTML with non-empty listing sections and links to the
+ * first 200 manifest entries, showing their sizes in bytes. Source links use the
+ * normalised baseurl; repository links use the GitHub environment settings.
+ */
 function renderIndex({ config, baseurl, sections, manifest }) {
   const blocks = [];
   for (const section of sections) {

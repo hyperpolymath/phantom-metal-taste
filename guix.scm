@@ -23,6 +23,9 @@
     (if (string=? (basename d) "build") (dirname d) d)))
 
 (define (spec->input spec)
+  "Resolve a Guix package specification to an input, returning the package alone
+for its default out output or (package output) otherwise. Package resolution
+errors propagate to the caller."
   (call-with-values (lambda () (specification->package+output spec))
     (lambda (pkg out) (if (string=? out "out") pkg (list pkg out)))))
 
@@ -32,6 +35,8 @@
     ".npmrc" ".netrc" ".pypirc" ".docker" "Manifest.toml"))
 
 (define (sensitive-source-name? file)
+  "Return a non-false value when FILE's basename matches an excluded source name,
+prefix or suffix, and #f otherwise. Only the name is checked, not file contents."
   (let ((base (basename file)))
     (or (member base %ignored)
         (string-prefix? ".env." base)

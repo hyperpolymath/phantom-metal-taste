@@ -46,6 +46,10 @@ const USES = /^\s*-?\s*uses:\s*([^\s#]+)/;
 const SHA = /@[a-f0-9]{40}$/;
 const EXEMPT_PREFIX = ["./", "$", "docker://"];
 
+/**
+ * Return sorted .yml/.yaml paths directly below .github/workflows in the current
+ * directory, or [] if it is absent or not a directory. Filesystem errors propagate.
+ */
 function workflowFiles() {
   if (!existsSync(WF) || !statSync(WF).isDirectory()) return [];
   return readdirSync(WF)
@@ -54,6 +58,14 @@ function workflowFiles() {
     .map((f) => join(WF, f));
 }
 
+/**
+ * Report action references rejected by the pin check; return 1 if any fail, else 0.
+ * Accept lowercase 40-hex SHA suffixes or case-insensitive reference matches in
+ * single-quoted actions.lock entries, including repository roots for subpath
+ * actions. Lockfile matches do not verify the resolved SHA. References beginning
+ * with "./", "$" or "docker://" are exempt. Missing workflows pass; filesystem
+ * errors propagate rather than becoming a return code.
+ */
 function main() {
   if (!existsSync(WF)) {
     console.log("no .github/workflows — nothing to check");

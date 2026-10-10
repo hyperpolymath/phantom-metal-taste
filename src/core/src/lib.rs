@@ -134,8 +134,17 @@ pub fn calculate_synergy_score(
     }
 }
 
-/// Analyze time series for "metric theater" patterns
-/// Returns probability (0-1) that metrics are being gamed
+/// Estimate a "metric theatre" score in 0..=1 from points with no linked actions.
+///
+/// `time_series_json` must be an array of objects with a string `timestamp`, a
+/// numeric `value` and a non-negative integer `linked_actions`. Timestamp and
+/// value are required but do not affect the score. An empty series returns 0.
+/// For up to 10 points, the score is half the unlinked fraction; otherwise it is
+/// 0.7 times that fraction, plus 0.3 when the fraction exceeds 0.8, capped at 1.
+///
+/// # Errors
+/// Returns a `JsValue` prefixed with "Parse error: " if JSON deserialisation fails,
+/// including missing fields or values incompatible with the required fields.
 #[wasm_bindgen]
 pub fn detect_metric_theater(time_series_json: &str) -> Result<f64, JsValue> {
     #[derive(Deserialize)]
@@ -168,8 +177,12 @@ pub fn detect_metric_theater(time_series_json: &str) -> Result<f64, JsValue> {
     Ok(theater_probability.min(1.0))
 }
 
-/// Calculate the "phantom metal taste" score
-/// The core metric: how wrong does this feel?
+/// Calculate the "phantom metal taste" score, capped at 100 with no lower bound.
+///
+/// Add 30 times the unintended/intended outcome ratio, 30 times `avg_metric_gap`
+/// and 40 times `metric_theater_probability`. When intended outcomes are zero,
+/// use a ratio of 2. `actual_outcomes` is currently ignored. The gap and
+/// probability are used as supplied, without rescaling or range validation.
 #[wasm_bindgen]
 pub fn phantom_metal_taste_score(
     intended_outcomes: usize,
