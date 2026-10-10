@@ -6,7 +6,6 @@ services:
     container_name: phantom-arangodb
     environment:
       ARANGO_ROOT_PASSWORD: ${ARANGO_ROOT_PASSWORD:?required}
-      ARANGO_NO_AUTH: "0"
     ports:
       - "127.0.0.1:8529:8529"
     volumes:
