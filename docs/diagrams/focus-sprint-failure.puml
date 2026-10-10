@@ -21,7 +21,7 @@ skinparam sequence {
     GroupBorderColor #E65100
 }
 
-title Focus-Sprint Protocol: Intended Path vs. Reality
+title Fictional Focus-Sprint Protocol: Intended Path vs. Reality
 
 actor "Chad Kensington\n(VP Human Synergy)" as Chad #E8EAF6
 participant "Synergy Matrix\nSystem" as System #C8E6C9

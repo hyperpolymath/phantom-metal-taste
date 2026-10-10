@@ -799,7 +799,7 @@ All architecture change requests follow the standard process:
 | Reflexivity Concern
 | The theoretical problem arising when the Synergy Matrix attempts to
   measure itself. Resolved architecturally by excluding the system from
-  its own analysis (see ADR-004).
+  its own analysis.
 
 | Sponsor-Originated Request
 | A change request submitted by Chad Kensington, which follows an

@@ -31,7 +31,7 @@ errors propagate to the caller."
 
 (define %ignored
   '(".git" "target" "_site" ".eval" "node_modules" ".cache"
-    ".cargo" ".julia" ".env" "secrets" ".ssh" ".aws" ".kube" "credentials"
+    ".cargo" ".julia" ".env" ".envrc" "secrets" ".ssh" ".aws" ".kube" "credentials"
     ".npmrc" ".netrc" ".pypirc" ".docker" "Manifest.toml"))
 
 (define (sensitive-source-name? file)
