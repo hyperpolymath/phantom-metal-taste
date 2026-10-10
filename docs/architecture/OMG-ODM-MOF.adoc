@@ -17,6 +17,14 @@ Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 :icons: font
 :source-highlighter: rouge
 
+[IMPORTANT]
+====
+This is a fictional/satirical model, not an implemented ontology, database, or
+reasoner. No runtime data, OWL file, integration, or model-checking evidence is
+provided by this document. For verified source status, see
+`ARCHITECTURE.adoc` in this directory.
+====
+
 toc::[]
 
 == Introduction
@@ -465,4 +473,4 @@ have to.
 * W3C. _OWL 2 Web Ontology Language Manchester Syntax_, 2nd ed., 2012-12-11.
 * Horrocks, I. et al. _SWRL: A Semantic Web Rule Language_, W3C Member Submission, 2004.
 * See also: `docs/diagrams/employee-state-machine.puml`,
-  `docs/architecture/ARCHITECTURE.md`.
+  `docs/architecture/ARCHITECTURE.adoc`.

@@ -1,14 +1,13 @@
-version: '3.8'
-
+# SPDX-License-Identifier: MPL-2.0
+# Optional local database prototypes only. No current source code connects to them.
 services:
   arangodb:
     image: arangodb:3.11
     container_name: phantom-arangodb
     environment:
-      ARANGO_ROOT_PASSWORD: phantom-dev-password
-      ARANGO_NO_AUTH: 0
+      ARANGO_ROOT_PASSWORD: ${ARANGO_ROOT_PASSWORD:?required}
     ports:
-      - "8529:8529"
+      - "127.0.0.1:8529:8529"
     volumes:
       - arango_data:/var/lib/arangodb3
       - arango_apps:/var/lib/arangodb3-apps
@@ -24,18 +23,18 @@ services:
     image: openlink/virtuoso-opensource-7:latest
     container_name: phantom-virtuoso
     environment:
-      DBA_PASSWORD: phantom-dev-password
+      DBA_PASSWORD: ${VIRTUOSO_DBA_PASSWORD:?required}
       SPARQL_UPDATE: "true"
       DEFAULT_GRAPH: https://phantom-metal-taste.org/graph
     ports:
-      - "8890:8890"
-      - "1111:1111"
+      - "127.0.0.1:8890:8890"
+      - "127.0.0.1:1111:1111"
     volumes:
       - virtuoso_data:/database
     networks:
       - phantom-network
     healthcheck:
-      test: ["CMD", "isql", "1111", "dba", "phantom-dev-password", "EXEC=status()"]
+      test: ["CMD-SHELL", "isql 1111 dba \"$${DBA_PASSWORD}\" EXEC=status()"]
       interval: 10s
       timeout: 5s
       retries: 5

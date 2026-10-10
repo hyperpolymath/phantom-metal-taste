@@ -1,48 +1,51 @@
-== Architecture
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Architecture and current implementation
+:toc:
 
-=== Overview
+== Purpose
 
-This repository follows a modular, maintainable architecture designed
-for clarity, scalability, and long-term sustainability.
+Phantom Metal Taste explores the gap between organisational intentions and
+observed outcomes. It is currently a set of experimental libraries and research
+artefacts, not a deployed application.
 
-=== Directory Structure
+== Implemented components
 
-....
-.
-├── src/           # Source code
-├── tests/        # Test suites
-├── docs/         # Documentation
-├── scripts/      # Utility scripts
-├── config/       # Configuration files
-├── LICENSE       # License file
-├── LICENSES/     # Full license texts
-└── README.adoc   # Project documentation
-....
+[cols="1,2,3",options="header"]
+|===
+|Component |Location |Verified scope
 
-=== Design Principles
+|Rust core
+|`Cargo.toml`, `src/core/`
+|A `wasm-bindgen` library with unit tests. WASM output is optional and requires the wasm32 target.
 
-* *Separation of Concerns*: Each module has a single responsibility
-* *Testability*: Code is written to be easily testable
-* *Documentation*: All public APIs are documented
-* *Configuration*: Environment-specific settings are externalized
+|Julia analytics
+|`Project.toml`, `src/PhantomAnalytics.jl`, `src/analytics/`, `test/`
+|Prototype statistical and causal-analysis functions with a Julia package test suite.
 
-=== Dependencies
+|Static site tooling
+|`package.json`, `scripts/build-site.mjs`, `site.json`
+|Bun builds an allowlisted site artifact; CI checks reproducibility.
 
-* External dependencies are minimized and clearly declared
-* Version pinning is used for reproducibility
+|AffineScript orchestration
+|`src/orchestrator/*.affine`
+|Scaffolds only; each file still requires semantic implementation and compiler verification.
 
-=== Security Considerations
+|Database design
+|`compose.yml`, diagrams, case study
+|Conceptual/optional only. Current source does not connect to ArangoDB or Virtuoso.
+|===
 
-* Sensitive data is never committed to the repository
-* Secrets are managed through environment variables or secure vaults
-* Regular dependency audits are performed
+== Not implemented
 
-=== Maintainability
+There is no HTTP API, runtime server, case-study loader, graph persistence,
+SPARQL integration, or end-to-end application flow. Database services are not
+required to build, test, or run the Julia example. The TLA+ files and diagrams
+are design artefacts; no current CI job claims that they have been model-checked
+or generated from a running application.
 
-* Code follows consistent style guidelines
-* Pull requests require review and CI checks
-* Issues and discussions are tracked transparently
+== Local verification
 
-'''''
-
-_Last updated: 2026-07-18_
+Use `just build`, `just test`, `just lint`, `just fmt-check`, and `just
+site-check`. The supported setup routes are in `docs/SETUP.adoc`; do not follow
+historical Deno/ReScript instructions elsewhere in the repository.

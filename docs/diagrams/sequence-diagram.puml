@@ -1,73 +1,43 @@
-@startuml Gap Analysis Sequence
+' SPDX-License-Identifier: MPL-2.0
+' The implemented local test flow; no application API/database sequence exists.
+@startuml Local Test and Site Reproducibility Flow
 
-actor Client
-participant "API Gateway" as API
-participant "InitiativeService" as IS
-participant "AnalyticsService" as AS
-participant "ArangoDB" as Arango
-participant "WASM Module" as WASM
-participant "Julia" as Julia
-participant "Virtuoso" as Virtuoso
+title Current local validation sequence
 
-Client -> API: GET /api/analytics/gap/:id
+actor Developer
+participant "Justfile" as Just
+participant "Cargo workspace" as Cargo
+participant "Julia package" as Julia
+participant "Bun tests" as BunTest
+participant "Bun site builder" as Site
+participant "Site hash check" as Hash
 
-API -> IS: getInitiativeWithOutcomes(id)
+Developer -> Just: just test
+activate Just
+Just -> Cargo: cargo test --locked --all-targets
+Cargo --> Just: pass / failure
+Just -> Julia: Pkg.test()
+Julia --> Just: pass / failure
+Just -> BunTest: bun test
+BunTest --> Just: pass / failure
+Just --> Developer: combined test result
+deactivate Just
 
-IS -> Arango: AQL Query (traverse causes)
-activate Arango
-Arango --> IS: {initiative, outcomes, metrics}
-deactivate Arango
+Developer -> Just: just site-check
+activate Just
+Just -> Site: build allowlisted site
+Site --> Just: output tree A
+Just -> Site: rebuild allowlisted site
+Site --> Just: output tree B
+Just -> Hash: compare paths and SHA-256
+Hash --> Just: reproducible / mismatch
+Just --> Developer: site-check result
+deactivate Just
 
-IS --> API: Initiative data
-
-API -> AS: calculateIntentionRealityGap(id)
-
-AS -> Arango: Query outcomes & metrics
-activate Arango
-Arango --> AS: Raw data
-deactivate Arango
-
-AS -> WASM: calculate_metric_gaps(metrics)
-activate WASM
-WASM -> WASM: Statistical calculations
-WASM --> AS: Gap scores
-deactivate WASM
-
-AS -> Julia: detect_metric_gaming(timeSeries)
-activate Julia
-Julia -> Julia: Variance analysis\nAnomaly detection
-Julia --> AS: Gaming probability
-deactivate Julia
-
-AS -> AS: Calculate final gap score
-
-AS -> Arango: Store gap analysis
-activate Arango
-Arango --> AS: Saved
-deactivate Arango
-
-AS -> Virtuoso: Update semantic layer
-activate Virtuoso
-Virtuoso --> AS: Updated
-deactivate Virtuoso
-
-AS --> API: IntentionRealityGap
-
-API --> Client: JSON response
-
-note over WASM
-  Performance-critical
-  calculations in Rust
-end note
-
-note over Julia
-  Statistical analysis
-  for gaming detection
-end note
-
-note over Arango, Virtuoso
-  Multi-model persistence:
-  Graph + Semantic
+note over Cargo, Site
+  These are local library/tooling checks.
+  They do not start a service or connect
+  to the optional database containers.
 end note
 
 @enduml

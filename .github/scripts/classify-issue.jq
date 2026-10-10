@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MPL-2.0
 #
-# Classify one issue title against the estate label taxonomy.
+# Classify one issue title using the checked-in label-classifier.json taxonomy.
 #
 #   jq -r --arg title "docs: fix the README" \
 #         --argjson have '[]' \
@@ -10,20 +10,8 @@
 # confidently. Nothing printed means "leave it for a human" -- a correct
 # outcome, not a failure.
 #
-# WHY jq AND NOT PYTHON
-#
-#   Python is fully banned estate-wide: the `governance / Language / package
-#   anti-pattern policy` gate runs `git ls-files '*.py'` and fails the PR
-#   ("Python is fully banned -- use AffineScript/Rust/SPARK/Julia"). This file
-#   is dispatched into every repo in the estate, so shipping it as .py would
-#   mean shipping an exemption into every repo too -- normalising the policy
-#   away by sweep. jq is preinstalled on every GitHub runner, is not on the
-#   banned list, needs no action (so no actions.lock entry can drift), and the
-#   rules are already JSON.
-#
-#   The canonical implementation remains scripts/label-classify.py in the hub,
-#   which never runs in CI. tests/test-classifier-parity.py asserts this file
-#   agrees with it on every title in the corpus.
+# The checked-in JSON is the configuration consumed by label-triage.yml. This
+# repository has no private generator or out-of-tree parity-suite dependency.
 #
 # `$have` lists labels the issue already carries. Anything already present is
 # never re-suggested, and the classifier stays out of any max-1 tier the issue

@@ -1,5 +1,13 @@
 == Tech-Debt Audit — phantom-metal-taste — 2026-05-26
 
+[WARNING]
+====
+This is a historical raw scan from 2026-05-26. Its file counts, findings, and
+recommendations predate the 2026-10-10 remediation and must not be treated as
+current status. See `docs/plans/ULTRAPLAN-ISSUE-77-RSR-RECON-2026-10-10.adoc`
+and `phantom-metal-taste_chora.deed` for current repository facts.
+====
+
 *Source:* estate-wide automated scan 2026-05-26. *Companion:*
 https://github.com/hyperpolymath/standards/tree/main/docs/audits[`+hyperpolymath/standards+`
 2026-05-26-estate-*-debt audits]. *Combined severity:* `+LOW+`.

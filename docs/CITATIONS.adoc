@@ -34,5 +34,5 @@ Jewell, J.D.A. (2026). _phantom-metal-taste_ [Computer software]. GitHub. https:
 
 == See Also
 
-* link:../CITATION.cff[CITATION.cff]
-* link:../codemeta.json[codemeta.json]
+This repository does not currently include `CITATION.cff` or `codemeta.json`;
+use the citation details above when referencing the software.

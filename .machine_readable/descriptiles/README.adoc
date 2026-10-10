@@ -1,0 +1,48 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Descriptiles
+:toc:
+
+The *descriptiles* record what this repository is and what state it is in.
+Repository-wide descriptive facts live in the repo deed at
+`../../phantom-metal-taste_chora.deed`. Provisioning-specific facts for the
+canonical setup engine live in `provisioning_praxis.deed`.
+
+[IMPORTANT]
+====
+The current RSR template retires the format formerly called A2ML: no `.a2ml`
+file may exist in this repository. The repo deed uses the DEED s-expression
+grammar; it is not TOML, YAML, or a key-value file. Resolve syntax questions
+against the normative
+https://github.com/hyperpolymath/standards/blob/main/1-formats/deed/spec/DEED-GRAMMAR-SPEC.adoc[DEED grammar]
+in `hyperpolymath/standards` and the current
+https://github.com/hyperpolymath/rsr-template-repo[RSR template].
+====
+
+== Current records
+
+`phantom-metal-taste_chora.deed` (repository root)::
+The single repo deed. It carries identity, status, maturity, ecosystem,
+metadata, agent guidance, symbolic-system boundaries, and the project
+playbook. It replaces the retired descriptive A2ML records and root AI
+manifest.
+
+`provisioning_praxis.deed`::
+Repository-specific facts consumed by `build/just/provision-lib.sh` and the
+launcher mode family in `build/just/provision-modes.sh`.
+
+== Contractiles
+
+The old `.a2ml` contractile declarations were retired and removed; they were
+not executable checks. The unreferenced root `Mustfile` for the never-built
+legacy CLI was removed as well. This repository has not yet adopted the
+current contractile trident (`.k9.ncl` declarations paired with Nickel runners).
+Assess and implement applicable project-specific contractiles as a separate
+remediation item rather than treating the removed files as active controls.
+
+== Generation and editing
+
+The root deed follows the current DEED grammar. Do not recreate A2ML files or
+the former root-level `.scm` state layout. Keep project facts in the repo deed
+and provisioning-engine inputs in `provisioning_praxis.deed`; update the
+human-readable remediation plan when verified status changes.

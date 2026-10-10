@@ -1,43 +1,9 @@
+<!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
+<!-- SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk> -->
 # Maintainers
 
-This file lists the current maintainers of this project.
+The repository owner and default code owner is **[@hyperpolymath](https://github.com/hyperpolymath)**, as recorded in `.github/CODEOWNERS`.
 
-## Active Maintainers
+No additional active or emeritus maintainer roster is asserted here. For current access and review authority, consult the repository settings and CODEOWNERS file.
 
-| Name | GitHub | Role | Since |
-|------|--------|------|-------|
-| Metadatastician | @metadatastician | Primary | Project Start |
-
-## Emeritus Maintainers
-
-None at this time.
-
-## Becoming a Maintainer
-
-To become a maintainer:
-
-1. Demonstrate consistent, high-quality contributions
-2. Show understanding of the project's goals and architecture
-3. Be active in code reviews and community discussions
-4. Be nominated by an existing maintainer
-5. Be approved by consensus of existing maintainers
-
-## Maintainer Responsibilities
-
-- Reviewing and merging pull requests
-- Managing releases
-- Triaging issues
-- Enforcing code standards
-- Mentoring new contributors
-- Participating in decision-making
-
-## Maintainer Expectations
-
-- Respond to issues and PRs in a timely manner
-- Follow the code of conduct
-- Be transparent in decision-making
-- Communicate clearly and respectfully
-
----
-
-*Last updated: 2026-07-18*
+For contributions, read [`.github/CONTRIBUTING.md`](.github/CONTRIBUTING.md). Report vulnerabilities privately through GitHub Security Advisories; see [`SECURITY.adoc`](SECURITY.adoc).

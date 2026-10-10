@@ -1,0 +1,22 @@
+# SPDX-License-Identifier: MPL-2.0
+# Thin wrapper around the shared RSR Rust CI. The Rust crate is the workspace
+# member under src/core; the root Cargo.lock pins its dependencies.
+name: Rust CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  rust-ci:
+    uses: hyperpolymath/standards/.github/workflows/rust-ci-reusable.yml@da2c748aad55c1a1dcba00b60fe4a35017bc6540
+    with:
+      working_directory: src/core

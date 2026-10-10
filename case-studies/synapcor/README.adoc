@@ -1,4 +1,15 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 == SynapCor Case Study
+
+[IMPORTANT]
+====
+This is a fictional narrative and design exercise. The people, company, counts,
+measurements, correlations, and conclusions are invented examples, not a
+tracked dataset or outputs from the current analytics package. This is not a
+reference implementation, test fixture, or runnable system: this checkout has
+no loader, API, or database integration.
+====
 
 === Overview
 
@@ -6,10 +17,9 @@ SynapCor is a fictional mid-sized technology company that has
 implemented a comprehensive data-driven "`employee wellness and
 engagement`" program called the *Synergy Matrix*.
 
-This case study serves as: 1. A reference implementation for Phantom
-Metal Taste 2. An integration test fixture 3. A demonstration of the gap
-between institutional intent and lived reality 4. A cautionary tale
-about measurement theater
+This case study is a narrative exploration of the gap between institutional
+intent and lived reality, and a cautionary tale about measurement theater. It is
+not a reference implementation or integration test fixture.
 
 === Company Background
 
@@ -278,34 +288,16 @@ exposure
 participation. Their automation scripts are the most well-tested code in
 the organization.
 
-=== Using This Case Study
+=== Exploring the Implemented Prototype
 
-Load the SynapCor data:
+There is no command to load or query the fictional SynapCor data. To run the
+current deterministic Julia example, use `just demo` from a provisioned
+checkout. The analysis prototypes operate on their test/example inputs and do
+not reproduce the story's invented counts or findings.
 
-[source,bash]
-----
-deno task load-data
-----
-
-Run analysis:
-
-[source,bash]
-----
-curl http://localhost:3000/api/analytics/gameable-metrics
-curl http://localhost:3000/api/analytics/metric-theater
-curl http://localhost:3000/api/analytics/department/engineering/synergy
-----
-
-Explore causal paths:
-
-[source,bash]
-----
-# Trace from "Thrive Thursday" to employee burnout
-curl http://localhost:3000/api/analytics/path/initiatives/thrive-thursday/outcomes/increased-burnout
-
-# Trace from "Focus-Sprint Protocol" to security violations
-curl http://localhost:3000/api/analytics/path/initiatives/focus-sprint/outcomes/security-violations
-----
+For the code that exists today, see
+link:../../docs/architecture/ARCHITECTURE.adoc[the implementation map] and
+link:../../docs/SETUP.adoc[the setup guide].
 
 === Philosophical Questions
 

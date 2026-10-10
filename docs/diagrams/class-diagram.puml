@@ -1,4 +1,6 @@
-@startuml Domain Model - Class Diagram
+' SPDX-License-Identifier: MPL-2.0
+' Conceptual domain model only; these classes are not backed by current source.
+@startuml Conceptual Domain Model - Class Diagram
 
 class Initiative {
   - _key: string

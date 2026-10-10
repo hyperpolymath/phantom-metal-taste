@@ -1,34 +1,24 @@
 # SPDX-License-Identifier: MPL-2.0
-# CODEOWNERS - Define code review assignments for GitHub
-# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
-
-# Default: sole maintainer for all files
+# Repository owner is the default reviewer; repository permissions govern merge authority.
 * @hyperpolymath
 
-# Security-sensitive files require explicit ownership
-SECURITY.md @hyperpolymath
+# Security-sensitive and governance files.
+SECURITY.adoc @hyperpolymath
 .github/workflows/ @hyperpolymath
 .machine_readable/ @hyperpolymath
-contractiles/ @hyperpolymath
 
-# License files
+# Licences and project policy.
 LICENSE @hyperpolymath
 LICENSES/ @hyperpolymath
-
-# Configuration
-.gitignore @hyperpolymath
-.github/ @hyperpolymath
-
-# Documentation
-README* @hyperpolymath
-CONTRIBUTING* @hyperpolymath
-CODE_OF_CONDUCT* @hyperpolymath
-GOVERNANCE* @hyperpolymath
+GOVERNANCE.adoc @hyperpolymath
 MAINTAINERS* @hyperpolymath
-CHANGELOG* @hyperpolymath
-ROADMAP* @hyperpolymath
+CHANGELOG.adoc @hyperpolymath
 
-# Build and CI
+# Source, build, and provisioning.
+Cargo.toml @hyperpolymath
+Cargo.lock @hyperpolymath
+Project.toml @hyperpolymath
+mise.toml @hyperpolymath
 Justfile @hyperpolymath
-Makefile @hyperpolymath
-*.sh @hyperpolymath
+build/just/ @hyperpolymath
+launcher.sh @hyperpolymath

@@ -1,0 +1,27 @@
+;; SPDX-License-Identifier: MPL-2.0
+;; SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+;;
+;; Repository-specific facts for the canonical provisioning engine.
+;; :name and :version keep launcher identity stable when downloaded without Git metadata.
+;; Canon: hyperpolymath/standards 3-practice/provisioning/PROVISIONING-STANDARD.adoc
+(praxis-deed
+  :schema-version "1.0.0"
+  :canonical-name "phantom-metal-taste-provisioning"
+  :repo "hyperpolymath/phantom-metal-taste"
+  :name "phantom-metal-taste"
+  :version "0.1.0"
+  :archetype "library"
+  :languages "rust julia bun"
+  :build ""
+  :test ""
+  :bench ""
+  :lint ""
+  :fmt ""
+  :fmt-check ""
+  :run "echo N/A: no application entry point is implemented; exit 0"
+  :deps ""
+  :config "Cargo.toml, Project.toml, package.json, site.json, mise.toml"
+  :ports ""
+  :system-deps "git"
+  :ai-say-it ""
+  :opsm-note "")

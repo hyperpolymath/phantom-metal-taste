@@ -1,6 +1,4 @@
 {
-  "_generated_from": ".github/label-classifier.yml + .github/labels.yml in hyperpolymath/.git-private-farm",
-  "_do_not_edit": "regenerate with scripts/gen-classifier-json.py",
   "version": 1,
   "prefix_split_on": "/",
   "title_prefix": {
@@ -421,7 +419,7 @@
     "migration": [
       "rescript",
       "to-affinescript",
-      "\u2192 affinescript",
+      "→ affinescript",
       "port",
       "deno",
       "bun"

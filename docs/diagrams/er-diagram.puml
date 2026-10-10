@@ -1,8 +1,9 @@
 ' SPDX-License-Identifier: MPL-2.0
 ' Entity-Relationship Diagram - Synergy Matrix Data Model
 ' Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+' Conceptual case-study schema only; no database schema is implemented.
 
-@startuml Entity-Relationship Diagram
+@startuml Conceptual Entity-Relationship Diagram
 
 !define TABLE_BG #FAFAFA
 !define PK_COLOR #1565C0

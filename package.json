@@ -1,0 +1,11 @@
+{
+  "name": "phantom-metal-taste",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MPL-2.0",
+  "type": "module",
+  "scripts": {
+    "build": "bun scripts/build-site.mjs --config site.json",
+    "test": "bun test"
+  }
+}

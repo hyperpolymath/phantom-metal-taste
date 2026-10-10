@@ -1,98 +1,16 @@
-== Phantom Metal Taste
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Phantom Metal Taste: project status
 
-image:https://img.shields.io/badge/license-PMPL--1.0-blue.svg[License]
-image:https://img.shields.io/badge/status-experimental-orange.svg[Status]
-image:https://img.shields.io/badge/irony-DISTINCT-red.svg[Irony]
+Phantom Metal Taste is an experimental project about measuring the distance
+between organisational intentions and observed outcomes. The source currently
+contains a small Rust library, Julia analytics prototypes, and a Bun-powered
+static site builder.
 
-=== Overview
+There is no HTTP API, server, data loader, or application/database integration.
+The `.affine` orchestrator files are TODO scaffolds. Diagrams and the SynapCor
+case study are conceptual material, not evidence of running capabilities.
 
-*Phantom Metal Taste* is an advanced multi-model database architecture
-designed to capture, analyze, and visualize the complex relationship
-between corporate initiatives and their outcomes.
-
-The project leverages cutting-edge graph and semantic database
-technologies to model organizational dynamics with unprecedented
-fidelity, revealing patterns that traditional relational databases
-cannot express.
-
-____
-_"`The taste of metal in your mouth when nothing is there—a phantom
-sensation that feels undeniably real yet fundamentally wrong.`"_
-____
-
-=== Technical Architecture
-
-This project employs a sophisticated stack:
-
-* *ArangoDB*: For graph-based modeling of causal relationships
-* *Virtuoso*: For semantic web ontologies and formal knowledge
-representation
-* *ReScript/Deno*: For orchestration and API layer
-* *Rust/WebAssembly*: For high-performance core logic
-* *Julia*: For advanced statistical analysis
-
-=== The SynapCor Case Study
-
-Included with this project is a complete case study of "`SynapCor,`" a
-fictional tech company implementing a data-driven employee wellness
-program called the "`Synergy Matrix.`" The case study includes:
-
-* Full UML modeling suite (Use Case, Sequence, State Machine diagrams)
-* TOGAF-compliant enterprise architecture documentation
-* OMG Ontology Definition Metamodel implementation
-* Data Flow Diagrams and Entity-Relationship models
-
-This case study serves as both documentation and a demonstration of the
-system’s capabilities.
-
-=== Key Features
-
-* *Multi-model persistence*: Store the same conceptual data in different
-database paradigms to unlock unique analytical capabilities
-* *Causal graph traversal*: Follow the explicit links between actions
-and consequences
-* *Semantic reasoning*: Apply formal logic to organizational knowledge
-* *Quantified impact analysis*: Measure and visualize the precise
-effects of organizational decisions
-
-=== Getting Started
-
-[source,bash]
-----
-# Clone the repository
-git clone https://github.com/yourusername/phantom-metal-taste.git
-
-# Install dependencies
-cd phantom-metal-taste
-deno task build
-
-# Start the databases (requires Podman)
-podman-compose up -d
-
-# Run the orchestrator
-deno task dev
-----
-
-=== The Deeper Question
-
-This project asks a fundamental question: What happens when we apply the
-full rigor of enterprise architecture, formal modeling, and data science
-to measure the gap between institutional intent and lived reality?
-
-The answer may leave a curious taste in your mouth.
-
-=== Contributing
-
-Contributions are welcome. Before submitting a PR, please ensure your
-code passes all tests and adheres to our modeling standards. See
-`+CONTRIBUTING.md+` for details.
-
-=== License
-
-This project is licensed under the Palimpsest License (MPL-2.0) - see
-the LICENSE file for details.
-
-'''''
-
-_"`The map is not the territory, but sometimes the map reveals what the
-territory conceals.`"_
+For a tested starting point, see link:QUICKSTART.adoc[QUICKSTART.adoc],
+link:docs/SETUP.adoc[docs/SETUP.adoc], and
+link:docs/architecture/ARCHITECTURE.adoc[the current implementation map].

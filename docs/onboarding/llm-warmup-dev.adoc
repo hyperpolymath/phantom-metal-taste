@@ -1,0 +1,50 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= LLM warm-up — Phantom Metal Taste (developer)
+
+Paste this into an AI assistant before changing the repository.
+
+== Current implementation
+
+* Rust: root Cargo workspace, crate under `src/core/`, lockfile at `Cargo.lock`.
+* Julia: root `Project.toml`, package module at `src/PhantomAnalytics.jl`, analysis
+  files under `src/analytics/`, tests under `test/`.
+* Bun: root `package.json`; the allowlisted Pages builder is `scripts/build-site.mjs`.
+* `src/orchestrator/*.affine` are TODO scaffolds, not completed domain behavior.
+* There is no HTTP API or database integration. Optional containers in
+  `compose.yml` are not used by the code.
+
+== Toolchain and loop
+
+`mise.toml` declares `just`, `shellcheck`, Rust, Julia, and Bun at `latest`. A
+checksummed `mise.lock` is still pending; it must be generated with `mise lock`,
+never hand-written. `manifest.scm` is the Guix development shell, and `guix.scm`
+is an honest source-package definition.
+
+[source,bash]
+----
+./launcher.sh --setup
+just build
+just test
+just lint
+just fmt-check
+just site-check
+just doctor
+----
+
+The provisioning module is canonical estate code under `build/just/`; do not
+hand-edit it to add project-specific behavior. Put facts in
+`.machine_readable/descriptiles/provisioning_praxis.deed` and project recipes in
+`Justfile`. The launcher is generated from the current RSR template.
+
+== Guardrails
+
+* Follow `hyperpolymath/standards` and `hyperpolymath/rsr-template-repo`.
+* Do not reintroduce Deno, ReScript, TypeScript, Node.js, npm/yarn/pnpm, Python,
+  Go, Java, Make, or Nix as project runtimes/build tools.
+* Keep application-language work in the estate's approved languages; the
+  AffineScript orchestrator remains incomplete until its compiler and semantics
+  are verified.
+* Keep claims about APIs, databases, tests, compliance, and reproducibility tied
+  to observed implementation/evidence.
+* New source/config files need SPDX headers; do not add secrets.

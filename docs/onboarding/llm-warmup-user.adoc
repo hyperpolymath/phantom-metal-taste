@@ -1,0 +1,32 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= LLM warm-up — Phantom Metal Taste (user)
+
+Paste this file into an AI assistant before asking about using the project.
+
+== What it is
+
+Phantom Metal Taste (https://github.com/hyperpolymath/phantom-metal-taste) is
+an experimental mixed-language repository exploring the gap between stated
+organisational intentions and observed outcomes. It currently contains a Rust
+library, Julia analysis package, Bun site builder, conceptual design artefacts,
+and unfinished AffineScript scaffolds.
+
+It does not currently include an HTTP API, service, data loader, or integration
+with ArangoDB/Virtuoso. The database compose file is optional infrastructure,
+not a runnable application dependency.
+
+== Set it up
+
+Use `docs/AI_INSTALLATION_GUIDE.adoc`, run `./launcher.sh --setup`, or follow
+`docs/SETUP.adoc`. After setup, try `just build`, `just test`, `just site-check`,
+and `just demo`.
+
+The declared tools are installed with mise; the required generated `mise.lock`
+has not yet been produced in this checkout. Until it is committed, tool
+resolution is not checksum-locked.
+
+== When something is wrong
+
+Run `just doctor`. Each FAIL has a `PV-E…` code with a fix in `docs/SETUP.adoc`.
+Do not share credentials or local database passwords in logs/issues.

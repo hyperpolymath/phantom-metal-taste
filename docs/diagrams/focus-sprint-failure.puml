@@ -1,8 +1,9 @@
 ' SPDX-License-Identifier: MPL-2.0
 ' Focus-Sprint Protocol Failure Sequence Diagram
 ' Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+' Fictional case-study scenario; not an operational sequence.
 
-@startuml Focus-Sprint Protocol Failure
+@startuml Fictional Focus-Sprint Protocol Failure
 
 skinparam participant {
     BackgroundColor #FAFAFA
@@ -20,7 +21,7 @@ skinparam sequence {
     GroupBorderColor #E65100
 }
 
-title Focus-Sprint Protocol: Intended Path vs. Reality
+title Fictional Focus-Sprint Protocol: Intended Path vs. Reality
 
 actor "Chad Kensington\n(VP Human Synergy)" as Chad #E8EAF6
 participant "Synergy Matrix\nSystem" as System #C8E6C9

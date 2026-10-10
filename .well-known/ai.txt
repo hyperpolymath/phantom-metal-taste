@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: MPL-2.0
+# AI usage and training policy for Phantom Metal Taste.
+# Informal crawler directives; follow the repository licence and agent guidance.
+
+User-Agent: *
+
+# Do not use repository content to train models without attribution under the
+# repository licence. Reference and indexing for search or contributor assistance
+# are permitted when licence terms are retained.
+Disallow-Training: /
+Allow: /
+
+Contact: https://github.com/hyperpolymath/phantom-metal-taste/security/advisories/new
+Policy: https://github.com/hyperpolymath/phantom-metal-taste/blob/main/.claude/CLAUDE.md
