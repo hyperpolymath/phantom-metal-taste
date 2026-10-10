@@ -1,54 +1,125 @@
 # SPDX-License-Identifier: MPL-2.0
-# Prevention workflow - validates all workflows have proper security config
+# Local checks for immutable action refs and workflow hygiene.
 name: Workflow Security Linter
 
 on:
-  pull_request:
-    paths:
-      - '.github/workflows/**'
   push:
     paths:
-      - '.github/workflows/**'
+      - ".github/workflows/**"
+      - "scripts/check-action-pinning.js"
+      - "scripts/check-no-a2ml.sh"
+      - "Justfile"
+      - "phantom-metal-taste_chora.deed"
+      - ".machine_readable/**"
+      - "**/*.a2ml"
+      - "**/*.A2ML"
+  pull_request:
+    paths:
+      - ".github/workflows/**"
+      - "scripts/check-action-pinning.js"
+      - "scripts/check-no-a2ml.sh"
+      - "Justfile"
+      - "phantom-metal-taste_chora.deed"
+      - ".machine_readable/**"
+      - "**/*.a2ml"
+      - "**/*.A2ML"
+  workflow_dispatch:
 
-permissions: read-all
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   lint-workflows:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
-      - name: Check SPDX headers
-        run: |
-          errors=0
-          for f in .github/workflows/*.yml .github/workflows/*.yaml; do
-            [ -f "$f" ] || continue
-            if ! head -1 "$f" | grep -q "SPDX-License-Identifier"; then
-              echo "ERROR: $f missing SPDX header"
-              errors=$((errors + 1))
-            fi
-          done
-          exit $errors
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.4.3
 
-      - name: Check permissions declaration
+      - name: Check SPDX headers and least-privilege defaults
+        shell: bash
         run: |
-          errors=0
-          for f in .github/workflows/*.yml .github/workflows/*.yaml; do
-            [ -f "$f" ] || continue
-            if ! grep -q "^permissions:" "$f"; then
-              echo "ERROR: $f missing permissions declaration"
-              errors=$((errors + 1))
+          set -euo pipefail
+          for file in .github/workflows/*.yml .github/workflows/*.yaml; do
+            [[ -f "$file" ]] || continue
+            if ! awk '/^# SPDX-License-Identifier:/ { found=1 } /^[^#[:space:]]/ { exit } END { exit !found }' "$file"; then
+              echo "::error file=$file::SPDX identifier missing from leading comment block"
+              exit 1
             fi
+            grep -q '^permissions:' "$file" || {
+              echo "::error file=$file::top-level permissions block is missing"
+              exit 1
+            }
           done
-          exit $errors
 
-      - name: Check pinned actions
+      - name: Check immutable action references
+        run: bun scripts/check-action-pinning.js
+
+      - name: Check retired A2ML format is absent
+        run: bash scripts/check-no-a2ml.sh
+
+      - name: Check current CodeQL coverage
+        shell: bash
         run: |
-          errors=0
-          for f in .github/workflows/*.yml .github/workflows/*.yaml; do
-            [ -f "$f" ] || continue
-            # Look for uses: without SHA
-            if grep -E "uses:.*@v[0-9]" "$f" | grep -v "#"; then
-              echo "WARNING: $f has unpinned actions (missing SHA comment)"
-            fi
+          set -euo pipefail
+          workflow=.github/workflows/codeql.yml
+          [[ -f "$workflow" ]] || { echo "::error::CodeQL workflow missing"; exit 1; }
+          for language in actions javascript-typescript rust; do
+            grep -Fq -- "- language: $language" "$workflow" || {
+              echo "::error::$language missing from the CodeQL matrix"
+              exit 1
+            }
           done
+          js_source=$(find . -type f \( -name '*.js' -o -name '*.mjs' -o -name '*.cjs' \) \
+            -not -path './.git/*' -not -path './node_modules/*' -not -path './_site/*' -print -quit)
+          [[ -n "$js_source" ]] || { echo "::error::JavaScript source expected but none found"; exit 1; }
+          echo "CodeQL matrix covers Actions, Rust, and Bun JavaScript tooling"
+
+      - name: Check feature-gated mirror secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          workflow=.github/workflows/mirror.yml
+          [[ -f "$workflow" ]] || exit 0
+          grep -Fq "vars.GITLAB_MIRROR_ENABLED == 'true'" "$workflow"
+          grep -Fq 'secrets.GITLAB_SSH_KEY' "$workflow"
+          grep -Fq "vars.BITBUCKET_MIRROR_ENABLED == 'true'" "$workflow"
+          grep -Fq 'secrets.BITBUCKET_SSH_KEY' "$workflow"
+          echo "Mirror secret use is guarded by its corresponding feature flag"
+
+      - name: Check optional farm-dispatch credential guard
+        shell: bash
+        run: |
+          set -euo pipefail
+          workflow=.github/workflows/instant-sync.yml
+          secret_ref='$''{{ secrets.FARM_DISPATCH_TOKEN }}'
+          grep -Fq "FARM_DISPATCH_TOKEN: $secret_ref" "$workflow"
+          grep -Fq 'payload=$(jq -cn' "$workflow"
+          grep -Fq "if: steps.credential.outputs.available == 'true'" "$workflow"
+          grep -Fq "if: steps.credential.outputs.available != 'true'" "$workflow"
+          echo "Farm dispatch is skipped with a warning when its credential is absent"
+
+      - name: Check secret-bearing workflow egress monitoring
+        shell: bash
+        run: |
+          set -euo pipefail
+          workflow=.github/workflows/instant-sync.yml
+          grep -Fq 'uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25' "$workflow"
+          grep -Fq 'egress-policy: audit' "$workflow"
+          awk '/uses: step-security\/harden-runner@/ { monitor=NR }
+            /FARM_DISPATCH_TOKEN: \$\{\{ secrets\.FARM_DISPATCH_TOKEN \}\}/ { secret=NR }
+            END { exit !(monitor > 0 && secret > monitor) }' "$workflow"
+          echo "Instant Sync audits egress before reading the dispatch secret"

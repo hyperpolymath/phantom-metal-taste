@@ -1,0 +1,94 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= AI Installation Guide — Phantom Metal Taste
+:toc:
+
+[IMPORTANT]
+====
+This guide is for an AI assistant helping someone set up the repository. Ask
+before installing tools or changing system state. Run one phase at a time and
+report failures honestly. This project is experimental: it has Rust and Julia
+libraries plus a Bun site builder, but no HTTP service, data loader, or working
+database integration.
+====
+
+== 1. Ask the person
+
+Ask which operating system they use and where they want the checkout. Windows
+steps must be run inside WSL2. The default directory is `~/src/phantom-metal-taste`.
+
+== 2. Explain what setup does
+
+Before proceeding, tell the person that setup will clone the public repository,
+install the tools declared in `mise.toml` through mise, fetch public Rust and
+Julia dependencies, and build/test local code. It does not need credentials,
+write to a production database, start a server, or upload project data.
+
+The toolchain lock is currently a known gap: `mise.lock` has not been generated
+because the implementation sandbox could not reach mise's Julia metadata host.
+Until the lock is committed, mise resolves current releases rather than
+checksum-locked versions. Make this clear; do not claim exact reproducibility.
+
+== 3. Check prerequisites
+
+Check `git --version`, `mise --version`, and the availability of a C compiler.
+Install only what is missing:
+
+* Fedora: `sudo dnf install git gcc pkgconf-pkg-config`.
+* Debian/Ubuntu: `sudo apt install git build-essential pkg-config`.
+* macOS: install Xcode Command Line Tools with `xcode-select --install`, and
+  install GNU coreutils with `brew install coreutils`; place
+  `$(brew --prefix coreutils)/libexec/gnubin` first on `PATH` before running the
+  generated launcher (`readlink -f` is not provided by the default BSD tool).
+* mise: use the OS package manager or follow https://mise.jdx.dev/installing-mise.html.
+  If using its standalone installer, download and inspect it before running it;
+  never pipe an unreviewed download to a shell.
+
+== 4. Clone and provision
+
+[source,bash]
+----
+git clone https://github.com/hyperpolymath/phantom-metal-taste.git ~/src/phantom-metal-taste
+cd ~/src/phantom-metal-taste
+mise trust
+./launcher.sh --setup
+----
+
+The launcher installs the declared tools, fetches project dependencies, and
+runs the environment doctor. If `just` is already installed, `just setup` is an
+equivalent entry point.
+
+== 5. Verify
+
+[source,bash]
+----
+just doctor
+just build
+just test
+just site-check
+----
+
+Run `just demo` to print a small Julia analysis example. Explain that the
+optional ArangoDB/Virtuoso containers are not connected to current code and are
+not needed for the demo. `just run` reports that there is no application entry
+point.
+
+== 6. Guix alternative
+
+If GNU Guix is already installed, the pinned shell is:
+
+[source,bash]
+----
+guix time-machine -C channels.scm -- shell -m manifest.scm
+mise trust && mise install
+just setup
+----
+
+`guix.scm` installs the source tree; it does not build a production executable.
+
+== If a step fails
+
+Run `just doctor`, use the error code's fix in `docs/SETUP.adoc`, and retry. Do
+not improvise another runtime or install arbitrary tools. If the problem
+persists, save `just doctor > doctor.txt 2>&1` and help the person open an issue.
+Never include secrets in an issue or log.

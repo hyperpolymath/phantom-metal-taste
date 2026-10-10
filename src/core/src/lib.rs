@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MPL-2.0
 // Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 #![forbid(unsafe_code)]
-use wasm_bindgen::prelude::*;
 use serde::{Deserialize, Serialize};
+use wasm_bindgen::prelude::*;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct MetricGap {
@@ -76,10 +76,7 @@ pub fn detect_metric_anomalies(values_json: &str) -> Result<f64, JsValue> {
     }
 
     let mean = values.iter().sum::<f64>() / values.len() as f64;
-    let variance = values
-        .iter()
-        .map(|v| (v - mean).powi(2))
-        .sum::<f64>() / values.len() as f64;
+    let variance = values.iter().map(|v| (v - mean).powi(2)).sum::<f64>() / values.len() as f64;
     let std_dev = variance.sqrt();
 
     // Check for suspicious patterns
@@ -143,8 +140,10 @@ pub fn calculate_synergy_score(
 pub fn detect_metric_theater(time_series_json: &str) -> Result<f64, JsValue> {
     #[derive(Deserialize)]
     struct TimePoint {
-        timestamp: String,
-        value: f64,
+        #[serde(rename = "timestamp")]
+        _timestamp: String,
+        #[serde(rename = "value")]
+        _value: f64,
         linked_actions: usize,
     }
 
@@ -179,13 +178,18 @@ pub fn phantom_metal_taste_score(
     avg_metric_gap: f64,
     metric_theater_probability: f64,
 ) -> f64 {
+    // Preserve this input in the public signature until the experimental score
+    // model defines how actual outcomes should affect its formula.
+    let _ = actual_outcomes;
+
     let outcome_ratio = if intended_outcomes > 0 {
         unintended_outcomes as f64 / intended_outcomes as f64
     } else {
         2.0 // No intended outcomes measured is very suspicious
     };
 
-    let base_score = outcome_ratio * 30.0 + avg_metric_gap * 30.0 + metric_theater_probability * 40.0;
+    let base_score =
+        outcome_ratio * 30.0 + avg_metric_gap * 30.0 + metric_theater_probability * 40.0;
 
     // Cap at 100
     base_score.min(100.0)
@@ -219,9 +223,9 @@ mod tests {
     #[test]
     fn test_phantom_score() {
         let score = phantom_metal_taste_score(
-            5,  // intended
-            3,  // actual
-            7,  // unintended
+            5,    // intended
+            3,    // actual
+            7,    // unintended
             45.0, // avg gap
             0.7,  // theater prob
         );

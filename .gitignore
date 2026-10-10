@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MPL-2.0
-# RSR-compliant .gitignore
+# RSR-compliant .gitignore; keep the provisioning engine under /build/ tracked.
 
-# OS & Editor
+# OS & editor
 .DS_Store
 Thumbs.db
 *.swp
@@ -10,12 +10,14 @@ Thumbs.db
 .idea/
 .vscode/
 
-# Build
+# Build outputs
 /target/
 /_build/
-/build/
 /dist/
 /out/
+/_site/
+/coverage/
+htmlcov/
 
 # Dependencies
 /node_modules/
@@ -24,24 +26,14 @@ Thumbs.db
 /.elixir_ls/
 
 # Rust
-# Cargo.lock  # Keep for binaries
-
-# Elixir
-/cover/
-/doc/
-*.ez
-erl_crash.dump
+# Cargo.lock is intentionally tracked.
 
 # Julia
 *.jl.cov
 *.jl.mem
 /Manifest.toml
 
-# ReScript
-/lib/bs/
-/.bsb.lock
-
-# Python (SaltStack only)
+# Generic caches from external tooling; Python is not a project runtime.
 __pycache__/
 *.py[cod]
 .venv/
@@ -63,28 +55,27 @@ __pycache__/
 .env.*
 *.pem
 *.key
+*.secret
 secrets/
+credentials/
+.ssh/
+.aws/
+.kube/
+.docker/
+token.*
+secret.*
+.npmrc
+.netrc
+.pypirc
+*.token
+*.p12
+*.pfx
+credentials.json
 
-# Test/Coverage
-/coverage/
-htmlcov/
-
-# Logs
+# Logs and temporary files
 *.log
 /logs/
-
-# Temp
 /tmp/
 *.tmp
 *.bak
-target/
-node_modules/
-_build/
-deps/
-.elixir_ls/
 .cache/
-build/
-dist/
-
-# Pages output
-/_site/

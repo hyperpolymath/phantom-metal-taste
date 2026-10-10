@@ -3,9 +3,9 @@
 //
 // TOGAF Architecture Development Method (ADM) -- Synergy Matrix
 // Enterprise Architecture Documentation
-// Classification: Internal -- Architecture Practice
+// Classification: Fictional case-study design -- not an implemented architecture
 
-= Synergy Matrix: TOGAF Architecture Development Method
+= Synergy Matrix: Fictional TOGAF Architecture Development Method
 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 v1.0, 2026-02-20
 :toc: left
@@ -13,8 +13,17 @@ v1.0, 2026-02-20
 :sectnums:
 :icons: font
 :source-highlighter: rouge
-:description: Full TOGAF ADM cycle for the Synergy Matrix enterprise initiative.
-:keywords: TOGAF, ADM, enterprise architecture, synergy, wellness, gap analysis
+:description: Fictional target-state TOGAF exercise for the Synergy Matrix case study; not a system architecture.
+:keywords: TOGAF, ADM, fictional case study, design exercise
+
+[IMPORTANT]
+====
+This is a satirical, fictional target-state design exercise. The architecture,
+review board, metrics, approval, systems, and deployment activities described
+below are not implemented or verified in this repository. The current code map
+and limitations are in `ARCHITECTURE.adoc`; do not use this document as an
+application runbook or compliance evidence.
+====
 
 == Document Control
 
@@ -22,7 +31,7 @@ v1.0, 2026-02-20
 |===
 | Document ID | SM-TOGAF-ADM-001
 | Version     | 1.0
-| Status      | Approved (by Chad Kensington)
+| Status      | Fictional narrative; not approved or implemented
 | Author      | Jonathan D.A. Jewell
 | Review Date | 2026-02-20
 | Next Review | When someone reads this
@@ -30,16 +39,12 @@ v1.0, 2026-02-20
 
 == Executive Summary
 
-This document presents the complete TOGAF Architecture Development Method cycle
-for the Synergy Matrix, an enterprise initiative aimed at the quantification,
-measurement, and continuous improvement of organizational wellness through
-rigorous architectural discipline. The Synergy Matrix applies formal gap analysis
-to the inherently immeasurable domain of human collaboration, producing precise
-numerical scores for phenomena that have historically resisted quantification for
-good reason.
-
-The architecture described herein follows all eight phases of the TOGAF ADM and
-has been reviewed by the Synergy Architecture Review Board.
+This satirical case-study document sketches a fictional TOGAF Architecture
+Development Method cycle for the Synergy Matrix, an imagined enterprise wellness
+initiative. Its descriptions of data, systems, measurements, governance, and
+reviews are narrative devices, not repository capabilities or implementation
+evidence. No architecture review board or deployed Synergy Matrix exists in
+this checkout.
 
 ---
 
@@ -305,11 +310,10 @@ separation of concerns. Data flow diagrams are maintained at:
 |===
 | Component | Technology | Responsibility
 
-| Orchestration Layer
-| ReScript / Deno
-| Coordinates initiative lifecycle, manages API surface, and ensures
-  that all requests pass through the appropriate authorization layer
-  (i.e., Chad).
+| Proposed Orchestration Layer
+| Not selected or implemented
+| A target-state narrative for lifecycle and API coordination; no service or
+  authorization layer exists in the repository.
 
 | Gap Engine
 | Rust / WASM
@@ -360,11 +364,10 @@ the production dashboard by request of the Sponsor.
 |===
 | Layer | Technology | Justification
 
-| Orchestration & API
-| ReScript compiled via Deno runtime
-| Type-safe orchestration without the overhead of TypeScript. ReScript
-  compiles to clean JavaScript executed by Deno, ensuring reproducible
-  builds and eliminating the npm supply chain as an attack vector.
+| Proposed orchestration & API
+| Not selected; not implemented
+| The earlier Deno/ReScript target is retired. This document does not
+  prescribe an active runtime, API framework, or executable architecture.
 
 | Performance-Critical Computation
 | Rust compiled to WebAssembly
@@ -515,9 +518,9 @@ truths that the organization may not be prepared to receive.
 |===
 | Activity | Details
 
-| Orchestration Layer
-| Deploy ReScript/Deno API services. Implement initiative lifecycle
-  management and participant enrollment workflows.
+| Proposed application service
+| No API service is implemented. Any future service requires a separate
+  approved scope, language/runtime decision, and tested design.
 
 | Metrics Collection
 | Activate telemetry collection across wellness initiative touchpoints.
@@ -663,20 +666,13 @@ by the Chair. Proposals submitted by other members have a 23% approval rate.
 | Quarterly
 |===
 
-=== Architecture Decision Records
+=== Fictional architecture decisions
 
-All significant architectural decisions are recorded as ADRs in the
-repository. Key decisions include:
-
-* *ADR-001*: Adoption of ArangoDB over Neo4j for graph storage
-* *ADR-002*: Selection of Rust/WASM for gap calculations
-* *ADR-003*: Use of OWL/RDF for wellness ontology (rather than informal definitions)
-* *ADR-004*: Decision to exclude the Synergy Matrix from its own gap analysis
-* *ADR-005*: Removal of the "Cancel Initiative" button from the dashboard UI
-
-ADRs are stored in `.machine_readable/META.scm` under the
-`architecture-decisions` section and follow the standard ADR format
-(Context, Decision, Status, Consequences).
+The numbered decisions in this legacy case-study narrative are fictional satire,
+not project ADRs. The repository has no deployed database, dashboard, or API,
+and the former `.machine_readable/META.scm` path is obsolete. Verified project
+policy and current toolchain facts live in `phantom-metal-taste_chora.deed`;
+that repo deed does not record the imagined decisions above.
 
 ---
 
@@ -764,19 +760,19 @@ All architecture change requests follow the standard process:
 
 == Appendices
 
-=== Appendix A: Referenced Artifacts
+=== Appendix A: Related Artifacts
 
 [cols="1,3"]
 |===
-| Artifact | Location
+| Artifact | Location and status
 
-| E-R Diagram               | `docs/diagrams/er-diagram.puml`
-| Context DFD               | `docs/diagrams/dfd-context.puml`
-| Detailed DFD              | `docs/diagrams/dfd-detailed.puml`
-| Deployment Diagram        | `docs/diagrams/deployment-diagram.puml`
-| Wellness Ontology (OWL)   | `ontology/wellness.owl`
-| Architecture Decisions    | `.machine_readable/META.scm`
-| Project State             | `.machine_readable/STATE.scm`
+| Conceptual E-R diagram | `docs/diagrams/er-diagram.puml`; no matching database schema is implemented.
+| Conceptual context DFD | `docs/diagrams/dfd-context.puml`; target-state sketch only.
+| Conceptual detailed DFD | `docs/diagrams/dfd-detailed.puml`; target-state sketch only.
+| Current deployment/publication map | `docs/diagrams/deployment-diagram.puml`.
+| Current implementation map | `docs/architecture/ARCHITECTURE.adoc`.
+| Wellness ontology (OWL) | Not present in this checkout.
+| Verified project decisions and state | `phantom-metal-taste_chora.deed` (current DEED repo record).
 |===
 
 === Appendix B: Glossary
@@ -820,5 +816,5 @@ All architecture change requests follow the standard process:
 | 0.2 | 2026-01-28 | J.D.A. Jewell | Incorporated SARB feedback (Chad's feedback)
 | 0.3 | 2026-02-10 | J.D.A. Jewell | Added risk register per CFO request (then removed
                                         two risks per Sponsor request)
-| 1.0 | 2026-02-20 | J.D.A. Jewell | Approved by SARB (unanimous, as always)
+| 1.0 | 2026-02-20 | J.D.A. Jewell | Fictional version; no real review or approval
 |===

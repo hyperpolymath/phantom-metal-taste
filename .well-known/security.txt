@@ -1,0 +1,9 @@
+# SPDX-License-Identifier: MPL-2.0
+# RFC 9116 security.txt for Phantom Metal Taste
+# https://securitytxt.org/
+
+Contact: https://github.com/hyperpolymath/phantom-metal-taste/security/advisories/new
+Expires: 2027-10-10T23:59:59Z
+Preferred-Languages: en
+Canonical: https://hyperpolymath.github.io/phantom-metal-taste/.well-known/security.txt
+Policy: https://github.com/hyperpolymath/phantom-metal-taste/blob/main/.github/SECURITY.md

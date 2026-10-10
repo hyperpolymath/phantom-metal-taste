@@ -1,65 +1,47 @@
-== TEST-NEEDS.md — phantom-metal-taste
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Test coverage and remaining needs
+:toc:
 
-=== CRG Grade: C — ACHIEVED 2026-04-04
+== Current suites
 
-=== Current Test State
-
-[width="100%",cols="42%,29%,29%",options="header",]
+[cols="1,2,3",options="header"]
 |===
-|Category |Count |Notes
-|Rust unit tests |4 |`+src/core/src/lib.rs+` `+#[cfg(test)]+` — all
-passing
+|Area |Test location |Current gate
 
-|Julia tests |0 |`+src/analytics/+` — no test suite yet
+|Rust core
+|`src/core/src/lib.rs` unit tests
+|`cargo test --locked --all-targets`, Clippy, and rustfmt through the shared Rust CI.
 
-|ReScript tests |0 |`+src/orchestrator/+` — no test suite yet
+|Julia analytics
+|`test/runtests.jl`
+|`julia --project=. -e 'using Pkg; Pkg.test()'` via Julia CI.
 
-|Integration tests |0 |Requires ArangoDB + Virtuoso (containers)
+|Bun site builder
+|`scripts/build-site.test.js`
+|`bun test`; site artifact is built and compared across two runs.
+
+|AffineScript orchestration
+|`src/orchestrator/*.affine`
+|No compiler/test gate: current files are incomplete TODO scaffolds.
+
+|Database integration
+|None
+|No integration tests. The optional containers are not connected to source code.
 |===
 
-=== What’s Covered
+== Limits and follow-up
 
-* [x] `+calculate_metric_gaps+` — parses JSON, returns gap structs
-* [x] `+calculate_path_strength+` — geometric mean of edge weights
-* [x] `+calculate_synergy_score+` — penalises suspiciously uniform high
-scores
-* [x] `+phantom_metal_taste_score+` — composite score from
-outcome/gap/theater inputs
-
-=== CI Gate
-
-[source,bash]
-----
-cd src/core && cargo test
-----
-
-=== Known Failures / Limitations
-
-* `+wasm-bindgen+` dependency: tests compile via `+rlib+` but WASM
-target untested
-* `+calculate_metric_gaps+` test only checks string presence, not parsed
-values
-* `+detect_metric_anomalies+` and `+detect_metric_theater+` have no test
-coverage
-* Julia analytics (`+src/analytics/+`) untested
-* ReScript orchestrator (`+src/orchestrator/+`) untested
-* Integration tests require running ArangoDB + Virtuoso containers
-* `+benchmarks/gap_calculation.bench.ts+` — TypeScript (banned language)
-
-=== Still Missing (for CRG B+)
-
-* [ ] Tests for `+detect_metric_anomalies+` and
-`+detect_metric_theater+`
-* [ ] Julia test suite for `+causal_inference.jl+` and
-`+impact_analysis.jl+`
-* [ ] ReScript/Deno tests for orchestrator layer
-* [ ] Migrate `+benchmarks/gap_calculation.bench.ts+` from TypeScript to
-Deno
-* [ ] 6+ diverse external targets (CRG B requirement)
-
-=== Run Tests
-
-[source,bash]
-----
-cd src/core && cargo test
-----
+* Rust WASM target compilation is optional and has not been replayed locally in
+  this environment; use `just wasm-build` where rustup and the target are available.
+* Julia tests were added with the root package setup but could not be executed in
+  the current sandbox because Julia is not installed. CI is the first runtime
+  execution gate; do not report the suite as locally passed until run.
+* The analytics tests are smoke/contract tests, not statistical validation or
+  coverage evidence. Numerical edge cases, missing data, collinearity, and
+  decision thresholds need domain review.
+* The AffineScript semantic port needs a separate behavior specification, a
+  supported compiler/toolchain, and tests before any TODO scaffold is treated
+  as implemented.
+* Database integration tests require actual clients, schemas, fixtures, and
+  explicit security decisions; merely starting containers is not coverage.

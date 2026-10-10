@@ -1,5 +1,5 @@
-# phantom-metal-taste - Editor Configuration
-# https://editorconfig.org
+# SPDX-License-Identifier: MPL-2.0
+# Editor configuration for the current Rust / Julia / Bun / Guix toolchain.
 
 root = true
 
@@ -20,49 +20,15 @@ trim_trailing_whitespace = false
 [*.rs]
 indent_size = 4
 
-[*.ex]
-indent_size = 2
-
-[*.exs]
-indent_size = 2
-
-[*.zig]
+[*.jl]
 indent_size = 4
 
-[*.ada]
-indent_size = 3
-
-[*.adb]
-indent_size = 3
-
-[*.ads]
-indent_size = 3
-
-[*.hs]
+[*.affine]
 indent_size = 2
 
-[*.res]
-indent_size = 2
-
-[*.resi]
-indent_size = 2
-
-[*.ncl]
-indent_size = 2
-
-[*.rkt]
-indent_size = 2
-
-[*.scm]
-indent_size = 2
-
-[*.nix]
+[*.{js,mjs,json,yml,yaml,toml,scm,sh}]
 indent_size = 2
 
 [Justfile]
-indent_style = space
-indent_size = 4
-
-[justfile]
 indent_style = space
 indent_size = 4

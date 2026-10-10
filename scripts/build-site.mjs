@@ -2,24 +2,21 @@
 // SPDX-License-Identifier: MPL-2.0
 // Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
 //
-// build-site.mjs — GitHub Pages publisher for verisimdb-data.
+// build-site.mjs — the allowlisted GitHub Pages publisher for phantom-metal-taste.
 //
-// Replaces the retired Jekyll pipeline (`ruby/setup-ruby` + `bundle exec jekyll
-// build`, and the `actions/jekyll-build-pages` container build). Ruby is a banned
-// implementation language for this estate, so the site is produced by this script.
-//
-// Runtime: Bun (tier 1 per LANGUAGE-POLICY §1) or Node >= 18, whichever is on
-// PATH. Zero dependencies: no lockfile is introduced, so runtime-policy.yml has
-// no package-manager tier to police and nothing here needs vendoring.
+// Runtime: Bun, the repository's only JavaScript runtime. The script uses Bun's
+// Node-compatible built-ins; it is not a Node.js application and has no
+// third-party JavaScript dependencies. package.json provides task entry points;
+// since there are no packages to resolve, Bun does not retain an empty lockfile.
 //
 // Usage:
-//   bun  scripts/build-site.mjs [--config site.json] [--out _site] [--baseurl PATH]
-//   node scripts/build-site.mjs --dry-run
+//   bun scripts/build-site.mjs [--config site.json] [--out _site] [--baseurl PATH]
+//   bun scripts/build-site.mjs --dry-run
 //
 // Contract:
-//   * Only paths named in site.json reach the site root. The repository tree is
-//     never mirrored — the old Jekyll build did exactly that as a side effect,
-//     which put scan payloads on a public origin without anyone deciding to.
+//   * Only source paths named in site.json are copied; the generator adds its
+//     configured landing page, publish manifest, and .nojekyll marker. The rest
+//     of the repository tree is never mirrored onto a public origin.
 //   * Output is deterministic for a given input tree + baseurl (no timestamps,
 //     sorted entries, LF separators), so CI can prove reproducibility.
 //   * Fails closed: a missing `required: true` source is an error. Serving
@@ -43,7 +40,9 @@ import { basename, dirname, join, posix, resolve, sep } from "node:path";
 import { argv, env, exit, stderr, stdout } from "node:process";
 import { pathToFileURL } from "node:url";
 
-const ROOT = resolve(dirname(dirname(realpathSync(argv[1] ?? import.meta.url.pathname))));
+const ROOT = resolve(
+  dirname(dirname(realpathSync(argv[1] ?? import.meta.url.pathname))),
+);
 
 // ── CLI ───────────────────────────────────────────────────────────────
 
@@ -85,24 +84,32 @@ function loadConfig(path) {
   // other shape is reported as the config error it is.
   parsed.copy = parsed.copy.map((entry, i) => {
     if (typeof entry === "string") return { from: entry, to: "." };
-    if (entry !== null && typeof entry === "object" && entry.from !== undefined) return entry;
-    return fail(`config copy[${i}]: expected a string or {from,to}, got ${JSON.stringify(entry)}`);
+    if (entry !== null && typeof entry === "object" && entry.from !== undefined)
+      return entry;
+    return fail(
+      `config copy[${i}]: expected a string or {from,to}, got ${JSON.stringify(entry)}`,
+    );
   });
   for (const entry of parsed.copy) {
     assertRelative(entry.from, "copy.from");
     assertRelative(entry.to ?? "", "copy.to");
   }
-  if (parsed.index_page !== undefined) assertRelative(parsed.index_page, "index_page");
+  if (parsed.index_page !== undefined)
+    assertRelative(parsed.index_page, "index_page");
   parsed.listing = (parsed.listing ?? []).map((entry, i) =>
     typeof entry === "string" ? { root: entry } : entry,
   );
   for (const entry of parsed.listing) {
     assertRelative(entry.root ?? ".", "listing.root");
     if (!Array.isArray(entry.match) || entry.match.length === 0) {
-      fail(`config: listing entry for "${entry.root}" needs a non-empty "match" array`);
+      fail(
+        `config: listing entry for "${entry.root}" needs a non-empty "match" array`,
+      );
     }
     if (entry.link_target !== "source" && entry.link_target !== "repo") {
-      fail(`config: listing entry for "${entry.root}" needs link_target "source" or "repo"`);
+      fail(
+        `config: listing entry for "${entry.root}" needs link_target "source" or "repo"`,
+      );
     }
   }
   return parsed;
@@ -113,11 +120,16 @@ function loadConfig(path) {
 // globs (list a directory and the walker expands it).
 function assertRelative(path, label) {
   if (path === "") return;
-  if (path.startsWith("/") || path.startsWith("\\") || /^[A-Za-z]:/.test(path)) {
+  if (
+    path.startsWith("/") ||
+    path.startsWith("\\") ||
+    /^[A-Za-z]:/.test(path)
+  ) {
     fail(`config ${label}: absolute path "${path}" is not allowed`);
   }
   const parts = path.split(/[\\/]/);
-  if (parts.includes("..")) fail(`config ${label}: path traversal in "${path}" is not allowed`);
+  if (parts.includes(".."))
+    fail(`config ${label}: path traversal in "${path}" is not allowed`);
   if (parts.some((part) => part.includes("*"))) {
     fail(`config ${label}: globs are not supported ("${path}")`);
   }
@@ -148,7 +160,10 @@ function walk(dir) {
 }
 
 function toPosixAbs(abs) {
-  return abs.slice(ROOT.length + 1).split(sep).join(posix.sep);
+  return abs
+    .slice(ROOT.length + 1)
+    .split(sep)
+    .join(posix.sep);
 }
 
 // Directory names that are never descended into: VCS state, installed
@@ -178,16 +193,20 @@ function esc(text) {
 }
 
 function urlFor(baseurl, sitePath) {
-  const clean = String(sitePath).replace(/^\.\/?/, "");
-  if (clean === "" || clean === ".") return baseurl === "" ? "/" : `${baseurl}/`;
+  const clean = String(sitePath).replace(/^\.\//, "");
+  if (clean === "" || clean === ".")
+    return baseurl === "" ? "/" : `${baseurl}/`;
   return baseurl === "" ? `/${clean}` : `${baseurl}/${clean}`;
 }
 
 function normaliseBaseurl(raw) {
-  const value = String(raw ?? "").trim().replace(/\/+$/, "");
+  const value = String(raw ?? "")
+    .trim()
+    .replace(/\/+$/, "");
   if (value === "" || value === "/") return "";
   const candidate = value.startsWith("/") ? value : `/${value}`;
-  if (!/^\/[A-Za-z0-9._~/-]+$/.test(candidate)) fail(`refusing unsafe baseurl: ${raw}`);
+  if (!/^\/[A-Za-z0-9._~/-]+$/.test(candidate))
+    fail(`refusing unsafe baseurl: ${raw}`);
   return candidate;
 }
 
@@ -199,18 +218,23 @@ function planCopies(config) {
   for (const entry of config.copy ?? []) {
     const srcAbs = resolve(ROOT, entry.from);
     if (!existsSync(srcAbs)) {
-      if (entry.required) fail(`required publish source missing: ${entry.from}`);
-      stdout.write(`build-site: optional source absent, skipped: ${entry.from}\n`);
+      if (entry.required)
+        fail(`required publish source missing: ${entry.from}`);
+      stdout.write(
+        `build-site: optional source absent, skipped: ${entry.from}\n`,
+      );
       continue;
     }
     const stat = lstatSync(srcAbs);
-    if (stat.isSymbolicLink()) fail(`publish source is a symlink: ${entry.from}`);
+    if (stat.isSymbolicLink())
+      fail(`publish source is a symlink: ${entry.from}`);
     if (stat.isFile()) {
       // For a single file, `to` is the destination path itself (empty/"."
       // means "same name at the site root").
-      const dest = entry.to === undefined || entry.to === "" || entry.to === "."
-        ? basename(entry.from)
-        : entry.to;
+      const dest =
+        entry.to === undefined || entry.to === "" || entry.to === "."
+          ? basename(entry.from)
+          : entry.to;
       items.push({ src: entry.from, site: dest });
       continue;
     }
@@ -243,7 +267,11 @@ function planListings(config) {
         site: joinSite(root, root === "." ? file : file.slice(root.length + 1)),
       }));
     if (entry.link_target === "source") published.push(...items);
-    sections.push({ label: entry.label ?? root, linkTarget: entry.link_target, items });
+    sections.push({
+      label: entry.label ?? root,
+      linkTarget: entry.link_target,
+      items,
+    });
   }
   return { sections, published };
 }
@@ -253,7 +281,9 @@ function dedupe(items) {
   for (const item of items) {
     const existing = bySite.get(item.site);
     if (existing !== undefined && existing.src !== item.src) {
-      fail(`collision: "${item.src}" and "${existing.src}" both publish to /${item.site}`);
+      fail(
+        `collision: "${item.src}" and "${existing.src}" both publish to /${item.site}`,
+      );
     }
     bySite.set(item.site, item);
   }
@@ -272,29 +302,43 @@ function build(opts) {
   const published = dedupe([...planCopies(config), ...listings.published]);
 
   const outputs = new Map();
-  for (const item of published) outputs.set(item.site, readFileSync(resolve(ROOT, item.src)));
+  for (const item of published)
+    outputs.set(item.site, readFileSync(resolve(ROOT, item.src)));
 
-  const manifest = published.map((item) => ({ path: item.site, source: item.src, bytes: byteSize(item.src) }));
-  // The hub page is deliberately NOT at the site root: GitHub Pages serves
-  // index.json for '/' here, and a root index.html would take that over and
-  // change the content type of a machine-readable endpoint.
-  const indexPage = config.index_page === undefined ? "hub/index.html" : config.index_page;
+  const manifest = published.map((item) => ({
+    path: item.site,
+    source: item.src,
+    bytes: byteSize(item.src),
+  }));
+  // The generated landing page defaults to hub/index.html. This project's
+  // site.json explicitly places it at index.html for normal Pages navigation.
+  const indexPage =
+    config.index_page === undefined ? "hub/index.html" : config.index_page;
   const atRoot = published.find((item) => item.site === "index.html");
   if (atRoot !== undefined && indexPage !== "index.html") {
     fail(
-      `"${atRoot.src}" would publish to /index.html and take over '/' (this site's root is ` +
-        `index.json). Publish it under a directory, or set "index_page": "index.html" to say ` +
-        `you really mean it. CI guards this too, so failing here is the earlier, kinder half.`,
+      `"${atRoot.src}" would publish to /index.html, which conflicts with the generated landing page. ` +
+        `Publish it under a directory or set "index_page": "index.html" to explicitly reserve the root.`,
     );
   }
   if (indexPage !== "") {
-    outputs.set(indexPage, Buffer.from(renderIndex({ config, baseurl, sections: listings.sections, manifest }), "utf8"));
+    outputs.set(
+      indexPage,
+      Buffer.from(
+        renderIndex({ config, baseurl, sections: listings.sections, manifest }),
+        "utf8",
+      ),
+    );
   }
   outputs.set(
     "publish-manifest.json",
-    Buffer.from(`${JSON.stringify({ generator: "scripts/build-site.mjs", baseurl: baseurl || "/", files: manifest }, null, 2)}\n`, "utf8"),
+    Buffer.from(
+      `${JSON.stringify({ generator: "scripts/build-site.mjs", baseurl: baseurl || "/", files: manifest }, null, 2)}\n`,
+      "utf8",
+    ),
   );
-  if (config.nojekyll !== false) outputs.set(".nojekyll", Buffer.from("\n", "utf8"));
+  if (config.nojekyll !== false)
+    outputs.set(".nojekyll", Buffer.from("\n", "utf8"));
 
   const hash = createHash("sha256");
   for (const site of [...outputs.keys()].sort()) {
@@ -335,7 +379,7 @@ function writeSiteFile(outDir, site, buffer) {
 // ── html ──────────────────────────────────────────────────────────────
 
 function repoUrl(src) {
-  const slug = env.GITHUB_REPOSITORY ?? "hyperpolymath/verisimdb-data";
+  const slug = env.GITHUB_REPOSITORY ?? "hyperpolymath/phantom-metal-taste";
   const ref = env.GITHUB_REF_NAME ?? "main";
   return `https://github.com/${slug}/blob/${ref}/${src.split("/").map(encodeURIComponent).join("/")}`;
 }
@@ -345,7 +389,10 @@ function renderIndex({ config, baseurl, sections, manifest }) {
   for (const section of sections) {
     if (section.items.length === 0) continue;
     const rows = section.items.map((item) => {
-      const href = section.linkTarget === "repo" ? repoUrl(item.src) : urlFor(baseurl, item.site);
+      const href =
+        section.linkTarget === "repo"
+          ? repoUrl(item.src)
+          : urlFor(baseurl, item.site);
       return `        <li><a href="${esc(href)}">${esc(item.src)}</a></li>`;
     });
     blocks.push(`      <section id="${esc(slugify(section.label))}">
@@ -355,10 +402,14 @@ ${rows.join("\n")}
         </ul>
       </section>`);
   }
+  const publishedRows = manifest.slice(0, 200).map((item) => {
+    const href = esc(urlFor(baseurl, item.path));
+    return `        <li><a href="${href}"><code>${esc(item.path)}</code></a> <span>${item.bytes} B</span></li>`;
+  });
   blocks.push(`      <section id="published-files">
         <h2>Published files (first 200 of ${manifest.length}; full list in <code>publish-manifest.json</code>)</h2>
         <ul>
-${manifest.slice(0, 200).map((item) => `        <li><code>${esc(item.path)}</code> <span>${item.bytes} B</span></li>`).join("\n")}
+${publishedRows.join("\n")}
         </ul>
       </section>`);
 
@@ -391,16 +442,17 @@ ${manifest.slice(0, 200).map((item) => `        <li><code>${esc(item.path)}</cod
     <header>
       <h1>${esc(config.title)}</h1>
       <p class="lead">
-        Flat-file data store for VeriSimDB scan, drift and outcome records.
-        Built by <code>scripts/build-site.mjs</code> (Bun / Node — no Ruby, no Jekyll)
-        from the publish allowlist in <code>site.json</code>.
+        Experimental analytics library and research artefacts for exploring the gap
+        between organizational intentions and outcomes. The AffineScript orchestrator
+        remains a scaffold. This allowlisted index is assembled with Bun from
+        <code>site.json</code>; AsciiDoc and Markdown sources are copied verbatim, not rendered.
       </p>
     </header>
 ${blocks.join("\n")}
     <footer>
       <p>
-        The canonical dataset is the git tree, not this site. Machine-readable index:
-        <a href="${esc(urlFor(baseurl, "index.json"))}"><code>index.json</code></a>.
+        The canonical sources remain in Git. See the published-file
+        <a href="${esc(urlFor(baseurl, "publish-manifest.json"))}">manifest</a>.
         Security contacts: <a href="${esc(urlFor(baseurl, ".well-known/security.txt"))}">security.txt</a>.
       </p>
     </footer>
@@ -416,6 +468,16 @@ function slugify(text) {
     .replace(/^-|-$/g, "");
 }
 
-if (import.meta.url === pathToFileURL(argv[1] ?? "").href) build(parseArgs(argv.slice(2)));
+if (import.meta.url === pathToFileURL(argv[1] ?? "").href)
+  build(parseArgs(argv.slice(2)));
 
-export { build, dedupe, normaliseBaseurl, parseArgs, planCopies, planListings, urlFor, walk };
+export {
+  build,
+  dedupe,
+  normaliseBaseurl,
+  parseArgs,
+  planCopies,
+  planListings,
+  urlFor,
+  walk,
+};

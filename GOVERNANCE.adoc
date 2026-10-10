@@ -1,60 +1,36 @@
-== Governance
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Governance
+:toc:
 
-=== Overview
+== Status
 
-This project is governed by the following principles and structures to
-ensure transparent, inclusive, and effective decision-making.
+This is a single-maintainer experimental repository. The default code owner is
+link:https://github.com/hyperpolymath[@hyperpolymath] in `.github/CODEOWNERS`.
+GitHub repository permissions and configured branch protections are authoritative
+for access, review, and merging; this document does not invent a multi-person
+council or unconfigured approval threshold.
 
-=== Roles and Responsibilities
+== Contributions and decisions
 
-==== Maintainers
+Contributors should open an issue or pull request for substantive changes,
+include evidence and tests, and update relevant user-facing documentation.
+The maintainer reviews changes and decides scope. Significant architecture or
+policy changes should be discussed before implementation. Do not represent
+conceptual case-study material as a live system capability.
 
-Maintainers are responsible for: - Reviewing and merging pull requests -
-Managing releases and versioning - Ensuring code quality and standards -
-Triaging issues and bug reports - Community engagement and support
+Follow `.github/CONTRIBUTING.md`, `CODE_OF_CONDUCT.adoc`, and the binding
+`hyperpolymath/standards` and `hyperpolymath/rsr-template-repo` policies.
 
-==== Contributors
+== Security and conduct
 
-Contributors are expected to: - Follow the code of conduct - Submit
-well-documented pull requests - Write tests for new functionality -
-Maintain existing tests - Update documentation as needed
+Report vulnerabilities through GitHub Security Advisories; details are in
+`SECURITY.adoc`. Conduct concerns should be reported privately through a
+maintainer-controlled channel. Do not publish private data or credentials.
 
-=== Decision Making
+== Licensing
 
-==== Minor Changes
-
-* Can be made by any maintainer
-* Include bug fixes, documentation updates, dependency updates
-
-==== Major Changes
-
-* Require discussion in issues or pull requests
-* Include new features, architectural changes, API changes
-* Need approval from at least 2 maintainers
-
-==== Breaking Changes
-
-* Require RFC (Request for Comments) process
-* Need approval from majority of maintainers
-* Must include migration guide
-
-=== Code of Conduct
-
-All participants are expected to follow our Code of Conduct. Violations
-can be reported to the maintainers.
-
-=== Communication
-
-* *Issues*: For bug reports and feature requests
-* *Discussions*: For questions and general discussion
-* *Pull Requests*: For code contributions
-
-=== Licensing
-
-All contributions are made under the terms of the repository’s LICENSE
-file. By submitting a pull request, you agree to license your
-contributions accordingly.
-
-'''''
-
-_Last updated: 2026-07-18_
+Source licensing is declared in `LICENSE` (MPL-2.0); documentation is marked
+CC-BY-SA-4.0. File headers and applicable license texts govern individual
+materials. Do not rely on legacy conflicting license prose in archived
+materials.

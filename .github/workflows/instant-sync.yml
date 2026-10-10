@@ -13,18 +13,45 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Trigger Propagation
+      - name: Monitor outbound egress
+        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
+        with:
+          egress-policy: audit
+      - name: Check propagation credential
+        id: credential
+        env:
+          FARM_DISPATCH_TOKEN: ${{ secrets.FARM_DISPATCH_TOKEN }}
+        run: |
+          if [ -n "$FARM_DISPATCH_TOKEN" ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Build propagation payload
+        id: payload
+        if: steps.credential.outputs.available == 'true'
+        env:
+          REPOSITORY: ${{ github.event.repository.name }}
+          REF_NAME: ${{ github.ref }}
+          COMMIT_SHA: ${{ github.sha }}
+        run: |
+          payload=$(jq -cn \
+            --arg repo "$REPOSITORY" \
+            --arg ref "$REF_NAME" \
+            --arg sha "$COMMIT_SHA" \
+            '{repo: $repo, ref: $ref, sha: $sha, forges: ""}')
+          echo "json=$payload" >> "$GITHUB_OUTPUT"
+      - name: Trigger propagation
+        if: steps.credential.outputs.available == 'true'
         uses: peter-evans/repository-dispatch@28959ce8df70de7be546dd1250a005dd32156697 # v4.0.1
         with:
           token: ${{ secrets.FARM_DISPATCH_TOKEN }}
           repository: hyperpolymath/.git-private-farm
           event-type: propagate
-          client-payload: |-
-            {
-              "repo": "${{ github.event.repository.name }}",
-              "ref": "${{ github.ref }}",
-              "sha": "${{ github.sha }}",
-              "forges": ""
-            }
+          client-payload: ${{ steps.payload.outputs.json }}
+      - name: Report skipped propagation
+        if: steps.credential.outputs.available != 'true'
+        run: echo "::warning::Propagation skipped because FARM_DISPATCH_TOKEN is not configured."
       - name: Confirm
+        if: steps.credential.outputs.available == 'true'
         run: echo "::notice::Propagation triggered for ${{ github.event.repository.name }}"

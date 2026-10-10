@@ -1,69 +1,35 @@
 {
-  "title": "phantom-metal-taste",
+  "title": "Phantom Metal Taste",
   "output": "_site",
   "index_page": "index.html",
   "copy": [
-    {
-      "from": "www/public",
-      "to": ".",
-      "required": false
-    },
-    {
-      "from": "www/.well-known",
-      "to": ".well-known",
-      "required": false
-    },
-    {
-      "from": "LICENSES",
-      "to": "LICENSES",
-      "required": false
-    },
-    {
-      "from": "benchmarks",
-      "to": "benchmarks",
-      "required": false
-    },
-    {
-      "from": "case-studies",
-      "to": "case-studies",
-      "required": false
-    },
-    {
-      "from": "docs",
-      "to": "docs",
-      "required": false
-    },
-    {
-      "from": "specs",
-      "to": "specs",
-      "required": false
-    },
-    {
-      "from": "src",
-      "to": "src",
-      "required": false
-    },
-    {
-      "from": "README.adoc",
-      "to": "README.adoc",
-      "required": false
-    }
+    { "from": ".well-known/ai.txt", "to": ".well-known/ai.txt", "required": true },
+    { "from": ".well-known/humans.txt", "to": ".well-known/humans.txt", "required": true },
+    { "from": ".well-known/security.txt", "to": ".well-known/security.txt", "required": true },
+    { "from": "LICENSE", "to": "LICENSE", "required": true },
+    { "from": "LICENSES", "to": "LICENSES", "required": true },
+    { "from": "QUICKSTART.adoc", "to": "QUICKSTART.adoc", "required": true },
+    { "from": "TEST-NEEDS.adoc", "to": "TEST-NEEDS.adoc", "required": true },
+    { "from": "RSR_COMPLIANCE.adoc", "to": "RSR_COMPLIANCE.adoc", "required": true },
+    { "from": "benchmarks", "to": "benchmarks", "required": false },
+    { "from": "case-studies", "to": "case-studies", "required": true },
+    { "from": "docs", "to": "docs", "required": true },
+    { "from": "specs", "to": "specs", "required": false },
+    { "from": "src", "to": "src", "required": false },
+    { "from": "README.adoc", "to": "README.adoc", "required": true }
   ],
   "listing": [
     {
       "root": "docs",
       "label": "Documentation",
-      "match": [
-        ".adoc",
-        ".md"
-      ],
+      "match": [".adoc", ".md"],
       "link_target": "source"
     }
   ],
   "nojekyll": true,
   "notes": [
-    "Derived by scripts/estate-ruby-exit.mjs — review before merge.",
-    "index_page is hub/index.html when the repo publishes index.json: GitHub Pages",
-    "serves index.json for '/' if no index.html exists, and some consumers rely on it."
+    "The site contains only the paths listed above; it is not the application or an API.",
+    "The HTML index links to AsciiDoc/Markdown sources copied verbatim; it does not render them.",
+    "The canonical sources remain in the Git repository."
   ]
 }

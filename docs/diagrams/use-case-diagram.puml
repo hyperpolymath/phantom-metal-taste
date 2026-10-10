@@ -1,4 +1,6 @@
-@startuml Phantom Metal Taste - Use Case Diagram
+' SPDX-License-Identifier: MPL-2.0
+' Proposed product use cases only; no API or actor-facing application exists.
+@startuml Conceptual Phantom Metal Taste - Use Case Diagram
 
 left to right direction
 

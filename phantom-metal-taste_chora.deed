@@ -1,0 +1,124 @@
+;; SPDX-License-Identifier: MPL-2.0
+;; SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+;;
+;; The repository's descriptive state, migrated from the retired A2ML format.
+;; Provisioning-specific facts remain in .machine_readable/descriptiles/provisioning_praxis.deed.
+(repo-deed
+  :schema-version "1.0.0"
+  :canonical-name "phantom-metal-taste"
+  :repo-uuid #u8"gv-clade-index:github.com/hyperpolymath/phantom-metal-taste"
+  :beholding-chora #u5"estate/chora"
+  (identity
+    :primary-forge github
+    :owner "hyperpolymath"
+    :prefixed-name "pm-phantom-metal-taste")
+  (forges
+    :github "hyperpolymath/phantom-metal-taste")
+  (status
+    :phase active
+    :since ""
+    :present #t
+    :aliases ()
+    :merged-into ""
+    :superseded-by ""
+    :successors ()
+    :ended "")
+  (maturity
+    :level experimental)
+  (ecosystem
+    :project "Phantom Metal Taste"
+    :ecosystem "hyperpolymath"
+    :position-type "experimental-research-library"
+    :purpose "Experimental libraries and research artefacts exploring gaps between organisational intentions and observed outcomes."
+    :not ("a deployed service"
+          "an HTTP API or application server"
+          "a production database integration"
+          "a completed AffineScript application")
+    :pipeline-position "prototype"
+    :coordination "hyperpolymath/standards and hyperpolymath/rsr-template-repo")
+  (meta
+    :version "0.1.0"
+    :last-updated "2026-10-10"
+    :type library
+    :languages (rust julia bun)
+    :license "MPL-2.0 for source; CC-BY-SA-4.0 for documentation"
+    :author "Jonathan D.A. Jewell (hyperpolymath)"
+    :build-tool just
+    :package-manager mise
+    :container-runtime podman
+    :ci-platform github-actions
+    :scoping-first #t
+    :execution-order "axis-1 > axis-2 > axis-3"
+    :axis-1 "must > intend > like"
+    :axis-2 "corrective > adaptive > perfective"
+    :axis-3 "systems > compliance > effects"
+    (decision
+      :id "runtime-policy"
+      :rationale "Deno and ReScript are retired. Bun is limited to static-site tooling; Rust and Julia contain the current prototype code.")
+    (decision
+      :id "application-boundary"
+      :rationale "No HTTP API, application server, data loader, database client, or complete AffineScript orchestrator is implemented.")
+    (decision
+      :id "publication"
+      :rationale "The static Pages artefact is built only from the explicit site.json allowlist.")
+    (decision
+      :id "provisioning"
+      :rationale "mise and Guix describe setup; generated mise.lock and actions.lock must come from their official tools and are not hand-authored."))
+  (agentic
+    :permissions (edit-source edit-tests edit-docs edit-config create-files)
+    (constraints
+      :never ("commit secrets, credentials, private data, or invented test evidence"
+              "restore Deno or ReScript as active project paths"
+              "introduce TypeScript, Python, Go, Java, Make, or Nix as active tooling"
+              "claim API, database, AffineScript, compliance, or formal-verification behavior without evidence"
+              "hand-write mise.lock, Cargo.lock, Manifest.toml, or actions.lock output"
+              "modify the canonical provisioning engine for project-specific behavior"))
+    (integrity
+      :fail-closed #t
+      :require-evidence-per-step #t
+      :allow-silent-skip #f
+      :require-rerun-after-fix #t
+      :release-claim-requires-hard-pass #t)
+    (guidance
+      :on-enter "Read README.adoc, CLAUDE.md, this deed, and the current binding standards."
+      :on-exit "Record verified outcomes and unresolved blockers in the current remediation plan."
+      :on-commit "Run the available project validation; identify unrun gates explicitly."))
+  (neurosym
+    :runtime-implemented #f
+    :symbolic-domain-rules-implemented #f
+    :formal-verification-run #f
+    (boundaries
+      :notes ("TLA+ specifications are design artefacts; no model-checking run is claimed."
+              "AffineScript orchestration files are incomplete TODO scaffolds and are not compiled."
+              "The project name and conceptual material do not imply a neural, symbolic, or neurosymbolic runtime.")))
+  (playbook
+    :setup "./launcher.sh --setup"
+    :setup-guide "docs/SETUP.adoc"
+    :validation "just validate"
+    :local-gates ("just doctor" "just provision-check" "just fmt-check" "just lint" "just test" "just site-check")
+    :evidence-policy "Record unavailable tools as not run; never report an unexecuted check as passing."
+    :current-remediation-plan "docs/plans/ULTRAPLAN-ISSUE-77-RSR-RECON-2026-10-10.adoc"
+    (release
+      :status "No verified versioned release is asserted."
+      :preconditions ("Generate and verify mise.lock and actions.lock with their official tools."
+                     "Run applicable Rust, Julia, Bun, provisioning, and workflow gates."
+                     "Describe implementation and conceptual material accurately.")))
+  (verification
+    :checked-on "2026-10-10"
+    :site-output "49 files; 46 sources copied"
+    :site-root-base-sha256 "fe2c7fac9f1f558b2a4bf066240a220fddda8d400106933a86157b7914ec7149"
+    :site-project-base-sha256 "4a4626680a7497d72d939e752aead0f17ecf3b67cfc916d072491fb71546ff3c"
+    :site-reproducibility "pass: two root-base builds match; project-base build passes"
+    :bun-tests "pass: 5 tests, 0 failures, 20 expect calls (Bun 1.4.3)"
+    :source-archive "pass: no .git; Bun tests/build, launcher help/version, no-A2ML check"
+    :deed-lint "pass: current standards self-test and both repository deeds"
+    :no-a2ml "pass: no tracked or unignored A2ML files"
+    :launcher-doctor "13 pass, 2 warn, 5 fail: local tools absent and mise.lock missing"
+    :pr-80-head "69f9e1eab43c41f3ac26d49b72b64cbb7e554380"
+    :pr-80-state "open; current local fixes require a new remote check run"
+    :pr-rust-ci "cargo check passed; fmt failed; clippy/tests skipped; local formatting applied, rerun pending"
+    :pr-julia-ci "analytics job passed"
+    :pr-bun-ci "passed"
+    :pr-actions-lock "failed: .github/workflows/actions.lock absent; official generator still required"
+    :pr-gitguardian "failed on two placeholder hints; local :?required hints await re-scan"
+    :pr-hypatia "failed on retired A2ML paths and missing egress monitor; local fixes await re-scan"))

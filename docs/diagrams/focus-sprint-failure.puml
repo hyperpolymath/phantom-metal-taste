@@ -1,8 +1,9 @@
 ' SPDX-License-Identifier: MPL-2.0
 ' Focus-Sprint Protocol Failure Sequence Diagram
 ' Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+' Fictional case-study scenario; not an operational sequence.
 
-@startuml Focus-Sprint Protocol Failure
+@startuml Fictional Focus-Sprint Protocol Failure
 
 skinparam participant {
     BackgroundColor #FAFAFA

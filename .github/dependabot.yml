@@ -1,21 +1,8 @@
 # SPDX-License-Identifier: MPL-2.0
+# Dependabot configuration for the current Rust, GitHub Actions, and Bun project.
 version: 2
 updates:
-  - package-ecosystem: "cargo"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    # `open-pull-requests-limit: 0` suppresses routine version-update PRs
-    # while leaving Dependabot SECURITY PRs flowing. The previous
-    # `ignore: "*" patch` rule also silenced security PRs under GitHub\'s
-    # current Dependabot behaviour. See rsr-template-repo commit 78b050e
-    # and 007-lang/audits/audit-dependabot-automation-gap-2026-04-17.md.
-    open-pull-requests-limit: 0
   - package-ecosystem: "github-actions"
-    # Ruby is banned for this estate: bump the action, or delete it? Delete.
-    ignore:
-      - dependency-name: "ruby/setup-ruby"
-      - dependency-name: "actions/jekyll-build-pages"
     directory: "/"
     schedule:
       interval: "weekly"
@@ -25,18 +12,24 @@ updates:
           - "*"
     open-pull-requests-limit: 2
     ignore:
-      # HOLD: github/codeql-action at v4.38.0 (SHA-pinned). v4.38.1 fails
-      # GitHub workflow-startup validation estate-wide (nexia-list#100;
-      # SHA-form re-bump bypassed versions-scoped ignores - nexia-list#101).
-      # Hold until upstream clears 4.38.1 or a new release verifies green.
-      - dependency-name: "github/codeql-action"
+      # HOLD: v4.38.1 fails GitHub workflow-startup validation estate-wide;
+      # revisit when upstream has a verified newer release. The wildcard is
+      # required because workflow refs use subpaths (/init and /analyze).
+      - dependency-name: "github/codeql-action*"
 
-  - package-ecosystem: "nix"
+  - package-ecosystem: "cargo"
     directory: "/"
     schedule:
       interval: "weekly"
+    # Suppress routine version PRs while allowing security updates.
+    open-pull-requests-limit: 0
+
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 3
+    groups:
+      dependency-updates:
+        patterns:
+          - "*"

@@ -1,239 +1,71 @@
-== Phantom Metal Taste - Quickstart Guide
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Quick start
+:toc:
 
-Get up and running in 5 minutes.
+This gets the *implemented pieces* of Phantom Metal Taste working locally. It
+does not start an API or connect to the optional database containers: neither is
+implemented in this checkout.
 
-=== Prerequisites
+== 1. Install the prerequisites
 
-Install these first: - https://deno.land[Deno] -
-`+curl -fsSL https://deno.land/install.sh | sh+` -
-https://podman.io[Podman] - `+sudo dnf install podman podman-compose+`
+Install Git and https://mise.jdx.dev/[mise] using your operating system's package
+manager. If using Windows, run the steps inside WSL2.
 
-=== Installation
+== 2. Clone and provision
 
 [source,bash]
 ----
-# 1. Clone (or you already have it)
+git clone https://github.com/hyperpolymath/phantom-metal-taste.git
 cd phantom-metal-taste
-
-# 2. Build ReScript code
-deno task build
-
-# 3. Start databases (takes ~30 seconds)
-podman-compose up -d
-
-# 4. Wait for databases to be healthy
-podman-compose ps
-# Both should show "healthy" status
-
-# 5. Start the API server
-deno task dev
+mise trust
+./launcher.sh --setup
 ----
 
-You should see:
+The launcher installs the declared tools with mise, fetches Rust and Julia
+packages, and checks the environment. Alternatively, if `just` is already
+installed, run `just setup`.
 
-....
-✓ ArangoDB initialized
-✓ Virtuoso initialized
-✓ Server running at http://localhost:3000
-....
-
-=== Load Sample Data
-
-In a new terminal:
+== 3. Build and test
 
 [source,bash]
 ----
-deno task load-data
+just build
+just test
+just site-check
 ----
 
-This loads a complete fictional company with initiatives, outcomes, and
-metrics.
+The test command runs the Rust crate tests, Julia package tests, and Bun's
+site-builder tests. The build command builds the Rust workspace, precompiles the
+Julia package, and creates `_site/` from the allowlist in `site.json`.
 
-=== Try It Out
-
-==== 1. Health Check
+== 4. Run the sample analysis
 
 [source,bash]
 ----
-curl http://localhost:3000/health
+just demo
 ----
 
-==== 2. Find Gameable Metrics
+This prints example intention/reality, metric-gaming, and causal-analysis
+results. No server, API keys, external data, or containers are needed.
+
+== Optional local databases
+
+`compose.yml` is an infrastructure sketch, not an application dependency. To
+run it, first export distinct, non-default local passwords:
 
 [source,bash]
 ----
-curl http://localhost:3000/api/analytics/gameable-metrics | jq
+export ARANGO_ROOT_PASSWORD="$(openssl rand -base64 32)"
+export VIRTUOSO_DBA_PASSWORD="$(openssl rand -base64 32)"
+just db-up
 ----
 
-Looks for metrics with suspicious gaps between target and actual values.
+Services bind to loopback only. The Rust/Julia code does not currently read or
+write these databases. Stop them with `just db-down`.
 
-==== 3. Detect Metric Theater
+== Where to go next
 
-[source,bash]
-----
-curl http://localhost:3000/api/analytics/metric-theater | jq
-----
-
-Finds metrics that are collected but never used.
-
-==== 4. Philosophical Reflection
-
-[source,bash]
-----
-curl http://localhost:3000/api/reflection | jq
-----
-
-The system questions itself.
-
-==== 5. Run the Demo
-
-[source,bash]
-----
-./scripts/demo.sh
-----
-
-Interactive demo of key features.
-
-=== Explore
-
-==== Web Interfaces
-
-* *ArangoDB*: http://localhost:8529
-** Login: `+root+` / `+phantom-dev-password+`
-** Browse collections, run AQL queries
-** View the causal graph visually
-* *Virtuoso*: http://localhost:8890/conductor
-** Login: `+dba+` / `+phantom-dev-password+`
-** Run SPARQL queries
-** Explore the ontology
-
-==== API Endpoints
-
-All endpoints return JSON:
-
-[source,bash]
-----
-# Create an initiative
-curl -X POST http://localhost:3000/api/initiatives \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "My Test Initiative",
-    "description": "Testing the system",
-    "startDate": "2024-01-01T00:00:00Z",
-    "department": "Engineering",
-    "intendedOutcome": "Learn the system",
-    "status": "active",
-    "participants": []
-  }'
-
-# Get gap analysis for an initiative (replace {id} with actual _key)
-curl http://localhost:3000/api/analytics/gap/{id} | jq
-
-# Find unintended consequences
-curl http://localhost:3000/api/initiatives/{id}/unintended | jq
-----
-
-=== Project Structure
-
-....
-phantom-metal-taste/
-├── src/
-│   ├── orchestrator/         # ReScript services
-│   │   ├── Index.res        # Main API entry point
-│   │   ├── Config.res       # Configuration
-│   │   ├── Types.res        # Type definitions
-│   │   └── db/              # Database connections
-│   ├── core/                # Rust/WASM modules
-│   └── analytics/           # Julia statistical analysis
-├── case-studies/
-│   └── synapcor/            # Sample company data
-├── tests/                   # Test suite
-├── docs/                    # Documentation
-└── compose.yml              # Database setup
-....
-
-=== Common Tasks
-
-==== Reset Everything
-
-[source,bash]
-----
-deno task db:reset  # Deletes all data and restarts
-----
-
-==== Run Tests
-
-[source,bash]
-----
-deno task test
-----
-
-==== Stop Databases
-
-[source,bash]
-----
-podman-compose down
-----
-
-==== View Logs
-
-[source,bash]
-----
-podman-compose logs -f arango
-podman-compose logs -f virtuoso
-----
-
-=== Next Steps
-
-[arabic]
-. Read the link:case-studies/synapcor/README.md[SynapCor Case Study] -
-understand the fictional company
-. Review link:docs/architecture/ARCHITECTURE.md[Architecture
-Documentation] - deep dive into design
-. Check link:docs/SETUP.md[Setup Guide] - comprehensive setup with
-troubleshooting
-. Read CLAUDE.md - guidelines for AI-assisted development
-
-=== Understanding the Data
-
-The SynapCor case study includes: - *Wellness Wednesday*: Meditation
-program that created stress - *Transparency Dashboard*: Public metrics
-that led to gaming - *Synergy Champions*: Recognition program that
-decreased productivity
-
-Each demonstrates the gap between good intentions and actual outcomes.
-
-=== Philosophy
-
-This system measures organizational delusion by: 1. Tracking stated
-intentions 2. Recording actual outcomes 3. Calculating the gap 4.
-Detecting when metrics are gamed 5. Identifying when metrics become
-theater
-
-The irony: A rigorous system to measure the limits of rigorous systems.
-
-=== Troubleshooting
-
-*Databases won’t start?*
-
-[source,bash]
-----
-podman-compose down -v
-podman-compose up -d
-----
-
-*API won’t connect to databases?* - Wait for "`healthy`" status:
-`+podman-compose ps+` - Check logs: `+podman-compose logs arango+`
-
-*Port 3000 already in use?* - Change in `+.env+`: `+PORT=3001+`
-
-*Need help?* - See docs/SETUP.md for detailed troubleshooting
-
-=== That’s It!
-
-You now have a working multi-model database system for measuring the gap
-between corporate intentions and reality. Explore the APIs, query the
-data, and contemplate the meta-ironies.
-
-_"`The map is not the territory, but sometimes the map reveals what the
-territory conceals.`"_
+* link:docs/SETUP.adoc[Full setup, Guix route, and troubleshooting]
+* link:docs/AI_INSTALLATION_GUIDE.adoc[AI-assisted installation]
+* link:docs/architecture/ARCHITECTURE.adoc[Implementation map and limitations]

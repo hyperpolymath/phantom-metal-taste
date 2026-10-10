@@ -1,8 +1,9 @@
 ' SPDX-License-Identifier: MPL-2.0
 ' DFD Level 0 (Context Diagram) - Synergy Matrix System
 ' Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+' Conceptual target-state data flow; no corresponding service is implemented.
 
-@startuml DFD Context Diagram
+@startuml DFD Context Diagram (Conceptual)
 
 !define ENTITY_COLOR #E8EAF6
 !define PROCESS_COLOR #C8E6C9

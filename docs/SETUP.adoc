@@ -1,450 +1,217 @@
-== Phantom Metal Taste - Setup Guide
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Setting up Phantom Metal Taste
+:toc:
+:toclevels: 2
 
-Complete guide to setting up and running the Phantom Metal Taste system.
+This is the manual setup route for the *implemented* Rust, Julia, and Bun tools.
+The repository does not currently provide an HTTP service, data loader, or
+working database integration; the conceptual design documents are not an
+application runbook.
 
-=== Prerequisites
+The same steps are available through `./launcher.sh --setup` and `just setup`.
+The launcher needs mise; `just setup` needs `just` and mise.
 
-==== Required Software
+[horizontal]
+Repository:: https://github.com/hyperpolymath/phantom-metal-taste
+Kind:: Experimental mixed-language library (`rust julia bun`)
+Project configuration:: `Cargo.toml`, `Project.toml`, `package.json`, `site.json`
+Toolchain configuration:: `mise.toml`; `manifest.scm` and `channels.scm` for Guix
 
-[arabic]
-. *Deno* (v1.40+)
-+
-[source,bash]
-----
-curl -fsSL https://deno.land/install.sh | sh
-----
-. *Podman & podman-compose*
-+
-[source,bash]
-----
-sudo dnf install podman podman-compose
-----
-. *Rust & Cargo* (v1.70+) - for WASM modules
-+
-[source,bash]
-----
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-rustup target add wasm32-unknown-unknown
-----
-. *Julia* (v1.9+) - for statistical analysis
-+
-[source,bash]
-----
-# macOS
-brew install julia
+== 1. Prerequisites
 
-# Linux
-wget https://julialang-s3.julialang.org/bin/linux/x64/1.9/julia-1.9.4-linux-x86_64.tar.gz
-tar -xvzf julia-1.9.4-linux-x86_64.tar.gz
-sudo mv julia-1.9.4 /opt/
-sudo ln -s /opt/julia-1.9.4/bin/julia /usr/local/bin/julia
-----
+Install Git, mise, and a system C toolchain. On Windows, use WSL2.
 
-==== Optional Software
+[cols="1,2,3"]
+|===
+|Tool |Why |Install
 
-* *ReScript* - `+npm install -g rescript+` (for compiling .res files)
-* *Git* - for version control
-* *jq* - for JSON processing in examples
+|Git
+|Clone the repository and inspect changes
+|Fedora `sudo dnf install git` · Debian/Ubuntu `sudo apt install git` · macOS `xcode-select --install` · Windows `winget install Git.Git`
 
-=== Installation
+|mise
+|Install the Rust, Julia, Bun, Just, and ShellCheck tools declared by this project
+|macOS `brew install mise` · Fedora `sudo dnf copr enable jdxcode/mise && sudo dnf install mise` · Windows `winget install jdx.mise` · other systems: https://mise.jdx.dev/installing-mise.html
 
-==== 1. Clone the Repository
+|C compiler and pkg-config
+|Native build support for Rust and Julia dependencies
+|Fedora `sudo dnf install gcc pkgconf-pkg-config` · Debian/Ubuntu `sudo apt install build-essential pkg-config` · macOS install Xcode Command Line Tools
+
+|OpenSSL command (optional)
+|Generate local-only database passwords if using `compose.yml`
+|Fedora `sudo dnf install openssl` · Debian/Ubuntu `sudo apt install openssl` · macOS normally includes `openssl` through Homebrew
+|===
+
+On macOS, the generated estate launcher uses GNU `readlink -f`. Install
+Homebrew coreutils and put its GNU-compatible commands first on `PATH` before
+running the launcher:
 
 [source,bash]
 ----
-git clone https://github.com/yourusername/phantom-metal-taste.git
+brew install coreutils
+export PATH="$(brew --prefix coreutils)/libexec/gnubin:$PATH"
+----
+
+The launcher is generated from the binding RSR template; do not patch the
+vendored launcher by hand. This portability requirement should be removed when
+the canonical template fixes its macOS path resolution.
+
+If installing mise with its standalone installer, download it, inspect it, and
+then run it. Do not pipe an unreviewed download into a shell. Add the activation
+line printed by the installer to your shell and open a new shell.
+
+== 2. Get the repository
+
+[source,bash]
+----
+git clone https://github.com/hyperpolymath/phantom-metal-taste.git
 cd phantom-metal-taste
 ----
 
-==== 2. Install Dependencies
+A complete GitHub source archive can be extracted instead of cloning. Preserve
+its hidden tracked files, especially `.well-known/` and `.github/`. The normal
+build and test commands use the checked-in manifests and do not require Git
+history; `just doctor` still requires the Git executable as a declared system
+prerequisite.
+
+== 3. Install tools and project dependencies
 
 [source,bash]
 ----
-# Build ReScript code
-deno task build
-
-# Julia dependencies
-cd src/analytics
-julia --project=. -e 'using Pkg; Pkg.instantiate()'
-cd ../..
+mise trust
+mise install
+./launcher.sh --setup
 ----
 
-==== 3. Build WASM Modules
+`./launcher.sh --setup` installs `just` if needed, installs the declared mise
+tools, fetches Cargo and Julia dependencies, and runs the environment doctor.
+If `just` is already available, use `just setup` instead.
+
+The tracked `mise.toml` declares tools at `latest`. The provisioning standard
+requires a generated `mise.lock` with checksums for those tools. *The lock has
+not yet been generated in this checkout*: the current sandbox cannot access
+mise's upstream Julia version metadata endpoint. Until that lock is generated
+and committed, first-time setup resolves current releases and requires network
+access. Do not treat the toolchain as checksum-locked yet.
+
+== 4. Build, test, and use the code
 
 [source,bash]
 ----
-cd src/core
-cargo build --target wasm32-unknown-unknown --release
-cd ../..
+just build          # Rust workspace, Julia precompile, and allowlisted site build
+just test           # Rust unit tests, Julia package tests, and Bun tests
+just lint           # Rust Clippy checks
+just fmt-check      # Rust formatting check
+just site-check     # two site builds compared byte-for-byte
+just demo           # deterministic Julia analysis example
+just validate       # doctor + lint/format/test/site-reproducibility gates
 ----
 
-Or use the Deno task:
+`just wasm-build` is optional and requires `rustup` with the `wasm32-unknown-unknown`
+target. `just run` explicitly reports that no application entry point exists.
+The demo uses library functions directly; it does not require a server or a
+running database.
+
+== 5. Optional database containers
+
+ArangoDB and Virtuoso are optional infrastructure examples. They are not
+required by the Rust or Julia packages and no current source code connects to
+them. The compose file requires unique local passwords and binds service ports
+to loopback:
 
 [source,bash]
 ----
-deno task build:wasm
+export ARANGO_ROOT_PASSWORD="$(openssl rand -base64 32)"
+export VIRTUOSO_DBA_PASSWORD="$(openssl rand -base64 32)"
+just db-up
+# ...when finished:
+just db-down
 ----
 
-==== 4. Configure Environment
+Do not reuse these passwords outside the local containers or commit them to the
+repository. `just db-logs` follows container logs. Remove persisted data only
+through an intentional volume-removal command; the provided `db-down` preserves
+it.
+
+== 6. Guix route
+
+With GNU Guix installed, use the pinned development shell:
 
 [source,bash]
 ----
-cp .env.example .env
+guix time-machine -C channels.scm -- shell -m manifest.scm
+mise trust
+mise install
+just setup
 ----
 
-Edit `+.env+` if needed (defaults should work for local development):
-
-[source,env]
-----
-# Database Configuration
-ARANGO_URL=http://localhost:8529
-ARANGO_DATABASE=phantom_metal_taste
-ARANGO_USERNAME=root
-ARANGO_PASSWORD=phantom-dev-password
-
-VIRTUOSO_URL=http://localhost:8890/sparql
-VIRTUOSO_UPDATE_URL=http://localhost:8890/sparql-auth
-VIRTUOSO_USERNAME=dba
-VIRTUOSO_PASSWORD=phantom-dev-password
-VIRTUOSO_GRAPH=https://phantom-metal-taste.org/graph
-
-# Application
-PORT=3000
-NODE_ENV=development
-LOG_LEVEL=debug
-----
-
-==== 5. Start Databases
-
-[source,bash]
-----
-podman-compose up -d
-----
-
-Wait for services to be healthy:
-
-[source,bash]
-----
-podman-compose ps
-----
-
-You should see both `+phantom-arangodb+` and `+phantom-virtuoso+` with
-status `+healthy+`.
-
-==== 6. Verify Database Connections
-
-*ArangoDB:* - Open http://localhost:8529 - Login: `+root+` /
-`+phantom-dev-password+` - Database `+phantom_metal_taste+` should exist
-
-*Virtuoso:* - Open http://localhost:8890/conductor - Login: `+dba+` /
-`+phantom-dev-password+` - SPARQL endpoint available at
-http://localhost:8890/sparql
-
-=== Running the Application
-
-==== Start the API Server
-
-[source,bash]
-----
-deno task dev
-----
-
-You should see:
-
-....
-🌀 Phantom Metal Taste - Initializing
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📊 Connecting to ArangoDB...
-✓ ArangoDB initialized
-🕸️  Connecting to Virtuoso...
-✓ Virtuoso initialized
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🚀 API Server starting on port 3000
-✓ Server running at http://localhost:3000
-....
-
-==== Verify API is Running
-
-[source,bash]
-----
-curl http://localhost:3000/health
-----
-
-Expected response:
-
-[source,json]
-----
-{
-  "status": "operational",
-  "message": "Measuring the gap between intention and reality",
-  "databases": {
-    "arango": "connected",
-    "virtuoso": "connected"
-  },
-  "irony": "fully operational"
-}
-----
-
-=== Load Sample Data (SynapCor Case Study)
-
-[source,bash]
-----
-deno task load-data
-----
-
-This loads: - 4 departments - 6 sample employees - 3 initiatives
-(Wellness Wednesday, Transparency Dashboard, Synergy Champions) - 9
-outcomes (intended and unintended) - Causal links - Sample metrics
-
-=== Verify Installation
-
-==== 1. Test Basic Functionality
-
-[source,bash]
-----
-# Health check
-curl http://localhost:3000/health
-
-# Gameable metrics
-curl http://localhost:3000/api/analytics/gameable-metrics
-
-# Metric theater detection
-curl http://localhost:3000/api/analytics/metric-theater
-----
-
-==== 2. Run Tests
-
-[source,bash]
-----
-# Start databases if not running
-podman-compose up -d
-
-# Run test suite
-deno task test
-----
-
-==== 3. Test WASM Module
-
-[source,bash]
-----
-cd src/core
-cargo test
-----
-
-==== 4. Test Julia Modules
-
-[source,bash]
-----
-cd src/analytics
-julia --project=. -e 'using Pkg; Pkg.test()'
-----
-
-=== Development Workflow
-
-==== Hot Reload
-
-The Deno dev server supports hot reload:
-
-[source,bash]
-----
-deno task dev
-----
-
-Make changes to ReScript files, rebuild, and the server will restart
-automatically.
-
-==== Database Management
-
-[source,bash]
-----
-# Start databases
-deno task db:up
-
-# Stop databases
-deno task db:down
-
-# Reset (delete all data and restart)
-deno task db:reset
-----
-
-==== Rebuild WASM
-
-After modifying Rust code:
-
-[source,bash]
-----
-deno task build:wasm
-----
-
-Then restart the API server.
-
-==== Type Checking
-
-[source,bash]
-----
-deno task build  # ReScript type checking is part of compilation
-----
-
-=== Troubleshooting
-
-==== Databases Won’t Start
-
-[source,bash]
-----
-# Check Podman is running
-podman ps
-
-# View logs
-podman-compose logs arango
-podman-compose logs virtuoso
-
-# Common fix: remove volumes and restart
-podman-compose down -v
-podman-compose up -d
-----
-
-==== ArangoDB Connection Errors
-
-* Ensure port 8529 is not in use
-* Check credentials in `+.env+`
-* Verify database was created (check web UI)
-
-==== Virtuoso Connection Errors
-
-* Ensure port 8890 is not in use
-* Wait longer for health check (Virtuoso takes ~30s to start)
-* Check logs: `+podman-compose logs virtuoso+`
-
-==== WASM Module Not Loading
-
-[source,bash]
-----
-# Rebuild
-cd src/core
-cargo clean
-cargo build --target wasm32-unknown-unknown --release
-
-# Verify output exists
-ls -lh target/wasm32-unknown-unknown/release/*.wasm
-----
-
-==== Julia Errors
-
-[source,bash]
-----
-# Reinstall packages
-cd src/analytics
-julia --project=. -e 'using Pkg; Pkg.resolve(); Pkg.instantiate()'
-----
-
-==== Port Already in Use
-
-If port 3000 is taken, change in `+.env+`:
-
-[source,env]
-----
-PORT=3001
-----
-
-=== API Examples
-
-==== Create an Initiative
-
-[source,bash]
-----
-curl -X POST http://localhost:3000/api/initiatives \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "My Initiative",
-    "description": "Testing the system",
-    "startDate": "2024-01-01T00:00:00Z",
-    "department": "Engineering",
-    "intendedOutcome": "Improve productivity",
-    "status": "active",
-    "participants": []
-  }'
-----
-
-==== Get Gap Analysis
-
-After loading SynapCor data, get initiative ID from web UI or query,
-then:
-
-[source,bash]
-----
-# Replace {id} with actual initiative _key
-curl http://localhost:3000/api/analytics/gap/{id}
-----
-
-==== Detect Gaming
-
-[source,bash]
-----
-curl http://localhost:3000/api/analytics/gameable-metrics
-----
-
-==== Philosophical Reflection
-
-[source,bash]
-----
-curl http://localhost:3000/api/reflection
-----
-
-=== Production Deployment
-
-==== Build for Production
-
-[source,bash]
-----
-deno task build
-----
-
-==== Container Production Image
-
-(Future enhancement - not yet implemented)
-
-[source,containerfile]
-----
-FROM cgr.dev/chainguard/wolfi-base:latest AS build
-
-WORKDIR /app
-COPY . .
-RUN deno task build
-RUN deno task build:wasm
-
-FROM cgr.dev/chainguard/static:latest
-COPY --from=build /app /app
-EXPOSE 3000
-CMD ["deno", "task", "start"]
-----
-
-==== Environment Variables
-
-Set these in production:
-
-[source,env]
-----
-NODE_ENV=production
-LOG_LEVEL=info
-ARANGO_PASSWORD=<strong-password>
-VIRTUOSO_PASSWORD=<strong-password>
-----
-
-=== Next Steps
-
-[arabic]
-. Explore the SynapCor case study: `+case-studies/synapcor/README.md+`
-. Read architecture docs: `+docs/architecture/ARCHITECTURE.md+`
-. Review API documentation (coming soon)
-. Build visualizations using the API endpoints
-
-=== Support
-
-* Issues: https://github.com/yourusername/phantom-metal-taste/issues
-* Docs: `+docs/+`
-* Case study: `+case-studies/synapcor/+`
-
-'''''
-
-_"`Setting up a system to measure organizational delusion requires
-meticulous attention to detail. The irony is not lost on us.`"_
+`manifest.scm` provides Git, Bash, coreutils, Just, mise, ShellCheck, and Rust
+build tools. Julia and Bun are installed by mise because the pinned Guix channel
+does not provide the requested tool versions.
+
+`guix build -f guix.scm` installs this mixed-language checkout as a *source
+package*. It does not produce a service binary: no service is implemented.
+`just dev-shell` enters the Guix shell when Guix is installed and otherwise uses
+the mise environment.
+
+== 7. Troubleshooting
+
+Run `just doctor` or `./launcher.sh --doctor` and follow the fix attached to each
+code. `just heal` applies only safe, reversible fixes.
+
+[cols="1,3,3"]
+|===
+|Code |Meaning |Fix
+
+|PV-E01
+|Git is missing
+|Install Git using the OS package manager (<<prerequisites>>).
+
+|PV-E02
+|Just is missing or older than 1.42
+|Install it with mise: `mise use -g just@latest`.
+
+|PV-E03 / PV-E10
+|A declared tool or language binary is missing
+|Run `mise install` and then `just doctor` again.
+
+|PV-E11
+|A system dependency listed in the provisioning deed is missing
+|Install the named OS package and repeat `just doctor`.
+
+|PV-E20
+|`mise.toml` is missing
+|Restore it from version control.
+
+|PV-E27
+|The launcher is not executable
+|Run `chmod +x launcher.sh`.
+
+|PV-E40
+|Neither Guix nor mise is available for a development shell
+|Install mise, or install Guix and use `manifest.scm`.
+
+|PV-E50 / PV-E51
+|A repository-specific doctor check or script failed
+|Read the preceding output and fix the named local check.
+
+|PV-W01
+|mise is not installed
+|Install mise; otherwise the launcher can only show its manual setup guidance.
+
+|PV-W20
+|`mise.lock` is missing
+|On a machine with access to mise's metadata endpoints, run `just toolchain-refresh`, review the generated checksums, and commit the lock. Do not hand-write it.
+
+|PV-W23
+|A mise config declares a prohibited tool/backend
+|Remove the offending declaration and rerun `just doctor`.
+
+|PV-W24–PV-W29
+|A provisioning file is missing or still contains template placeholders
+|Compare the file with the provisioning standard and fill only repository-specific facts.
+|===
+
+If setup still fails, capture `just doctor > doctor.txt 2>&1` and attach that
+output to an issue. Never include credentials or password values.

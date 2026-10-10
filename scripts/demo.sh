@@ -1,79 +1,36 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# SPDX-License-Identifier: MPL-2.0
+# SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+set -euo pipefail
 
-# Demo script for Phantom Metal Taste
-# Demonstrates key features of the system
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$root"
 
-set -e
-
-API_URL="http://localhost:3000"
-
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "  Phantom Metal Taste - Interactive Demo"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
-
-# Check if API is running
-echo "🔍 Checking API health..."
-if ! curl -s "${API_URL}/health" > /dev/null; then
-    echo "API is not running. Please start it with: deno task dev"
-    exit 1
+if ! command -v julia >/dev/null 2>&1; then
+  printf 'Julia is not installed. Run `mise install` or follow docs/SETUP.adoc.\n' >&2
+  exit 127
 fi
-echo "✓ API is healthy"
-echo ""
 
-# Check if data is loaded
-echo "🔍 Checking if SynapCor data is loaded..."
-METRIC_COUNT=$(curl -s "${API_URL}/api/analytics/gameable-metrics" | grep -o '"count":[0-9]*' | cut -d: -f2 || echo "0")
+julia --project=. -e '
+using PhantomAnalytics
+using JSON3
 
-if [ "$METRIC_COUNT" -eq "0" ]; then
-    echo "⚠️  No data found. Loading SynapCor case study..."
-    deno task load-data
-else
-    echo "✓ Data is loaded"
-fi
-echo ""
+impact = PhantomAnalytics.ImpactAnalysis
+causal = PhantomAnalytics.CausalInference
 
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "  Demo 1: Detecting Gameable Metrics"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
-echo "Metrics with large gaps between target and actual values"
-echo "suggest either unrealistic targets or gaming behavior."
-echo ""
-curl -s "${API_URL}/api/analytics/gameable-metrics" | jq '.metrics[] | {name: .metric.name, gap: .gapPercentage, suspicion: .suspicionLevel}'
-echo ""
+intention = Float64[100, 100, 100, 100]
+actual = Float64[110, 112, 108, 115]
+println("Intention/reality gap:")
+println(JSON3.write(impact.analyze_intention_reality_gap(intention, actual)))
 
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "  Demo 2: Metric Theater Detection"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
-echo "Metrics that are collected but never linked to any initiative"
-echo "or decision represent 'metric theater' - measurement for its own sake."
-echo ""
-curl -s "${API_URL}/api/analytics/metric-theater" | jq '{detected: .detected, message: .message}'
-echo ""
+series = Float64[10, 10, 11, 10, 12, 10, 11, 15, 16, 16, 17, 18, 19, 20]
+println("\nMetric-gaming signals:")
+println(JSON3.write(impact.detect_metric_gaming(series; window_size=7)))
 
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "  Demo 3: Philosophical Reflection"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
-echo "Every good system should question its own existence..."
-echo ""
-curl -s "${API_URL}/api/reflection" | jq '.'
-echo ""
-
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "  Demo Complete!"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
-echo "Explore more:"
-echo "  • API docs: http://localhost:3000/health"
-echo "  • ArangoDB: http://localhost:8529"
-echo "  • Virtuoso: http://localhost:8890/conductor"
-echo ""
-echo "Key endpoints:"
-echo "  GET  /api/analytics/gameable-metrics"
-echo "  GET  /api/analytics/metric-theater"
-echo "  GET  /api/analytics/gap/:id"
-echo "  GET  /api/reflection"
-echo ""
+treatment = Float64[0, 1, 0, 1, 0, 1]
+confounder = Float64[0, 0, 1, 1, 2, 2]
+noise = Float64[0.0, 0.1, -0.1, 0.1, -0.1, 0.0]
+outcome = 5.0 .+ 2.0 .* treatment .+ 3.0 .* confounder .+ noise
+println("\nIllustrative adjusted treatment estimate:")
+println(JSON3.write(causal.estimate_causal_effect(treatment, outcome, reshape(confounder, :, 1))))
+'

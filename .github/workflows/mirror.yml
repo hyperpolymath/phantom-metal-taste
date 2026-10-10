@@ -4,7 +4,8 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
-permissions: read-all
+permissions:
+  contents: read
 jobs:
   mirror-gitlab:
     runs-on: ubuntu-latest

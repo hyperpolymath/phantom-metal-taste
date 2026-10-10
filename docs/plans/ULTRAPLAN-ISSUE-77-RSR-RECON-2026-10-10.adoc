@@ -1,0 +1,298 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Remediation plan: issue #77, standalone setup, and RSR alignment
+:revdate: 2026-10-10
+:toc:
+:toclevels: 3
+:sectnums:
+
+[IMPORTANT]
+====
+*Status: in progress; implementation has begun in the working tree.* This plan
+records a repository recon and a phased remediation. It is not evidence of a
+merged PR or a fresh default-branch pass. Issue #77 remains open. Do not close
+it until the acceptance evidence listed in <<issue-77-acceptance>> exists.
+====
+
+== Executive disposition
+
+. The last inspected default-branch baseline was `8ae3c4e0c8731a587dbe3616a44c5a26fb4aa37c` on 2026-10-10. The associated issue #77 described two failing checks. No new default-branch run has yet validated the current worktree changes.
+. The old ReScript/Deno workflow did not test an implemented application path. It has been removed rather than repaired or hidden. A Rust workflow, Julia test workflow, Bun tests, and an allowlisted reproducible Pages build now describe the actual prototype.
+. The governance reusable pin and action refs use current full commit SHAs; the local SPDX check accepts a leading comment block. YAML syntax parsing and the local action-pin scan pass. `.github/workflows/actions.lock` is still missing, and actionlint, reusable workflow validation, and remote workflow execution remain unverified.
+. The user-requested standalone setup is in progress: root Rust/Julia manifests, Bun site scripts, Just integration, the RSR provisioning engine, launcher, mise declarations, and Guix files are present. `mise.lock` is still missing; do not claim the toolchain is locked.
+. The Rust and Julia packages are provisional and have not been executed in this environment. Bun 1.4.3 tests, allowlisted site build, POSIX two-build reproducibility, project-base URL dry run, and a no-`.git` source-archive smoke test pass locally.
+. Issues #51 and #54 remain closed. Their unchecked semantic AffineScript hand-port work remains unresolved; the `.affine` files are still TODO scaffolds.
+. The initial recon also found mirror jobs failing on empty SSH-key inputs. This is independent operational work; do not request or expose secret values.
+
+== Scope and evidence baseline
+
+=== Issues and acceptance
+
+[cols="1,2,1,4",options="header"]
+|===
+|Issue |Title |State |Disposition
+
+|link:https://github.com/hyperpolymath/phantom-metal-taste/issues/77[#77]
+|CI: 2 red checks on default branch, deferred from #76
+|Open
+|Primary tracking item for the failing checks. Acceptance permits a passing/neutral context with rationale or intentional retirement linked to the issue. The old context is now retired in the worktree; fresh default-branch evidence and an explicit issue update are still required.
+
+|link:https://github.com/hyperpolymath/phantom-metal-taste/issues/51[#51]
+|Eradicate ReScript ecosystem and port to AffineScript
+|Closed
+|Historical mechanical migration is not evidence of semantic implementation. Keep the unchecked behavior work as a separately scoped follow-up.
+
+|link:https://github.com/hyperpolymath/phantom-metal-taste/issues/54[#54]
+|Eradicate TypeScript ecosystem
+|Closed
+|Historical config/file checklist does not complete the semantic port. Do not reopen automatically or claim completion based on extensions.
+|===
+
+=== Historical failing-run findings
+
+The baseline run IDs below were inspected during recon. They establish the
+starting point only; their result must not be presented as the current result.
+
+[cols="2,3,4",options="header"]
+|===
+|Run / context |Baseline result |Finding
+
+|link:https://github.com/hyperpolymath/phantom-metal-taste/actions/runs/38040979621[ReScript/Deno CI, run 38040979621]
+|`build` failed at `Deno lint`; its independent security job passed.
+|The check annotations named `scripts/build-site.mjs`; unused variable and Node-global lint diagnostics prevented later format/test steps from running. There was no active Deno project config, ReScript config, or tracked `.ts`/`.res` implementation. Retire the unused workflow; do not add suppressions or pretend it tested AffineScript.
+
+|link:https://github.com/hyperpolymath/phantom-metal-taste/actions/runs/38040980036[Governance, run 38040980036]
+|The workflow security linter rejected action refs.
+|The old governance caller used `81dbf2dd854b1444fd6236fa2352474383b2c2b9`; the Pages workflow used version tags, and there was no action lock. Use the current reusable pin `da2c748aad55c1a1dcba00b60fe4a35017bc6540`, full SHAs, and the official lock generator.
+
+|link:https://github.com/hyperpolymath/phantom-metal-taste/actions/runs/38040979972[Secret Scanner, run 38040979972]
+|`scan / gitleaks`, `scan / rust-secrets`, and `scan / shell-secrets` passed.
+|Keep the scanner read-only and retain the required `scan` job identity; the wrapper in the current RSR template does not inherit secrets. The pinned reusable's header still contains stale `secrets: inherit` prose from its former gitleaks-action implementation, but its current jobs do not consume secrets.
+
+|link:https://github.com/hyperpolymath/phantom-metal-taste/actions/runs/38040979668[Mirror workflow, run 38040979668]
+|GitLab and Bitbucket mirror jobs failed at SSH setup.
+|The SSH private-key inputs were empty. This remains a separate configuration/enablement question; secret values must never be placed in this plan or public logs.
+|===
+
+=== PR #80 check results observed before local follow-up fixes
+
+Observed via `gh pr checks 80` on head `69f9e1eab43c41f3ac26d49b72b64cbb7e554380`
+(2026-10-10). The PR remains open against `main`; these findings describe that
+pushed commit only. The local changes below were not yet pushed when the check
+results were collected.
+
+[cols="2,3,5",options="header"]
+|===
+|Check |Result |Finding / disposition
+
+|Actions lockfile verification
+|Fail
+|`.github/workflows/actions.lock` is absent and the grace window ended 2026-10-01. The official `gh-actions-lock` release asset could not be downloaded in this sandbox. No lock data has been fabricated; generate and verify it with the official tool on an egress-enabled host.
+
+|Rust CI
+|Fail
+|`cargo check` passed, but `cargo fmt` failed; Clippy and Cargo tests were skipped. `src/core/src/lib.rs` has since been formatted locally using `@scalar/rust-fmt@0.3.0` WASM; equivalence to the CI Rustfmt and the rerun result remain unverified.
+
+|GitGuardian
+|Fail
+|Two generic-password findings pointed at descriptive environment-variable error hints in `compose.yml`; no literal credential was present. The local hints are now `:?required`; GitGuardian must re-scan the pushed edit.
+
+|Hypatia
+|Fail
+|Annotations identified retired `.machine_readable/6a2/` references in `.claude/CLAUDE.md` and `0-AI-MANIFEST.a2ml`, plus secret use in Instant Sync without `step-security/harden-runner`. The old A2ML structure has since been removed in favor of the root repo deed, and Instant Sync now has a full-SHA-pinned egress-audit step; Hypatia must recheck the pushed changes.
+
+|Other visible checks
+|Pass
+|CodeQL, Bun, analytics, local workflow linting, the secret-scanner contexts, and multiple governance checks passed on this head. Full per-check status remains visible on link:https://github.com/hyperpolymath/phantom-metal-taste/pull/80[PR #80].
+|===
+
+=== Current source facts
+
+* Rust workspace: root `Cargo.toml` and `Cargo.lock`, with the prototype crate in `src/core/`.
+* Julia package: root `Project.toml`, `src/PhantomAnalytics.jl`, analysis code in `src/analytics/`, and tests in `test/`.
+* Bun tooling: root `package.json`; `scripts/build-site.mjs` builds the `site.json` allowlist, and `scripts/build-site.test.js` covers CLI helpers. There are no third-party JavaScript dependencies; Bun 1.4.3 removes an empty `bun.lock` instead of retaining one.
+* AffineScript: five orchestrator files plus one benchmark sketch are incomplete TODO scaffolds. No semantic implementation or compiler test is claimed.
+* Databases: `compose.yml` describes optional ArangoDB/Virtuoso containers with non-default local passwords and loopback-only ports. No current source code connects to them.
+* Application boundary: no HTTP API, service server, data loader, graph persistence, or end-to-end application exists.
+* Publication: the Bun builder copies only paths in `site.json`; root user guides, licences, and `.well-known/{ai,humans,security}.txt` are explicitly allowlisted. It creates an HTML index but copies AsciiDoc/Markdown sources verbatim rather than rendering them. The competing full-root Pages workflow has been removed from the worktree.
+* Current repo-level descriptive state is `phantom-metal-taste_chora.deed`, with provisioning facts in `.machine_readable/descriptiles/provisioning_praxis.deed`. The RSR template retires A2ML: no `.a2ml` file may be present. Do not recreate the retired `6a2` path or former root-level `.scm` state layout.
+
+[[binding-rules]]
+== Binding estate rules
+
+The source-of-truth order is current `hyperpolymath/standards`, current
+`hyperpolymath/rsr-template-repo` for canonical instantiation, verified local
+source/state, then legacy prose. In particular:
+
+. The current estate language policy makes AffineScript the direction for future application behavior, Bun the tier-1 JavaScript runtime, and prohibits Deno. ReScript/TypeScript legacy work is not a reason to restore either old runtime path.
+. The current template reusable pin recorded during recon is `da2c748aad55c1a1dcba00b60fe4a35017bc6540`; keep reusable workflow callers on full reachable SHAs.
+. Workflow SPDX validation must accept an SPDX line in the leading comment block, including when a lock tool adds its own comment above it.
+. Generate `.github/workflows/actions.lock` using the official `gh-actions-lock` tool. Do not hand-write lock data or guess action resolutions. Keep direct action refs immutable; validate the lock after generation.
+. Generate `mise.lock` using official mise tooling. Do not write checksums or release metadata by hand. The current `mise.lock` gap is a release/setup reproducibility blocker.
+. Provisioning engine code in `build/just/` is canonical estate code. Put provisioning facts in `.machine_readable/descriptiles/provisioning_praxis.deed`, repo-wide facts in `phantom-metal-taste_chora.deed`, and project tasks in the root `Justfile`.
+. The current RSR template retires A2ML. Keep all `.a2ml` files removed; the old descriptive A2ML records and non-executable A2ML contractile declarations are not authoritative. Adopt applicable contractiles in the current `.k9.ncl`/Nickel format rather than reviving the old files.
+. Apply the current template capability-by-capability. Do not copy unrelated languages, FFI, services, containers, or formal-method scaffolding simply to imitate the template.
+
+Binding references: link:https://github.com/hyperpolymath/standards/blob/main/3-practice/provisioning/PROVISIONING-STANDARD.adoc[Provisioning Standard], link:https://github.com/hyperpolymath/standards/issues/727[standards#727], link:https://github.com/hyperpolymath/standards/issues/1108[standards#1108], the link:https://github.com/hyperpolymath/rsr-template-repo[RSR template], and the pinned reusable workflow commit above.
+
+== Work begun and remaining phases
+
+=== Phase 1 — Retire stale runtime and align the source layout
+
+[cols="1,4,3",options="header"]
+|===
+|Status |Work item |Evidence / remaining gate
+
+|Done in worktree
+|Deleted `.github/workflows/rescript-deno-ci.yml` and `deno.lock`; removed the second, repository-root Pages publisher and the generic SLSA workflow that attested placeholder artifacts.
+|Confirm resulting contexts on a fresh default-branch run. #77 has not been updated or closed.
+
+|Done in worktree
+|Added root Rust workspace and Julia package; moved the Rust lock to workspace root; added Bun site tests and scripts.
+|Bun is locally tested. Rust/Julia builds and tests still require execution.
+
+|Done in worktree
+|Replaced README, quick start, setup, architecture, AI, compliance, case-study, and maintainer guidance with implementation-based descriptions.
+|Legacy architecture and case-study materials are labelled conceptual; setup guidance follows the implemented Rust/Julia/Bun paths. The published-source link audit is recorded in Phase 4.
+
+|Done in worktree
+|Expanded `site.json` to publish root user guides, current licenses, and required `.well-known` files. Added regression coverage for the root docs/license/security metadata, repaired the generated site's stale `index.json`/security links, and removed a citation page's links to absent metadata.
+|Rebuild and rerun tests after the final plan/content edits; verify all local links resolve and every published target is allowlisted.
+
+|Done in worktree
+|Migrated descriptive facts into the root `phantom-metal-taste_chora.deed`; removed the retired A2ML records, root A2ML AI manifest, stale non-executable A2ML contractile declarations, and the unreferenced root `Mustfile` for the never-built legacy CLI. Added DEED guidance and removed all `.a2ml` files.
+|The repo deed now carries the current project facts. The current `.k9.ncl`/Nickel contractile trident remains a separately tracked applicability gap; old declarations were not executable controls.
+
+|Done in worktree
+|Reviewed stale active instructions, issue metadata, and retired configuration references. The README agent-notes link now targets the maintained root `CLAUDE.md`; the citation guide no longer links to absent metadata files.
+|Active Deno/ReScript runtime/workflow paths are retired. Historical policy, issue, and migration mentions remain labelled as history or prohibition. Recheck the complete diff before PR.
+|===
+
+=== Phase 2 — Standalone setup and provisioning
+
+[cols="1,4,3",options="header"]
+|===
+|Status |Work item |Evidence / remaining gate
+
+|Done in worktree
+|Added `mise.toml`, root `Justfile`, provisioning deed, the four canonical `build/just/` provisioning files, executable `launcher.sh`, `manifest.scm`, `channels.scm`, and source-only `guix.scm`. The provisioning files match `hyperpolymath/rsr-template-repo` at `df09a6c50c4c77e93abac0fdf162509bf5648611`.
+|Launcher `--help` and `--version` pass from the checkout. `./launcher.sh --doctor` ran and reported 13 PASS, 2 WARN, 5 FAIL because `just`, mise, Rust, Julia, and Bun are absent and `mise.lock` is missing; this is an honest environment diagnosis, not a code pass. Full Just lifecycle and Guix validation remain pending.
+
+|Done in worktree
+|Documented setup from either a full Git checkout or complete source archive; hardened the Guix source filter and `.gitignore` for credential/config material. The first fresh-archive smoke test exposed a missing `build/just/provision-modes.sh`; all four provisioning files were restored from the current RSR template, and stable `:name`/`:version` facts were added for launcher identity without Git metadata.
+|A complete source archive without `.git` now passes Bun tests/site build, `launcher.sh --help`/`--version`, and the no-A2ML check. Guix, Just, and mise remain unavailable; Guix execution and official `mise.lock` generation are still blockers.
+
+|Blocker
+|Create and review the official `mise.lock` for the declared tools.
+|`mise lock --dry-run --verbose` failed resolving Julia metadata with a TLS handshake EOF; generate via `just toolchain-refresh` on an egress-enabled host. Never fabricate it.
+
+|Done with documented limitation
+|Kept the Bun toolchain at 1.4.3, with no external packages.
+|Bun 1.4.3 reports no packages and deletes an empty lock; do not add a fake package just to create `bun.lock`.
+
+|Pending
+|Verify the launcher, full Just lifecycle, Guix shell, and source package against the standard.
+|Required binaries were not available locally. The generated launcher uses GNU `readlink -f`, so macOS users need Homebrew coreutils first on PATH; this limitation is documented, and the canonical template should fix it before portability is claimed without qualification.
+|===
+
+=== Phase 3 — CI and Pages replacement
+
+[cols="1,4,3",options="header"]
+|===
+|Status |Work item |Evidence / remaining gate
+
+|Done in worktree
+|Added Rust CI caller pinned to the current shared reusable at `da2c748aad55c1a1dcba00b60fe4a35017bc6540`, Julia CI, Bun CI, and allowlisted Pages build with a two-build hash check.
+|GitHub, GitLab, Dependabot, and Copilot YAML parsed with Prettier; actionlint and schema-aware local workflow validation remain unrun. PR #80 executed CI: Julia analytics and Bun passed; Rust `cargo check` passed but formatting failed. The full first-run status is recorded above, and the local fixes still need a fresh PR run.
+
+|Done in worktree
+|Aligned CodeQL's SHA to the template's held v4.38.0 release; narrowed CodeQL, Pages, and mirror permissions; removed no-op Bun dependency-install steps because the project has no third-party packages. Direct and reusable action refs are immutable.
+|CodeQL source at `b96794f015dfd88f77b49b1c93e0fa7110f94c63` confirms Rust is built in and accepts `build-mode: none`. All pinned action commits resolved through GitHub's API; local YAML syntax and direct-SHA checks pass. Schema-aware workflow validation and remote execution remain unverified.
+
+|Done in worktree
+|Added a presence-only guard to Instant Sync: dispatch runs only when `FARM_DISPATCH_TOKEN` exists, otherwise the workflow warns without printing or requesting the secret. Added a full-SHA-pinned `step-security/harden-runner` egress-audit step before reading the secret, with a linter regression check.
+|Actual secret availability and private-farm dispatch remain owner-side operational settings; no credentials are stored here. Hypatia's egress-monitoring warning is addressed locally; a fresh PR run must confirm.
+
+|Blocker
+|Generate `.github/workflows/actions.lock` with the official tool and validate all workflow refs.
+|Installing `gh-actions-lock` v0.1.6 failed because its release asset host returned EOF/outside the network allowlist. Do not hand-author the lock.
+
+|Pending
+|Validate GitLab CI image tags and all GitHub reusable workflow input contracts with schema-aware tooling and live pipelines.
+|Prettier YAML syntax parsing, JSON checks, and immutable action-pin checks pass locally. `actionlint` and remote workflow execution are unavailable/unrun; do not claim semantic workflow validation.
+|===
+
+=== Phase 4 — Local tests and reproducibility
+
+[cols="1,4,3",options="header"]
+|===
+|Status |Work item |Evidence / remaining gate
+
+|Pass
+|Bun tests.
+|Bun 1.4.3: 5 passed, 0 failed, 20 `expect()` calls.
+
+|Pass
+|Bun static site build.
+|49 output files (46 sources copied); the exact root-base SHA-256 is recorded in `phantom-metal-taste_chora.deed`. This plan is itself published, so duplicating the digest here would make the hash self-referential.
+
+|Pass
+|Two-build reproducibility, local-link review, and source-archive smoke test.
+|`sh scripts/check-site-reproducible.sh` matched both builds. A local AsciiDoc-macro audit checked 15 local targets across all 46 readable published sources; every target is allowlisted. A complete archive without `.git` passed Bun tests/build and `launcher.sh --help`.
+
+|Pass
+|Local static configuration and source checks.
+|Prettier parsed the changed workflow YAML; JSON parsing, inline action-pin checks, Bash/sh syntax, no-A2ML check, and the current standards DEED linter passed. These do not substitute for schema-aware workflow, Justfile, or Guix validation.
+
+|Partial; rerun pending
+|Rust formatting, Clippy, Cargo tests, and optional WASM target.
+|On PR head `69f9e1eab43c41f3ac26d49b72b64cbb7e554380`, `cargo check` passed and `cargo fmt` failed; Clippy and Cargo tests were skipped. The Rust source was formatted locally using `@scalar/rust-fmt@0.3.0` WASM, but equivalence and the post-fix CI result remain unverified. Rust tooling is unavailable locally.
+
+|Pass on PR
+|Julia package tests/precompile.
+|The PR #80 `analytics` job passed on the initial head. Julia was not available locally; the demo was not run.
+
+|Not run / pending
+|Just doctor/provisioning, Guix execution, mise install/lock, actionlint, and the post-fix PR workflow rerun.
+|Required local tools are unavailable; the initial remote PR run is recorded above, but its local fixes have not yet been pushed and rechecked.
+|===
+
+=== Phase 5 — Issue #77 acceptance and separate follow-ups
+
+[[issue-77-acceptance]]
+Before resolving #77:
+
+. Update #77 with the reason for retiring the obsolete ReScript/Deno context and the replacement coverage.
+. Verify the pinned Governance reusable, action-lock checks, local workflow linter, Rust/Julia/Bun checks, and Pages reproducibility on the PR.
+. After merge, capture a fresh default-branch run URL and exact commit SHA. Confirm the retired context is deliberately absent/neutral with rationale, replacement checks are green, and the required Secret Scanner contexts remain green.
+. Close #77 only after those facts are observable; do not bypass rulesets or weaken checks to manufacture a pass.
+
+Keep separate follow-ups for:
+
+* Mirror/forge propagation reliability: the initial GitLab/Bitbucket jobs failed because SSH key inputs were empty. They remain gated by explicit enablement flags; Instant Sync now warns and skips if `FARM_DISPATCH_TOKEN` is absent. The owner must configure the needed secrets through GitHub settings or leave those integrations disabled. Never place secret values in the issue, repository, or logs.
+* Semantic AffineScript port: first define behavior and tests for the five TODO scaffolds; verify compiler support; then implement and test deliberately. Do not reopen #51/#54 without an explicit owner decision.
+* Standards lock-exemption ledger: after local `actions.lock` is generated and accepted, submit the separate shrink-only standards-side removal.
+* Current contractile adoption: assess applicable project-specific `must`, `trust`, `adjust`, `dust`, `bust`, and `intend` tridents using the template's `.k9.ncl`/Nickel format. The removed A2ML declarations were stale template residue, not executable checks.
+* Additional RSR capability/profile gaps: compare measured repository capabilities with the current template; adopt only applicable features.
+
+== Verification checklist
+
+Before considering this remediation complete:
+
+* [x] No `.a2ml` files remain; repo facts use the root DEED file and both `.deed` records pass the current standards linter. Applicable current contractiles still need separate assessment.
+* [ ] `mise.lock` generated by mise and reviewed; `mise install` works from a fresh checkout.
+* [ ] `.github/workflows/actions.lock` generated and verified by `gh actions-lock`; all direct and reusable refs are immutable/reachable.
+* [ ] `just doctor`, `just provision-check`, `just validate`, Rust tests/Clippy/fmt, Julia tests, Bun tests/build, and site reproducibility run and pass.
+* [ ] GitHub workflow YAML/actionlint and GitLab CI YAML validate; CI jobs run successfully.
+* [ ] Guix manifest, pinned channel, source package, and launcher paths are exercised.
+* [ ] Site artifact contains only `site.json` allowlisted content; root user guides/licences and `.well-known` policy files remain present; no competing workflow publishes the repository root.
+* [ ] Current docs, case study, diagrams, CI, and recipes distinguish implementations from conceptual material.
+* [ ] #77 has fresh default-branch evidence; it is closed only after linked acceptance is met.
+* [ ] Outstanding #51/#54 semantic behavior and mirror/ledger follow-ups remain explicit rather than being counted as completed.
+
+== Non-goals
+
+This plan does not implement an HTTP service, database integration, or
+AffineScript behavior; request or store secrets; change branch protection; claim
+formal verification or certification; fabricate lock files; or mark closed
+issues #51/#54 as semantically complete.

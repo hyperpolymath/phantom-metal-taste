@@ -1,0 +1,16 @@
+# SPDX-License-Identifier: MPL-2.0
+# humanstxt.org — the people and tools behind this repository.
+
+/* TEAM */
+  Maintainer: Jonathan D.A. Jewell (hyperpolymath)
+  Contact: 6759885+hyperpolymath@users.noreply.github.com
+  From: United Kingdom
+  Site: https://github.com/hyperpolymath/phantom-metal-taste
+
+/* SITE */
+  Last update: 2026-10-10
+  Standards: Rhodium Standard Repository (RSR)
+  Components: Rust core, Julia analytics, Bun site builder, conceptual artefacts;
+              AffineScript orchestration remains an incomplete scaffold
+  Tools: just, mise, Guix, Rust, Julia, Bun
+  Licence: MPL-2.0 (source) / CC-BY-SA-4.0 (documentation)
