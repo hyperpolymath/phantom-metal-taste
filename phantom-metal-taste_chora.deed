@@ -7,7 +7,7 @@
   :schema-version "1.0.0"
   :canonical-name "phantom-metal-taste"
   :repo-uuid #u8"gv-clade-index:github.com/hyperpolymath/phantom-metal-taste"
-  :beholding-chora #u5"estate/chora"
+  :beholding-chora #u8"chora:estate/github.com/hyperpolymath"
   (identity
     :primary-forge github
     :owner "hyperpolymath"
